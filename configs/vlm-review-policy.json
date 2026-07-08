@@ -1,0 +1,138 @@
+{
+  "version": "1.0",
+  "provider_role": "vlm_reviewer",
+  "default_max_fix_attempts": 2,
+  "verdict_contract": {
+    "response_format": "strict JSON object with keys verdict, confidence, findings",
+    "verdicts": [
+      "approve",
+      "revise",
+      "blocked"
+    ],
+    "finding_keys": [
+      "defect_tag",
+      "severity",
+      "description",
+      "region",
+      "suggested_fix_id"
+    ]
+  },
+  "stages": {
+    "reconstruction": {
+      "rubric": "vlm_review_reconstruction.md",
+      "evidence_globs": [
+        "assets/*/renders/**/*.png",
+        "renders/**/*.png",
+        "source-assets/**/*.png",
+        "source-assets/**/*.jpg",
+        "source-assets/**/*.jpeg"
+      ],
+      "defect_tags": [
+        "mesh_holes",
+        "fragmented_parts",
+        "lumpy_surface",
+        "wrong_proportions",
+        "missing_parts",
+        "extra_geometry",
+        "wrong_scale"
+      ]
+    },
+    "segmentation": {
+      "rubric": "vlm_review_segmentation.md",
+      "evidence_globs": [
+        "assets/*/textures/segments/*.png",
+        "source-assets/**/*.png",
+        "source-assets/**/*.jpg"
+      ],
+      "defect_tags": [
+        "missing_segment",
+        "mask_misaligned",
+        "wrong_semantic_label",
+        "merged_segments",
+        "oversplit_segments"
+      ]
+    },
+    "material-inference": {
+      "rubric": "vlm_review_material_inference.md",
+      "evidence_globs": [
+        "assets/*/textures/segments/*.png",
+        "source-assets/**/*.png",
+        "source-assets/**/*.jpg"
+      ],
+      "defect_tags": [
+        "implausible_material",
+        "material_contradicts_photo",
+        "implausible_physical_value",
+        "missing_component_material"
+      ]
+    },
+    "texturing": {
+      "rubric": "vlm_review_texturing.md",
+      "evidence_globs": [
+        "assets/*/textures/**/*.png",
+        "assets/*/renders/**/*.png",
+        "source-assets/**/*.png",
+        "source-assets/**/*.jpg"
+      ],
+      "defect_tags": [
+        "baked_lighting",
+        "seam_artefacts",
+        "wrong_material_appearance",
+        "text_or_watermark_artefacts",
+        "decal_misplaced",
+        "tiling_artefacts",
+        "resolution_too_low"
+      ]
+    },
+    "physics-articulation": {
+      "rubric": "vlm_review_physics_articulation.md",
+      "evidence_globs": [
+        "assets/*/renders/**/*.png",
+        "source-assets/**/*.png",
+        "source-assets/**/*.jpg"
+      ],
+      "defect_tags": [
+        "collider_mismatch",
+        "implausible_mass_distribution",
+        "joint_axis_wrong",
+        "joint_limits_wrong",
+        "grasp_point_unreachable",
+        "missing_articulation"
+      ]
+    },
+    "nonvisual-materials": {
+      "rubric": "vlm_review_nonvisual_materials.md",
+      "evidence_globs": [
+        "source-assets/**/*.png",
+        "source-assets/**/*.jpg"
+      ],
+      "defect_tags": [
+        "implausible_value_range",
+        "material_class_mismatch",
+        "missing_unit_or_uncertainty"
+      ]
+    },
+    "simready-verification": {
+      "rubric": "vlm_review_simready_verification.md",
+      "evidence_globs": [
+        "assets/*/renders/**/*.png",
+        "renders/**/*.png",
+        "source-assets/**/*.png",
+        "source-assets/**/*.jpg"
+      ],
+      "defect_tags": [
+        "render_mismatch_with_source",
+        "package_visually_incomplete",
+        "material_binding_visibly_wrong",
+        "silhouette_mismatch"
+      ]
+    }
+  },
+  "default_models": {
+    "nvidia_nim": "nvidia/llama-3.1-nemotron-nano-vl-8b-v1",
+    "openai": "",
+    "openai_compatible": ""
+  },
+  "source_image_limit": 2,
+  "max_image_edge": 1024
+}

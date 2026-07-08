@@ -1,0 +1,236 @@
+{
+  "id": "asset-packs",
+  "version": "1.0",
+  "domain": "asset_packs",
+  "description": "Curated links to existing asset, material and texture packs. Used to find exemplars when reconstructing objects and to offer downloads through the library fetch surface.",
+  "items": [
+    {
+      "item_id": "nvidia_simready_warehouse",
+      "name": "NVIDIA SimReady warehouse assets",
+      "domain": "asset_packs",
+      "source": "curated",
+      "uri": "https://docs.omniverse.nvidia.com/simready/latest/simready-asset-library.html",
+      "tags": [
+        "warehouse",
+        "industrial",
+        "pallet",
+        "rack",
+        "bin",
+        "cart",
+        "ladder",
+        "robotics"
+      ],
+      "licence": "NVIDIA Omniverse licence",
+      "pack_domains": [
+        "usd_assets"
+      ],
+      "formats": [
+        "usd"
+      ],
+      "description": "SimReady-converted warehouse objects with physics and semantics; strong exemplars for industrial reconstruction targets"
+    },
+    {
+      "item_id": "nvidia_omniverse_industrial",
+      "name": "Omniverse industrial 3D models pack",
+      "domain": "asset_packs",
+      "source": "curated",
+      "uri": "https://docs.omniverse.nvidia.com/usd/latest/usd_content_samples.html",
+      "tags": [
+        "industrial",
+        "factory",
+        "machine",
+        "shelving",
+        "ladder"
+      ],
+      "licence": "NVIDIA Omniverse licence",
+      "pack_domains": [
+        "usd_assets"
+      ],
+      "formats": [
+        "usd"
+      ],
+      "description": "Industrial content samples shipped with Omniverse; useful for scale and articulation exemplars"
+    },
+    {
+      "item_id": "nvidia_vmaterials",
+      "name": "NVIDIA vMaterials 2 catalogue",
+      "domain": "asset_packs",
+      "source": "curated",
+      "uri": "https://developer.nvidia.com/vmaterials",
+      "tags": [
+        "mdl",
+        "measured",
+        "metal",
+        "plastic",
+        "wood",
+        "glass",
+        "concrete"
+      ],
+      "licence": "NVIDIA vMaterials EULA",
+      "pack_domains": [
+        "materials"
+      ],
+      "formats": [
+        "mdl"
+      ],
+      "description": "Measured MDL materials; the exemplar entries in this library reference its catalogue names"
+    },
+    {
+      "item_id": "ambientcg_materials",
+      "name": "ambientCG PBR materials",
+      "domain": "asset_packs",
+      "source": "curated",
+      "uri": "https://ambientcg.com",
+      "tags": [
+        "pbr",
+        "metal",
+        "rust",
+        "wood",
+        "concrete",
+        "fabric",
+        "tiles"
+      ],
+      "licence": "CC0",
+      "pack_domains": [
+        "textures",
+        "materials"
+      ],
+      "formats": [
+        "png",
+        "jpg"
+      ],
+      "description": "Public domain PBR texture sets with a JSON API; queryable and downloadable through the library fetch surface"
+    },
+    {
+      "item_id": "polyhaven_textures",
+      "name": "Poly Haven textures",
+      "domain": "asset_packs",
+      "source": "curated",
+      "uri": "https://polyhaven.com/textures",
+      "tags": [
+        "pbr",
+        "wood",
+        "metal",
+        "ground",
+        "brick"
+      ],
+      "licence": "CC0",
+      "pack_domains": [
+        "textures"
+      ],
+      "formats": [
+        "png",
+        "jpg",
+        "exr"
+      ],
+      "description": "Public domain texture sets with an API; queryable through the library fetch surface"
+    },
+    {
+      "item_id": "polyhaven_models",
+      "name": "Poly Haven models",
+      "domain": "asset_packs",
+      "source": "curated",
+      "uri": "https://polyhaven.com/models",
+      "tags": [
+        "props",
+        "furniture",
+        "tools",
+        "household"
+      ],
+      "licence": "CC0",
+      "pack_domains": [
+        "usd_assets"
+      ],
+      "formats": [
+        "blend",
+        "gltf"
+      ],
+      "description": "Public domain photoscanned models; good geometry exemplars"
+    },
+    {
+      "item_id": "smithsonian_open_access",
+      "name": "Smithsonian open access 3D",
+      "domain": "asset_packs",
+      "source": "curated",
+      "uri": "https://3d.si.edu",
+      "tags": [
+        "scanned",
+        "museum",
+        "historical",
+        "objects"
+      ],
+      "licence": "CC0",
+      "pack_domains": [
+        "usd_assets"
+      ],
+      "formats": [
+        "gltf",
+        "obj"
+      ],
+      "description": "CC0 photogrammetry scans; useful silhouette and detail exemplars"
+    },
+    {
+      "item_id": "google_scanned_objects",
+      "name": "Google scanned objects",
+      "domain": "asset_packs",
+      "source": "curated",
+      "uri": "https://app.gazebosim.org/GoogleResearch/fuel/collections/Scanned%20Objects%20by%20Google%20Research",
+      "tags": [
+        "household",
+        "products",
+        "packaging",
+        "robotics"
+      ],
+      "licence": "CC-BY 4.0",
+      "pack_domains": [
+        "usd_assets"
+      ],
+      "formats": [
+        "obj",
+        "sdf"
+      ],
+      "description": "Scanned household objects widely used in robotics; attribution required"
+    },
+    {
+      "item_id": "objaverse_xl",
+      "name": "Objaverse-XL",
+      "domain": "asset_packs",
+      "source": "curated",
+      "uri": "https://objaverse.allenai.org",
+      "tags": [
+        "broad",
+        "mesh",
+        "reference"
+      ],
+      "licence": "mixed licences",
+      "pack_domains": [
+        "usd_assets"
+      ],
+      "formats": [
+        "glb"
+      ],
+      "description": "Very large mesh corpus; licences vary per object, so rights checks are mandatory before use as anything beyond a visual exemplar"
+    },
+    {
+      "item_id": "nvidia_omniverse_base_materials",
+      "name": "Omniverse base materials",
+      "domain": "asset_packs",
+      "source": "curated",
+      "uri": "https://docs.omniverse.nvidia.com/materials-and-rendering/latest/materials.html",
+      "tags": [
+        "omnipbr",
+        "omniglass",
+        "mdl",
+        "base"
+      ],
+      "licence": "NVIDIA Omniverse licence",
+      "pack_domains": [
+        "materials"
+      ],
+      "formats": [
+        "mdl"
+      ],
+      "description": "OmniPBR and OmniGlass base materials shipped with Omniverse; the default binding targets for authored assets"
+    }
+  ]
+}

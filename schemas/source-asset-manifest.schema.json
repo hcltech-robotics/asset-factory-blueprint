@@ -1,0 +1,261 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hcltech-robotics.github.io/asset-factory-blueprint/schemas/v1/source-asset-manifest.schema.json",
+  "title": "source asset manifest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "id",
+    "version",
+    "status",
+    "evidence",
+    "source_assets",
+    "local_copies",
+    "source_assets_mutated",
+    "rights_status",
+    "unit_policy"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*\\.[0-9]+(?:\\.[0-9]+)?(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "asset_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "proposal",
+        "validated",
+        "review_required",
+        "blocked",
+        "released",
+        "not_validated"
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "evidence_id",
+          "kind",
+          "uri",
+          "checksum"
+        ],
+        "properties": {
+          "evidence_id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "uri": {
+            "type": "string"
+          },
+          "checksum": {
+            "type": "string",
+            "anyOf": [
+              {"pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"},
+              {"const": "sha256:example"}
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "provider_trace": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "provider",
+          "model",
+          "role",
+          "prompt_checksum"
+        ],
+        "properties": {
+          "provider": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "prompt_checksum": {
+            "type": "string"
+          },
+          "request_id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "not_reviewed",
+        "review_required",
+        "approved",
+        "rejected"
+      ]
+    },
+    "source_assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "source_path",
+          "project_copy_path",
+          "source_sha256",
+          "copy_sha256",
+          "suffix",
+          "size_bytes",
+          "status"
+        ],
+        "properties": {
+          "source_path": {
+            "type": "string"
+          },
+          "project_copy_path": {
+            "type": "string"
+          },
+          "source_sha256": {
+            "type": "string",
+            "pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"
+          },
+          "copy_sha256": {
+            "type": "string",
+            "pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"
+          },
+          "suffix": {
+            "type": "string"
+          },
+          "size_bytes": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "copied",
+              "blocked"
+            ]
+          },
+          "rights_id": {
+            "type": "string"
+          },
+          "source_uri": {
+            "type": "string",
+            "format": "uri-reference"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "local_copies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_assets_mutated": {
+      "type": "boolean"
+    },
+    "rights_status": {
+      "type": "string",
+      "enum": [
+        "unknown",
+        "pending",
+        "review_required",
+        "cleared",
+        "restricted",
+        "rejected"
+      ]
+    },
+    "unit_policy": {
+      "type": "string"
+    },
+    "provenance": {
+      "type": "object"
+    },
+    "validation_gates": {
+      "type": "array",
+      "items": {"type": "object"}
+    },
+    "validation_status": {
+      "type": "string"
+    },
+    "blocked_reasons": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "source_rights": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rights_id",
+          "source_id",
+          "rights_status",
+          "licence_expression",
+          "permitted_uses",
+          "redistribution_allowed",
+          "derivatives_allowed",
+          "privacy_status",
+          "evidence_ids"
+        ],
+        "properties": {
+          "rights_id": {"type": "string", "minLength": 1},
+          "source_id": {"type": "string", "minLength": 1},
+          "rights_status": {
+            "type": "string",
+            "enum": ["unknown", "pending", "cleared", "restricted", "rejected"]
+          },
+          "licence_expression": {"type": "string", "minLength": 1},
+          "terms_uri": {"type": ["string", "null"], "format": "uri-reference"},
+          "creator": {"type": ["string", "null"]},
+          "revision": {"type": ["string", "null"]},
+          "attribution": {"type": ["string", "null"]},
+          "permitted_uses": {"type": "array", "items": {"type": "string"}},
+          "redistribution_allowed": {"type": "boolean"},
+          "derivatives_allowed": {"type": "boolean"},
+          "privacy_status": {
+            "type": "string",
+            "enum": ["not_applicable", "unknown", "cleared", "restricted", "rejected"]
+          },
+          "consent_evidence_ids": {"type": "array", "items": {"type": "string"}},
+          "evidence_ids": {"type": "array", "items": {"type": "string"}},
+          "expires_at": {"type": ["string", "null"], "format": "date-time"},
+          "extensions": {"type": "object", "additionalProperties": true}
+        }
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"version": {"pattern": "^2\\."}},
+        "required": ["version"]
+      },
+      "then": {
+        "required": ["source_rights", "extensions"]
+      }
+    }
+  ]
+}

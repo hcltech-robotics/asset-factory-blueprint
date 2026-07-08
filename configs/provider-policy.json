@@ -1,0 +1,130 @@
+{
+  "version": "1.0",
+  "default_provider": "nvidia_nim",
+  "providers": {
+    "nvidia_nim": {
+      "kind": "openai-compatible",
+      "api_key_env": "NVIDIA_API_KEY",
+      "base_url_env": "AFB_NVIDIA_BASE_URL",
+      "default_base_url": "https://integrate.api.nvidia.com/v1",
+      "allowed_hosts": ["integrate.api.nvidia.com"],
+      "allow_loopback_http": false,
+      "model_env": "AFB_NVIDIA_MODEL",
+      "default_model_id": "nvidia/llama-3.1-nemotron-nano-8b-v1",
+      "timeout_seconds": 180,
+      "capabilities": [
+        "chat",
+        "text",
+        "vision"
+      ]
+    },
+    "openai": {
+      "kind": "openai",
+      "api_key_env": "OPENAI_API_KEY",
+      "base_url_env": "AFB_OPENAI_BASE_URL",
+      "default_base_url": "https://api.openai.com/v1",
+      "allowed_hosts": ["api.openai.com"],
+      "allow_loopback_http": false,
+      "model_env": "AFB_OPENAI_MODEL",
+      "default_model_id": "gpt-5.5",
+      "image_model_env": "AFB_IMAGE_GENERATION_MODEL",
+      "default_image_model_id": "chatgpt-image-latest",
+      "timeout_seconds": 180,
+      "capabilities": [
+        "chat",
+        "text",
+        "vision",
+        "embeddings",
+        "image_generation"
+      ]
+    },
+    "openai_compatible": {
+      "kind": "openai-compatible",
+      "api_key_env": "AFB_LLM_API_KEY",
+      "base_url_env": "AFB_LLM_BASE_URL",
+      "default_base_url": "http://localhost:11434/v1",
+      "allowed_hosts": ["localhost", "127.0.0.1", "::1"],
+      "allow_loopback_http": true,
+      "model_env": "AFB_LLM_MODEL",
+      "default_model_id": "llama3.2:1b",
+      "timeout_seconds": 180,
+      "api_key_optional": true,
+      "capabilities": [
+        "chat",
+        "text"
+      ]
+    },
+    "local": {
+      "kind": "openai-compatible",
+      "api_key_env": "AFB_LOCAL_API_KEY",
+      "base_url_env": "AFB_LOCAL_BASE_URL",
+      "default_base_url": "http://localhost:11434/v1",
+      "allowed_hosts": ["localhost", "127.0.0.1", "::1"],
+      "allow_loopback_http": true,
+      "model_env": "AFB_LOCAL_MODEL",
+      "default_model_id": "llama3.2:1b",
+      "timeout_seconds": 240,
+      "api_key_optional": true,
+      "capabilities": [
+        "chat",
+        "text"
+      ]
+    },
+    "local_flux": {
+      "kind": "openai-compatible",
+      "api_key_env": "AFB_LOCAL_IMAGE_API_KEY",
+      "base_url_env": "AFB_LOCAL_IMAGE_BASE_URL",
+      "default_base_url": "http://localhost:8000/v1",
+      "allowed_hosts": ["localhost", "127.0.0.1", "::1"],
+      "allow_loopback_http": true,
+      "model_env": "AFB_LOCAL_IMAGE_MODEL",
+      "default_model_id": "black-forest-labs/FLUX.1-dev",
+      "image_model_env": "AFB_LOCAL_IMAGE_MODEL",
+      "default_image_model_id": "black-forest-labs/FLUX.1-dev",
+      "timeout_seconds": 600,
+      "api_key_optional": true,
+      "capabilities": [
+        "image_generation"
+      ]
+    },
+    "hf_flux_schnell": {
+      "kind": "gradio-space",
+      "api_key_env": "HF_TOKEN",
+      "space_env": "AFB_HF_FLUX_SPACE",
+      "default_space": "black-forest-labs/FLUX.1-schnell",
+      "allowed_hosts": ["huggingface.co", "*.hf.space"],
+      "allow_loopback_http": false,
+      "model_env": "AFB_HF_FLUX_MODEL",
+      "default_model_id": "black-forest-labs/FLUX.1-schnell",
+      "timeout_seconds": 900,
+      "api_key_optional": true,
+      "capabilities": [
+        "image_generation"
+      ],
+      "predict_api_name": "/infer",
+      "default_width": 1024,
+      "default_height": 1024,
+      "default_steps": 5
+    }
+  },
+  "role_defaults": {
+    "planner": "nvidia_nim",
+    "vision_reasoner": "openai",
+    "vlm_reviewer": "nvidia_nim",
+    "material_reasoner": "nvidia_nim",
+    "texture_prompt_writer": "openai",
+    "nonvisual_material_reasoner": "nvidia_nim",
+    "physics_reasoner": "nvidia_nim",
+    "validator_judge": "openai_compatible",
+    "embeddings": "openai",
+    "image_generation": "openai",
+    "texture_generator": "openai",
+    "external_model_runner": "local"
+  },
+  "logging": {
+    "record_provider": true,
+    "record_model": true,
+    "record_base_url_host_only": true,
+    "redact_api_keys": true
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "id": "metal_jerrycan",
+  "version": "1.0",
+  "objective": "Create a SimReady candidate for a worn 20 litre metal jerrycan from a single photo, with material, texture, physics and grasp evidence.",
+  "sources": [
+    "examples/sources/photos/metal_jerrycan.png"
+  ],
+  "requested_outputs": [
+    "simready",
+    "texture"
+  ],
+  "constraints": {
+    "review_required": true,
+    "target_simulator": "isaac_sim"
+  },
+  "source_note": "sample photo is a CC0 render of the Poly Haven metal_jerrycan model"
+}

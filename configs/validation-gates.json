@@ -1,0 +1,78 @@
+{
+  "version": "1.0",
+  "gates": [
+    {
+      "id": "schema-valid",
+      "type": "schema",
+      "pass_criteria": "manifest validates",
+      "required_evidence": [
+        "manifest"
+      ]
+    },
+    {
+      "id": "source-lineage",
+      "type": "source",
+      "pass_criteria": "source checksum exists",
+      "required_evidence": [
+        "checksum"
+      ]
+    },
+    {
+      "id": "material-evidence",
+      "type": "material",
+      "pass_criteria": "selected material has evidence",
+      "required_evidence": [
+        "material-manifest"
+      ]
+    },
+    {
+      "id": "segmentation-segments",
+      "type": "segmentation",
+      "pass_criteria": "appearance segments have masks, semantic labels and material targets",
+      "required_evidence": [
+        "segmentation-manifest",
+        "segment-mask"
+      ]
+    },
+    {
+      "id": "texture-uv",
+      "type": "texture",
+      "pass_criteria": "UV readiness is declared",
+      "required_evidence": [
+        "texture-manifest"
+      ]
+    },
+    {
+      "id": "nonvisual-evidence",
+      "type": "physics",
+      "pass_criteria": "hidden properties cite evidence",
+      "required_evidence": [
+        "nonvisual-manifest"
+      ]
+    },
+    {
+      "id": "vlm-signoff",
+      "type": "review",
+      "pass_criteria": "stage VLM reviewer approved the artefacts or an operator accepted the recorded findings",
+      "required_evidence": [
+        "vlm-review-record"
+      ]
+    },
+    {
+      "id": "isaac-load",
+      "type": "isaac",
+      "pass_criteria": "load check passes or blocks with runtime reason",
+      "required_evidence": [
+        "isaac-report"
+      ]
+    },
+    {
+      "id": "governance-review",
+      "type": "governance",
+      "pass_criteria": "rights and retention status recorded",
+      "required_evidence": [
+        "governance-record"
+      ]
+    }
+  ]
+}

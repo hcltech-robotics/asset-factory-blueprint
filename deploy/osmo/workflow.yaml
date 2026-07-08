@@ -1,0 +1,6 @@
+name: asset-factory-blueprint
+steps:
+  - name: validate
+    command: afb skill-audit --root . --output artifacts/skill-audit.json
+  - name: dry-run
+    command: afb workflow run --request examples/run-requests/warehouse_pick_cell.json --project-root projects --dry-run

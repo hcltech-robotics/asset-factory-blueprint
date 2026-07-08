@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hcltech-robotics.github.io/asset-factory-blueprint/schemas/v1/operator-release-decision.schema.json",
+  "title": "operator release decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "decision_id",
+    "decided_by",
+    "decided_at",
+    "decision",
+    "scope",
+    "run_id",
+    "request_digest",
+    "asset_fingerprint",
+    "profile_id",
+    "profile_version",
+    "expires_at",
+    "notes"
+  ],
+  "properties": {
+    "decision_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "decided_by": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decided_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "decision": {
+      "type": "string",
+      "enum": ["approve", "reject"]
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["visualisation", "rigid_body_manipulation", "articulated_training", "redistribution"]
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "request_digest": {
+      "type": "string",
+      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+    },
+    "asset_fingerprint": {
+      "type": "string",
+      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+    },
+    "profile_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "profile_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hcltech-robotics.github.io/asset-factory-blueprint/schemas/v1/provenance-record.schema.json",
+  "title": "provenance record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "provenance_id",
+    "created_at",
+    "schema_version",
+    "repository",
+    "environment_bom",
+    "model_bom",
+    "prompt_checksums",
+    "config_checksums",
+    "manifest_ids",
+    "source_assets",
+    "source_assets_mutated",
+    "reproducibility"
+  ],
+  "properties": {
+    "id": {"type": "string"},
+    "provenance_id": {
+      "type": "string",
+      "pattern": "^prov_[A-Fa-f0-9]{32}$"
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "schema_version": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*\\.[0-9]+(?:\\.[0-9]+)?(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "run_id": {"type": ["string", "null"]},
+    "attempt_ids": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["git_sha", "git_dirty", "git_state", "workspace_digest"],
+      "properties": {
+        "git_sha": {"type": "string"},
+        "git_dirty": {"type": "boolean"},
+        "git_state": {"type": "string", "enum": ["git", "no_git_repository"]},
+        "workspace_digest": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+        "dependency_lock": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "path", "sha256", "resolver"],
+          "properties": {
+            "status": {"type": "string", "enum": ["locked", "missing"]},
+            "path": {"const": "uv.lock"},
+            "sha256": {"type": "string", "pattern": "^(?:[A-Fa-f0-9]{64})?$"},
+            "resolver": {"const": "uv"}
+          }
+        }
+      }
+    },
+    "environment_bom": {"$ref": "#/$defs/environmentBom"},
+    "model_bom": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/modelBomEntry"}
+    },
+    "prompt_checksums": {"$ref": "#/$defs/checksumMap"},
+    "config_checksums": {"$ref": "#/$defs/checksumMap"},
+    "manifest_ids": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "source_assets": {
+      "type": "array",
+      "items": {"type": "object", "additionalProperties": true}
+    },
+    "source_assets_mutated": {"type": "boolean"},
+    "reproducibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["random_seeds", "entrypoint", "secret_policy"],
+      "properties": {
+        "random_seeds": {
+          "type": "object",
+          "additionalProperties": {"type": "integer"}
+        },
+        "entrypoint": {"type": "string"},
+        "secret_policy": {"const": "environment variables only"}
+      }
+    },
+    "tool_versions": {"type": "object", "additionalProperties": {"type": "string"}},
+    "provider_model_ids": {"type": "object", "additionalProperties": true},
+    "secret_policy": {"const": "environment variables only"},
+    "extensions": {"type": "object", "additionalProperties": true}
+  },
+  "$defs": {
+    "checksumMap": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[A-Fa-f0-9]{64}$"
+      }
+    },
+    "environmentBom": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operating_system", "python", "hardware", "accelerator", "container", "simulation"],
+      "properties": {
+        "operating_system": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["system", "release", "version"],
+          "properties": {
+            "system": {"type": "string"},
+            "release": {"type": "string"},
+            "version": {"type": "string"}
+          }
+        },
+        "python": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["implementation", "version", "abi", "packages"],
+          "properties": {
+            "implementation": {"type": "string"},
+            "version": {"type": "string"},
+            "abi": {"type": "string"},
+            "packages": {"type": "object", "additionalProperties": {"type": "string"}}
+          }
+        },
+        "hardware": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["architecture", "processor", "gpu_vendor", "gpu_model", "gpu_count", "memory_bytes"],
+          "properties": {
+            "architecture": {"type": "string"},
+            "processor": {"type": "string"},
+            "gpu_vendor": {"type": "string"},
+            "gpu_model": {"type": "string"},
+            "gpu_count": {"type": "string"},
+            "memory_bytes": {"type": "string"}
+          }
+        },
+        "accelerator": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["cuda_version", "driver_version", "compute_capability"],
+          "properties": {
+            "cuda_version": {"type": "string"},
+            "driver_version": {"type": "string"},
+            "compute_capability": {"type": "string"}
+          }
+        },
+        "container": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["image", "digest", "runtime"],
+          "properties": {
+            "image": {"type": "string"},
+            "digest": {"type": "string"},
+            "runtime": {"type": "string"}
+          }
+        },
+        "simulation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["openusd_version", "isaac_sim_version", "materialx_version", "renderer", "physics_backend"],
+          "properties": {
+            "openusd_version": {"type": "string"},
+            "isaac_sim_version": {"type": "string"},
+            "materialx_version": {"type": "string"},
+            "renderer": {"type": "string"},
+            "physics_backend": {"type": "string"}
+          }
+        },
+        "extensions": {"type": "object", "additionalProperties": true}
+      }
+    },
+    "modelBomEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "provider",
+        "kind",
+        "model_id",
+        "revision",
+        "weights_checksum",
+        "licence_expression",
+        "resolution_status",
+        "runtime"
+      ],
+      "properties": {
+        "role": {"type": "string"},
+        "provider": {"type": "string"},
+        "kind": {"type": "string"},
+        "model_id": {"type": "string"},
+        "revision": {"type": "string"},
+        "weights_checksum": {"type": "string"},
+        "licence_expression": {"type": "string"},
+        "resolution_status": {"type": "string"},
+        "runtime": {"type": "string"},
+        "extensions": {"type": "object", "additionalProperties": true}
+      }
+    }
+  }
+}

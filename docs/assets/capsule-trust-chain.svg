@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="620" viewBox="0 0 1360 620" role="img" aria-labelledby="title desc">
+  <title id="title">Reference capsule trust chain</title>
+  <desc id="desc">A selected run passes publication gates, sanitisation and checksum closure before reproduction, while an external signed attestation binds the immutable capsule digest.</desc>
+  <defs>
+    <style>
+      .bg { fill: transparent; }
+      .box { fill: #0a100c; stroke: #3d4a42; stroke-width: 2; }
+      .boxHot { fill: #0b1608; stroke: #76b900; stroke-width: 2.3; }
+      .boxAccent { fill: #160929; stroke: #5f1ebe; stroke-width: 2.3; }
+      .inner { fill: #0d130f; stroke: #7d8780; stroke-width: 1.9; }
+      .innerHot { fill: #0d1809; stroke: #76b900; stroke-width: 1.9; }
+      .innerAccent { fill: #1b0c31; stroke: #5f1ebe; stroke-width: 1.9; }
+      .label { fill: #edf3ef; font-family: Aptos, Helvetica, sans-serif; font-size: 20px; font-weight: 680; }
+      .small { fill: #c6cec8; font-family: Aptos, Helvetica, sans-serif; font-size: 13px; font-weight: 620; }
+      .line { stroke: #e6ece8; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+      .greenLine { stroke: #76b900; stroke-width: 2.4; fill: none; marker-end: url(#arrowGreen); }
+      .accentLine { stroke: #5f1ebe; stroke-width: 2.4; fill: none; marker-end: url(#arrowAccent); }
+    </style>
+    <marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#e6ece8"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#76b900"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#5f1ebe"/>
+    </marker>
+  </defs>
+  <rect class="box" x="40" y="80" width="230" height="240" rx="8"/>
+  <text class="label" x="155.0" y="122" text-anchor="middle">Selected run</text>
+  <rect class="inner" x="62" y="184" width="186" height="34" rx="4"/>
+  <text class="small" x="155.0" y="205.0" text-anchor="middle" style="font-size:12px">attempts + package</text>
+  <rect class="inner" x="62" y="230" width="186" height="34" rx="4"/>
+  <text class="small" x="155.0" y="251.0" text-anchor="middle" style="font-size:12px">release decision</text>
+  <path class="line" d="M270 200 L286 200"/>
+  <rect class="box" x="290" y="80" width="230" height="240" rx="8"/>
+  <text class="label" x="405.0" y="122" text-anchor="middle">Publication gates</text>
+  <rect class="inner" x="312" y="184" width="186" height="34" rx="4"/>
+  <text class="small" x="405.0" y="205.0" text-anchor="middle" style="font-size:12px">rights + licences</text>
+  <rect class="inner" x="312" y="230" width="186" height="34" rx="4"/>
+  <text class="small" x="405.0" y="251.0" text-anchor="middle" style="font-size:12px">clean source + BOM</text>
+  <path class="line" d="M520 200 L536 200"/>
+  <rect class="box" x="540" y="80" width="230" height="240" rx="8"/>
+  <text class="label" x="655.0" y="122" text-anchor="middle">Sanitise + materialise</text>
+  <rect class="inner" x="562" y="184" width="186" height="34" rx="4"/>
+  <text class="small" x="655.0" y="205.5" text-anchor="middle" style="font-size:13px">relative paths</text>
+  <rect class="inner" x="562" y="230" width="186" height="34" rx="4"/>
+  <text class="small" x="655.0" y="251.0" text-anchor="middle" style="font-size:12px">portable records</text>
+  <path class="accentLine" d="M770 200 L786 200"/>
+  <rect class="boxAccent" x="790" y="80" width="230" height="240" rx="8"/>
+  <text class="label" x="905.0" y="122" text-anchor="middle">Capsule closure</text>
+  <rect class="innerAccent" x="812" y="184" width="186" height="34" rx="4"/>
+  <text class="small" x="905.0" y="205.0" text-anchor="middle" style="font-size:12px">checksum inventory</text>
+  <rect class="inner" x="812" y="230" width="186" height="34" rx="4"/>
+  <text class="small" x="905.0" y="251.0" text-anchor="middle" style="font-size:12px">schemas + digests</text>
+  <path class="accentLine" d="M1020 200 L1036 200"/>
+  <rect class="box" x="1040" y="80" width="230" height="240" rx="8"/>
+  <text class="label" x="1155.0" y="122" text-anchor="middle">Reproduce</text>
+  <rect class="inner" x="1062" y="184" width="186" height="34" rx="4"/>
+  <text class="small" x="1155.0" y="205.5" text-anchor="middle" style="font-size:13px">tagged archive</text>
+  <rect class="inner" x="1062" y="230" width="186" height="34" rx="4"/>
+  <text class="small" x="1155.0" y="251.0" text-anchor="middle" style="font-size:12px">recomputed checks</text>
+  <rect class="boxAccent" x="450" y="425" width="460" height="130" rx="8"/>
+  <text class="label" x="680.0" y="467" text-anchor="middle">External release attestation</text>
+  <rect class="innerAccent" x="472" y="489" width="416" height="21" rx="4"/>
+  <text class="small" x="680.0" y="503.5" text-anchor="middle" style="font-size:12px">binds capsule.json</text>
+  <rect class="inner" x="472" y="518" width="416" height="21" rx="4"/>
+  <text class="small" x="680.0" y="532.5" text-anchor="middle" style="font-size:12px">signed externally</text>
+  <path class="accentLine" d="M1155 320 L1155 385 L680 385 L680 425"/>
+</svg>

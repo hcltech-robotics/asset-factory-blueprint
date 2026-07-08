@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "models": [
+    {
+      "model_id": "local-reconstruction-runner",
+      "kind": "container",
+      "enabled": false,
+      "backend_registry": "configs/reconstruction-backends.json",
+      "input_schema": "schemas/external-model-run-manifest.schema.json",
+      "output_schema": "schemas/reconstruction-manifest.schema.json",
+      "allowed_paths": [
+        "projects",
+        "artifacts",
+        ".cache/afb"
+      ],
+      "gpu_requirements": {
+        "cuda": true,
+        "min_vram_gb": 12
+      },
+      "command": [
+        "python",
+        "scripts/reconstruction/run_reconstruction_backend.py",
+        "--manifest",
+        "<external-model-run-manifest.json>"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+#!/usr/bin/env python
+from asset_factory_blueprint.cli import main
+raise SystemExit(main())

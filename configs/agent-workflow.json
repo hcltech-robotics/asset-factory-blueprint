@@ -1,0 +1,108 @@
+{
+  "name": "asset-factory-blueprint-agent-workflow",
+  "version": "1.0",
+  "description": "Internal skill workflow for asset creation from source intake through the seven-stage pipeline to validation and governance.",
+  "provider_policy": "configs/provider-policy.json",
+  "skill_registry": "configs/skill-registry.json",
+  "validation_gates": "configs/validation-gates.json",
+  "llm": {
+    "provider_env": "AFB_LLM_PROVIDER",
+    "api_key_env": "AFB_LLM_API_KEY",
+    "base_url_env": "AFB_LLM_BASE_URL",
+    "model_env": "AFB_LLM_MODEL",
+    "fallback_api_key_env": [
+      "NVIDIA_API_KEY",
+      "OPENAI_API_KEY"
+    ],
+    "max_tokens": 4096,
+    "temperature": 0.2,
+    "timeout_seconds": 180,
+    "require_api_key": true
+  },
+  "stages": [
+    {
+      "id": "orchestrate",
+      "name": "Run planning and skill routing",
+      "skill": "asset-factory-orchestrator",
+      "instruction": "Execute run planning and skill routing with manifests, evidence and validation gates."
+    },
+    {
+      "id": "intake",
+      "name": "Asset programme intake",
+      "skill": "asset-programme-strategist",
+      "instruction": "Execute asset programme intake with manifests, evidence and validation gates."
+    },
+    {
+      "id": "source-ingestion",
+      "name": "Source asset ingestion",
+      "skill": "source-ingestion-lead",
+      "instruction": "Execute source asset ingestion with manifests, evidence and validation gates."
+    },
+    {
+      "id": "reconstruction",
+      "name": "Mesh reconstruction from images and descriptions",
+      "skill": "reconstruction-lead",
+      "instruction": "Execute mesh reconstruction from images and descriptions with manifests, evidence and validation gates."
+    },
+    {
+      "id": "segmentation",
+      "name": "Segmentation and semantic inference",
+      "skill": "segmentation-lead",
+      "instruction": "Execute segmentation and semantic inference with manifests, evidence and validation gates."
+    },
+    {
+      "id": "material-inference",
+      "name": "Material and physical inference",
+      "skill": "material-inference-lead",
+      "instruction": "Execute material and physical inference with manifests, evidence and validation gates."
+    },
+    {
+      "id": "texturing",
+      "name": "Texturing, texture generation and decals",
+      "skill": "texturing-lead",
+      "instruction": "Execute texturing, texture generation and decals with manifests, evidence and validation gates."
+    },
+    {
+      "id": "physics-articulation",
+      "name": "Physics, articulation and grasp affordances",
+      "skill": "physics-articulation-lead",
+      "instruction": "Execute physics, articulation and grasp affordance authoring with manifests, evidence and validation gates."
+    },
+    {
+      "id": "nonvisual-materials",
+      "name": "Nonvisual material inference",
+      "skill": "nonvisual-materials-lead",
+      "instruction": "Execute nonvisual material inference with manifests, evidence and validation gates."
+    },
+    {
+      "id": "simready-verification",
+      "name": "SimReady packaging and USD verification",
+      "skill": "simready-verification-lead",
+      "instruction": "Execute simready packaging and USD verification with manifests, evidence and validation gates."
+    },
+    {
+      "id": "rl-environment",
+      "name": "RL environment design",
+      "skill": "rl-environment-design-lead",
+      "instruction": "Execute rl environment design with manifests, evidence and validation gates."
+    },
+    {
+      "id": "evaluation",
+      "name": "Evaluation and validation",
+      "skill": "evaluation-validation-lead",
+      "instruction": "Execute evaluation and validation with manifests, evidence and validation gates."
+    },
+    {
+      "id": "infrastructure",
+      "name": "Infrastructure orchestration",
+      "skill": "infrastructure-orchestration-lead",
+      "instruction": "Execute infrastructure orchestration with manifests, evidence and validation gates."
+    },
+    {
+      "id": "governance",
+      "name": "Governance and provenance",
+      "skill": "governance-provenance-lead",
+      "instruction": "Execute governance and provenance with manifests, evidence and validation gates."
+    }
+  ]
+}

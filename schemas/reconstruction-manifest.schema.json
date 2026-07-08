@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hcltech-robotics.github.io/asset-factory-blueprint/schemas/v1/reconstruction-manifest.schema.json",
+  "title": "reconstruction manifest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "id",
+    "version",
+    "status",
+    "evidence"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*\\.[0-9]+(?:\\.[0-9]+)?(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "asset_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "proposal",
+        "validated",
+        "review_required",
+        "blocked",
+        "released",
+        "not_validated"
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "evidence_id",
+          "kind",
+          "uri",
+          "checksum"
+        ],
+        "properties": {
+          "evidence_id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "uri": {
+            "type": "string"
+          },
+          "checksum": {
+            "type": "string",
+            "anyOf": [
+              {"pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"},
+              {"const": "sha256:example"}
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "provider_trace": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "provider",
+          "model",
+          "role",
+          "prompt_checksum"
+        ],
+        "properties": {
+          "provider": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "prompt_checksum": {
+            "type": "string"
+          },
+          "request_id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "not_reviewed",
+        "review_required",
+        "approved",
+        "rejected"
+      ]
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

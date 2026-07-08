@@ -1,0 +1,845 @@
+{
+  "id": "physical-properties",
+  "version": "1.0",
+  "domain": "physical_properties",
+  "description": "Dictionary of physical property ranges per material class. Feeds review-gated proposals in material inference; never promoted without measurement, specification or reviewer approval.",
+  "items": [
+    {
+      "item_id": "props_steel",
+      "name": "steel",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "metal",
+        "steel"
+      ],
+      "material_class": "steel",
+      "properties": {
+        "density_kg_m3": {
+          "low": 7750,
+          "high": 8050
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.5,
+          "high": 0.8
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.4,
+          "high": 0.6
+        },
+        "restitution": {
+          "low": 0.05,
+          "high": 0.2
+        },
+        "youngs_modulus_gpa": {
+          "low": 190,
+          "high": 210
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 43,
+          "high": 54
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "structural and carbon steels"
+    },
+    {
+      "item_id": "props_stainless_steel",
+      "name": "stainless steel",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "metal",
+        "steel",
+        "stainless"
+      ],
+      "material_class": "stainless_steel",
+      "properties": {
+        "density_kg_m3": {
+          "low": 7700,
+          "high": 8000
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.5,
+          "high": 0.7
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.4,
+          "high": 0.55
+        },
+        "restitution": {
+          "low": 0.05,
+          "high": 0.2
+        },
+        "youngs_modulus_gpa": {
+          "low": 190,
+          "high": 200
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 14,
+          "high": 17
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "austenitic grades"
+    },
+    {
+      "item_id": "props_aluminium",
+      "name": "aluminium",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "metal",
+        "aluminium"
+      ],
+      "material_class": "aluminium",
+      "properties": {
+        "density_kg_m3": {
+          "low": 2600,
+          "high": 2800
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.4,
+          "high": 0.6
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.3,
+          "high": 0.45
+        },
+        "restitution": {
+          "low": 0.1,
+          "high": 0.25
+        },
+        "youngs_modulus_gpa": {
+          "low": 68,
+          "high": 72
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 200,
+          "high": 240
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "wrought alloys"
+    },
+    {
+      "item_id": "props_cast_iron",
+      "name": "cast iron",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "metal",
+        "iron"
+      ],
+      "material_class": "cast_iron",
+      "properties": {
+        "density_kg_m3": {
+          "low": 6800,
+          "high": 7400
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.4,
+          "high": 0.7
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.3,
+          "high": 0.5
+        },
+        "restitution": {
+          "low": 0.05,
+          "high": 0.15
+        },
+        "youngs_modulus_gpa": {
+          "low": 100,
+          "high": 170
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 50,
+          "high": 55
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "grey and ductile iron"
+    },
+    {
+      "item_id": "props_copper",
+      "name": "copper",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "metal",
+        "copper"
+      ],
+      "material_class": "copper",
+      "properties": {
+        "density_kg_m3": {
+          "low": 8900,
+          "high": 8960
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.5,
+          "high": 0.8
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.4,
+          "high": 0.6
+        },
+        "restitution": {
+          "low": 0.1,
+          "high": 0.25
+        },
+        "youngs_modulus_gpa": {
+          "low": 110,
+          "high": 130
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 390,
+          "high": 400
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "pure and low-alloy copper"
+    },
+    {
+      "item_id": "props_brass",
+      "name": "brass",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "metal",
+        "brass"
+      ],
+      "material_class": "brass",
+      "properties": {
+        "density_kg_m3": {
+          "low": 8400,
+          "high": 8700
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.4,
+          "high": 0.6
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.3,
+          "high": 0.45
+        },
+        "restitution": {
+          "low": 0.1,
+          "high": 0.3
+        },
+        "youngs_modulus_gpa": {
+          "low": 95,
+          "high": 110
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 110,
+          "high": 130
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "common yellow brass"
+    },
+    {
+      "item_id": "props_painted_metal",
+      "name": "painted metal",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "metal",
+        "painted"
+      ],
+      "material_class": "painted_metal",
+      "properties": {
+        "density_kg_m3": {
+          "low": 7600,
+          "high": 8000
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.3,
+          "high": 0.5
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.25,
+          "high": 0.4
+        },
+        "restitution": {
+          "low": 0.1,
+          "high": 0.25
+        },
+        "youngs_modulus_gpa": {
+          "low": 190,
+          "high": 210
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 40,
+          "high": 54
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "steel substrate with paint layer; friction reflects the coating"
+    },
+    {
+      "item_id": "props_abs_plastic",
+      "name": "abs plastic",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "plastic",
+        "abs"
+      ],
+      "material_class": "abs_plastic",
+      "properties": {
+        "density_kg_m3": {
+          "low": 1010,
+          "high": 1080
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.3,
+          "high": 0.5
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.25,
+          "high": 0.4
+        },
+        "restitution": {
+          "low": 0.3,
+          "high": 0.5
+        },
+        "youngs_modulus_gpa": {
+          "low": 1.8,
+          "high": 2.5
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 0.15,
+          "high": 0.2
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "injection-moulded housings"
+    },
+    {
+      "item_id": "props_polypropylene",
+      "name": "polypropylene",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "plastic",
+        "polypropylene"
+      ],
+      "material_class": "polypropylene",
+      "properties": {
+        "density_kg_m3": {
+          "low": 890,
+          "high": 920
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.25,
+          "high": 0.45
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.2,
+          "high": 0.35
+        },
+        "restitution": {
+          "low": 0.3,
+          "high": 0.5
+        },
+        "youngs_modulus_gpa": {
+          "low": 1.1,
+          "high": 1.6
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 0.1,
+          "high": 0.22
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "crates, bins and containers"
+    },
+    {
+      "item_id": "props_polycarbonate",
+      "name": "polycarbonate",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "plastic",
+        "polycarbonate"
+      ],
+      "material_class": "polycarbonate",
+      "properties": {
+        "density_kg_m3": {
+          "low": 1190,
+          "high": 1220
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.3,
+          "high": 0.5
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.25,
+          "high": 0.4
+        },
+        "restitution": {
+          "low": 0.3,
+          "high": 0.5
+        },
+        "youngs_modulus_gpa": {
+          "low": 2.2,
+          "high": 2.5
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 0.19,
+          "high": 0.22
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "clear panels and guards"
+    },
+    {
+      "item_id": "props_rubber_natural",
+      "name": "rubber natural",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "rubber"
+      ],
+      "material_class": "rubber_natural",
+      "properties": {
+        "density_kg_m3": {
+          "low": 910,
+          "high": 1150
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.9,
+          "high": 1.4
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.7,
+          "high": 1.1
+        },
+        "restitution": {
+          "low": 0.6,
+          "high": 0.85
+        },
+        "youngs_modulus_gpa": {
+          "low": 0.001,
+          "high": 0.05
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 0.13,
+          "high": 0.16
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "soft natural rubber; friction strongly load dependent"
+    },
+    {
+      "item_id": "props_rubber_nitrile",
+      "name": "rubber nitrile",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "rubber",
+        "nitrile"
+      ],
+      "material_class": "rubber_nitrile",
+      "properties": {
+        "density_kg_m3": {
+          "low": 1000,
+          "high": 1250
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.7,
+          "high": 1.1
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.5,
+          "high": 0.9
+        },
+        "restitution": {
+          "low": 0.4,
+          "high": 0.7
+        },
+        "youngs_modulus_gpa": {
+          "low": 0.002,
+          "high": 0.05
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 0.24,
+          "high": 0.28
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "seals and gaskets"
+    },
+    {
+      "item_id": "props_silicone",
+      "name": "silicone",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "rubber",
+        "silicone"
+      ],
+      "material_class": "silicone",
+      "properties": {
+        "density_kg_m3": {
+          "low": 1100,
+          "high": 1250
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.8,
+          "high": 1.3
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.6,
+          "high": 1.0
+        },
+        "restitution": {
+          "low": 0.4,
+          "high": 0.7
+        },
+        "youngs_modulus_gpa": {
+          "low": 0.001,
+          "high": 0.05
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 0.2,
+          "high": 0.3
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "bakeware, seals and grips"
+    },
+    {
+      "item_id": "props_oak_wood",
+      "name": "oak wood",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "wood",
+        "oak"
+      ],
+      "material_class": "oak_wood",
+      "properties": {
+        "density_kg_m3": {
+          "low": 650,
+          "high": 780
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.4,
+          "high": 0.6
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.3,
+          "high": 0.5
+        },
+        "restitution": {
+          "low": 0.3,
+          "high": 0.55
+        },
+        "youngs_modulus_gpa": {
+          "low": 10,
+          "high": 13
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 0.16,
+          "high": 0.19
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "hardwood, across grain values vary"
+    },
+    {
+      "item_id": "props_pine_wood",
+      "name": "pine wood",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "wood",
+        "pine"
+      ],
+      "material_class": "pine_wood",
+      "properties": {
+        "density_kg_m3": {
+          "low": 400,
+          "high": 550
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.35,
+          "high": 0.55
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.3,
+          "high": 0.45
+        },
+        "restitution": {
+          "low": 0.3,
+          "high": 0.55
+        },
+        "youngs_modulus_gpa": {
+          "low": 8,
+          "high": 12
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 0.11,
+          "high": 0.14
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "softwood, pallets and crates"
+    },
+    {
+      "item_id": "props_plywood",
+      "name": "plywood",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "wood",
+        "plywood"
+      ],
+      "material_class": "plywood",
+      "properties": {
+        "density_kg_m3": {
+          "low": 500,
+          "high": 650
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.35,
+          "high": 0.55
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.3,
+          "high": 0.45
+        },
+        "restitution": {
+          "low": 0.3,
+          "high": 0.5
+        },
+        "youngs_modulus_gpa": {
+          "low": 7,
+          "high": 10
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 0.12,
+          "high": 0.15
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "sheet goods"
+    },
+    {
+      "item_id": "props_glass_soda_lime",
+      "name": "glass soda lime",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "glass"
+      ],
+      "material_class": "glass_soda_lime",
+      "properties": {
+        "density_kg_m3": {
+          "low": 2400,
+          "high": 2550
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.5,
+          "high": 0.7
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.4,
+          "high": 0.6
+        },
+        "restitution": {
+          "low": 0.6,
+          "high": 0.8
+        },
+        "youngs_modulus_gpa": {
+          "low": 68,
+          "high": 72
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 0.9,
+          "high": 1.1
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "bottles and windows; brittle contact"
+    },
+    {
+      "item_id": "props_concrete",
+      "name": "concrete",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "concrete"
+      ],
+      "material_class": "concrete",
+      "properties": {
+        "density_kg_m3": {
+          "low": 2200,
+          "high": 2500
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.6,
+          "high": 0.9
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.5,
+          "high": 0.7
+        },
+        "restitution": {
+          "low": 0.1,
+          "high": 0.3
+        },
+        "youngs_modulus_gpa": {
+          "low": 25,
+          "high": 40
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 1.4,
+          "high": 2.9
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "floors and structures"
+    },
+    {
+      "item_id": "props_ceramic_porcelain",
+      "name": "ceramic porcelain",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "ceramic",
+        "porcelain"
+      ],
+      "material_class": "ceramic_porcelain",
+      "properties": {
+        "density_kg_m3": {
+          "low": 2300,
+          "high": 2500
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.4,
+          "high": 0.6
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.3,
+          "high": 0.5
+        },
+        "restitution": {
+          "low": 0.5,
+          "high": 0.75
+        },
+        "youngs_modulus_gpa": {
+          "low": 60,
+          "high": 90
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 1.2,
+          "high": 1.8
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "drinkware and tiles; brittle"
+    },
+    {
+      "item_id": "props_cardboard",
+      "name": "cardboard",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "cardboard",
+        "paper"
+      ],
+      "material_class": "cardboard",
+      "properties": {
+        "density_kg_m3": {
+          "low": 120,
+          "high": 250
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.4,
+          "high": 0.6
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.3,
+          "high": 0.5
+        },
+        "restitution": {
+          "low": 0.2,
+          "high": 0.4
+        },
+        "youngs_modulus_gpa": {
+          "low": 0.2,
+          "high": 0.6
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 0.05,
+          "high": 0.08
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "corrugated packaging; density is bulk density"
+    },
+    {
+      "item_id": "props_foam_polyurethane",
+      "name": "foam polyurethane",
+      "domain": "physical_properties",
+      "source": "curated",
+      "tags": [
+        "foam"
+      ],
+      "material_class": "foam_polyurethane",
+      "properties": {
+        "density_kg_m3": {
+          "low": 25,
+          "high": 90
+        },
+        "static_friction_on_dry_steel": {
+          "low": 0.6,
+          "high": 1.0
+        },
+        "dynamic_friction_on_dry_steel": {
+          "low": 0.5,
+          "high": 0.9
+        },
+        "restitution": {
+          "low": 0.2,
+          "high": 0.5
+        },
+        "youngs_modulus_gpa": {
+          "low": 0.001,
+          "high": 0.01
+        },
+        "thermal_conductivity_w_mk": {
+          "low": 0.03,
+          "high": 0.05
+        }
+      },
+      "unit_policy": "SI units; friction values are dimensionless pair coefficients against dry steel",
+      "evidence_note": "engineering handbook ranges; values are review-gated priors, not measurements",
+      "notes": "packaging and padding; highly compressible"
+    }
+  ]
+}

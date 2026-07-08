@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="620" viewBox="0 0 1360 620" role="img" aria-labelledby="title desc">
+  <title id="title">Image to USD storyboard</title>
+  <desc id="desc">Photos and words move through priors, generative backends, the USD layer stack and review into a governed package.</desc>
+  <defs>
+    <style>
+      .bg { fill: transparent; }
+      .box { fill: #0a100c; stroke: #3d4a42; stroke-width: 2; }
+      .boxHot { fill: #0b1608; stroke: #76b900; stroke-width: 2.3; }
+      .boxAccent { fill: #160929; stroke: #5f1ebe; stroke-width: 2.3; }
+      .inner { fill: #0d130f; stroke: #7d8780; stroke-width: 1.9; }
+      .innerHot { fill: #0d1809; stroke: #76b900; stroke-width: 1.9; }
+      .innerAccent { fill: #1b0c31; stroke: #5f1ebe; stroke-width: 1.9; }
+      .label { fill: #edf3ef; font-family: Aptos, Helvetica, sans-serif; font-size: 20px; font-weight: 680; }
+      .small { fill: #c6cec8; font-family: Aptos, Helvetica, sans-serif; font-size: 13px; font-weight: 620; }
+      .line { stroke: #e6ece8; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+      .greenLine { stroke: #76b900; stroke-width: 2.4; fill: none; marker-end: url(#arrowGreen); }
+      .accentLine { stroke: #5f1ebe; stroke-width: 2.4; fill: none; marker-end: url(#arrowAccent); }
+    </style>
+    <marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#e6ece8"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#76b900"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#5f1ebe"/>
+    </marker>
+  </defs>
+  <rect class="box" x="52" y="96" width="200" height="250" rx="8"/>
+  <text class="label" x="152.0" y="138" text-anchor="middle">Capture</text>
+  <rect class="innerAccent" x="74" y="182" width="156" height="34" rx="4"/>
+  <text class="small" x="152.0" y="203.5" text-anchor="middle" style="font-size:13px">photos</text>
+  <rect class="inner" x="74" y="228" width="156" height="34" rx="4"/>
+  <text class="small" x="152.0" y="249.5" text-anchor="middle" style="font-size:13px">video</text>
+  <rect class="inner" x="74" y="274" width="156" height="34" rx="4"/>
+  <text class="small" x="152.0" y="295.5" text-anchor="middle" style="font-size:13px">objective text</text>
+  <path class="line" d="M252 221 L264 221"/>
+  <rect class="box" x="268" y="96" width="200" height="250" rx="8"/>
+  <text class="label" x="368.0" y="138" text-anchor="middle">Priors</text>
+  <rect class="inner" x="290" y="182" width="156" height="34" rx="4"/>
+  <text class="small" x="368.0" y="203.5" text-anchor="middle" style="font-size:13px">segment masks</text>
+  <rect class="inner" x="290" y="228" width="156" height="34" rx="4"/>
+  <text class="small" x="368.0" y="249.5" text-anchor="middle" style="font-size:13px">part count</text>
+  <rect class="inner" x="290" y="274" width="156" height="34" rx="4"/>
+  <text class="small" x="368.0" y="295.0" text-anchor="middle" style="font-size:12px">conditioning image</text>
+  <path class="accentLine" d="M468 221 L480 221"/>
+  <rect class="boxAccent" x="484" y="96" width="200" height="250" rx="8"/>
+  <text class="label" x="584.0" y="138" text-anchor="middle">Backend</text>
+  <rect class="inner" x="506" y="161" width="156" height="33" rx="4"/>
+  <text class="small" x="584.0" y="182.0" text-anchor="middle" style="font-size:13px">TRELLIS.2</text>
+  <rect class="inner" x="506" y="206" width="156" height="33" rx="4"/>
+  <text class="small" x="584.0" y="227.0" text-anchor="middle" style="font-size:13px">Hunyuan3D</text>
+  <rect class="inner" x="506" y="251" width="156" height="33" rx="4"/>
+  <text class="small" x="584.0" y="272.0" text-anchor="middle" style="font-size:13px">PartCrafter</text>
+  <rect class="inner" x="506" y="296" width="156" height="33" rx="4"/>
+  <text class="small" x="584.0" y="317.0" text-anchor="middle" style="font-size:13px">DUSt3R</text>
+  <path class="line" d="M684 221 L696 221"/>
+  <rect class="box" x="700" y="96" width="200" height="250" rx="8"/>
+  <text class="label" x="800.0" y="138" text-anchor="middle">Layer stack</text>
+  <rect class="inner" x="722" y="182" width="156" height="34" rx="4"/>
+  <text class="small" x="800.0" y="203.0" text-anchor="middle" style="font-size:12px">geo / mtl / phy</text>
+  <rect class="inner" x="722" y="228" width="156" height="34" rx="4"/>
+  <text class="small" x="800.0" y="249.5" text-anchor="middle" style="font-size:13px">art / sem</text>
+  <rect class="inner" x="722" y="274" width="156" height="34" rx="4"/>
+  <text class="small" x="800.0" y="295.5" text-anchor="middle" style="font-size:13px">variants</text>
+  <path class="line" d="M900 221 L912 221"/>
+  <rect class="box" x="916" y="96" width="200" height="250" rx="8"/>
+  <text class="label" x="1016.0" y="138" text-anchor="middle">Review</text>
+  <rect class="innerAccent" x="938" y="182" width="156" height="34" rx="4"/>
+  <text class="small" x="1016.0" y="203.5" text-anchor="middle" style="font-size:13px">VLM verdicts</text>
+  <rect class="inner" x="938" y="228" width="156" height="34" rx="4"/>
+  <text class="small" x="1016.0" y="249.5" text-anchor="middle" style="font-size:13px">gates</text>
+  <rect class="inner" x="938" y="274" width="156" height="34" rx="4"/>
+  <text class="small" x="1016.0" y="295.5" text-anchor="middle" style="font-size:13px">fix attempts</text>
+  <path class="line" d="M1116 221 L1128 221"/>
+  <rect class="box" x="1132" y="96" width="200" height="250" rx="8"/>
+  <text class="label" x="1232.0" y="138" text-anchor="middle">Package</text>
+  <rect class="innerHot" x="1154" y="182" width="156" height="34" rx="4"/>
+  <text class="small" x="1232.0" y="203.5" text-anchor="middle" style="font-size:13px">SimReady</text>
+  <rect class="inner" x="1154" y="228" width="156" height="34" rx="4"/>
+  <text class="small" x="1232.0" y="249.5" text-anchor="middle" style="font-size:13px">checksums</text>
+  <rect class="inner" x="1154" y="274" width="156" height="34" rx="4"/>
+  <text class="small" x="1232.0" y="295.5" text-anchor="middle" style="font-size:13px">provenance</text>
+  <rect class="box" x="452" y="430" width="460" height="130" rx="8"/>
+  <text class="label" x="682.0" y="472" text-anchor="middle">Evidence never mutates</text>
+  <rect class="inner" x="474" y="502" width="416" height="34" rx="4"/>
+  <text class="small" x="682.0" y="522.0" text-anchor="middle" style="font-size:10px">source copies stay immutable</text>
+  <path class="line" d="M152 346 L152 495 L452 495"/>
+</svg>

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hcltech-robotics.github.io/asset-factory-blueprint/schemas/v1/stage-attempt.schema.json",
+  "title": "stage attempt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "identity",
+    "status",
+    "started_at",
+    "completed_at",
+    "consumed_ids",
+    "produced_ids",
+    "evidence_ids",
+    "error_codes"
+  ],
+  "properties": {
+    "id": {"type": "string"},
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attempt_id", "run_id", "stage_id", "attempt_number", "request_digest"],
+      "properties": {
+        "attempt_id": {"type": "string", "pattern": "^attempt_[A-Fa-f0-9]{32}$"},
+        "run_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+        "stage_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+        "attempt_number": {"type": "integer", "minimum": 1},
+        "request_digest": {"type": "string", "pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"}
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["succeeded", "failed", "cancelled", "timed_out", "blocked"]
+    },
+    "started_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "consumed_ids": {"type": "array", "items": {"type": "string"}},
+    "produced_ids": {"type": "array", "items": {"type": "string"}},
+    "evidence_ids": {"type": "array", "items": {"type": "string"}},
+    "error_codes": {"type": "array", "items": {"type": "string"}},
+    "provenance_id": {"type": ["string", "null"]},
+    "extensions": {"type": "object", "additionalProperties": true}
+  }
+}

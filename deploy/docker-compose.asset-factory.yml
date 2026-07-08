@@ -1,0 +1,32 @@
+services:
+  asset-factory:
+    init: true
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    environment:
+      AFB_ENV: local
+      AFB_TRUSTED_TOOL_SERVER_NETWORK: "1"
+      AFB_TOOL_SERVER_TOKEN: "${AFB_TOOL_SERVER_TOKEN:?Set AFB_TOOL_SERVER_TOKEN in deploy/.env}"
+      AFB_TOOL_SERVER_APPROVAL_SECRET: "${AFB_TOOL_SERVER_APPROVAL_SECRET:?Set AFB_TOOL_SERVER_APPROVAL_SECRET in deploy/.env}"
+      AFB_TOOL_SERVER_ALLOWED_TOOLS: "${AFB_TOOL_SERVER_ALLOWED_TOOLS:-asset_library_search,material_propose,material_texture_defaults_validate,scene_layout_validate}"
+      AFB_TOOL_SERVER_JOB_STORE: /workspace/artifacts/tool-server-state
+    env_file:
+      - path: .env
+        required: false
+    ports:
+      - "127.0.0.1:8181:8181"
+    volumes:
+      - ../projects:/workspace/projects
+      - ../artifacts:/workspace/artifacts
+      - ../library/downloads:/workspace/library/downloads
+      - ../.cache:/workspace/.cache
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+    stop_grace_period: 30s

@@ -1,0 +1,757 @@
+{
+  "version": "1.0",
+  "tools": [
+    {
+      "name": "articulation_plan",
+      "domain": "physics_articulation",
+      "description": "Create joint, limit, drive and grasp affordance proposal records.",
+      "owning_service": "articulation_plan",
+      "prompt_file": "physics_articulation.md",
+      "write_layer": "articulation",
+      "dry_run_supported": true,
+      "requires_review": true,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "joints": {"type": "array", "items": {"type": "object"}},
+          "part_graph": {"type": "array", "items": {"type": "object"}},
+          "grasp_points": {"type": "array", "items": {"type": "object"}},
+          "affordance_labels": {"type": "array", "items": {"type": "string"}},
+          "extensions": {"type": "object"}
+        }
+      }
+    },
+    {
+      "name": "asset_factory_start",
+      "domain": "programme",
+      "description": "Start the complete agent loop from an intake-validated run request.",
+      "owning_service": "asset_factory_start",
+      "prompt_file": "programme.md",
+      "write_layer": "governance",
+      "dry_run_supported": true,
+      "requires_review": true,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["run_request"],
+        "properties": {
+          "run_request": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "id": {"type": "string"},
+              "version": {"type": "string"},
+              "objective": {"type": "string"},
+              "sources": {"type": "array", "items": {"type": "string"}},
+              "requested_outputs": {"type": "array", "items": {"type": "string"}},
+              "constraints": {"type": "object"},
+              "extensions": {"type": "object"}
+            }
+          },
+          "project_root": {"type": "string"},
+          "project_name": {"type": "string"},
+          "dry_run": {"type": "boolean"},
+          "max_fix_attempts": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    {
+      "name": "asset_fix_apply",
+      "domain": "fix_library",
+      "description": "Resolve defect tags against the fix library and apply or plan repair recipes.",
+      "owning_service": "asset_fix_apply",
+      "prompt_file": "fix_library.md",
+      "write_layer": "geometry",
+      "dry_run_supported": true,
+      "requires_review": true,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "project": {
+            "type": "string"
+          },
+          "stage_id": {
+            "type": "string"
+          },
+          "defect_tags": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "findings": {
+            "type": "array",
+            "items": {"type": "object"}
+          },
+          "dry_run": {
+            "type": "boolean"
+          },
+          "attempt": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    {
+      "name": "asset_image_segmentation_prior",
+      "domain": "segmentation",
+      "description": "Create image segmentation masks and a PartCrafter conditioning prior before reconstruction.",
+      "owning_service": "asset_image_segmentation_prior",
+      "prompt_file": "segmentation.md",
+      "write_layer": "geometry",
+      "dry_run_supported": false,
+      "requires_review": true,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "asset_id": {
+            "type": "string"
+          },
+          "image_path": {
+            "type": "string"
+          },
+          "expected_segments": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {"type": "string"},
+                {"type": "object"}
+              ]
+            }
+          },
+          "method": {
+            "type": "string"
+          },
+          "max_segments": {
+            "type": "integer"
+          },
+          "output_dir": {
+            "type": "string"
+          },
+          "cache_dir": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "asset_library_fetch",
+      "domain": "library",
+      "description": "Plan or perform downloads from indexed remote pack sources into the library cache.",
+      "owning_service": "asset_library_fetch",
+      "prompt_file": "library.md",
+      "write_layer": "governance",
+      "dry_run_supported": true,
+      "requires_review": true,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string"
+          },
+          "item_ids": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "dry_run": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    {
+      "name": "asset_library_index",
+      "domain": "library",
+      "description": "Index operator-declared local backings into searchable library indexes.",
+      "owning_service": "asset_library_index",
+      "prompt_file": "library.md",
+      "write_layer": "governance",
+      "dry_run_supported": true,
+      "requires_review": false,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "backing_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "asset_library_search",
+      "domain": "library",
+      "description": "Search library backings and knowledge for grounding references.",
+      "owning_service": "asset_library_search",
+      "prompt_file": "library.md",
+      "write_layer": "governance",
+      "dry_run_supported": true,
+      "requires_review": false,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "domains": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "include_remote": {
+            "type": "boolean"
+          },
+          "include_usd_search": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    {
+      "name": "asset_mesh_condition",
+      "domain": "segmentation",
+      "description": "Heal reconstructed meshes and apply material-aware dent, bump or smooth operations.",
+      "owning_service": "asset_mesh_condition",
+      "prompt_file": "segmentation.md",
+      "write_layer": "geometry",
+      "dry_run_supported": false,
+      "requires_review": true,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "asset_id": {
+            "type": "string"
+          },
+          "base_dir": {
+            "type": "string"
+          },
+          "source_meshes": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {"type": "string"},
+                {"type": "object"}
+              ]
+            }
+          },
+          "operations": {
+            "type": "array",
+            "items": {"type": "object"}
+          },
+          "output_dir": {
+            "type": "string"
+          },
+          "report_path": {
+            "type": "string"
+          },
+          "manifest_path": {
+            "type": "string"
+          },
+          "checksums_path": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "asset_programme_intake",
+      "domain": "programme",
+      "description": "Validate a partial run-request draft and return the exact questions needed before the factory can start.",
+      "owning_service": "asset_programme_intake",
+      "prompt_file": "programme.md",
+      "write_layer": "governance",
+      "dry_run_supported": true,
+      "requires_review": false,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "draft": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "id": {"type": "string"},
+              "version": {"type": "string"},
+              "objective": {"type": "string"},
+              "sources": {"type": "array", "items": {"type": "string"}},
+              "requested_outputs": {"type": "array", "items": {"type": "string"}},
+              "constraints": {"type": "object"},
+              "extensions": {"type": "object"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "asset_source_inspect",
+      "domain": "source",
+      "description": "Inspect source files, checksums, declared rights and unit policy.",
+      "owning_service": "asset_source_inspect",
+      "prompt_file": "source.md",
+      "write_layer": "governance",
+      "dry_run_supported": true,
+      "requires_review": true,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "sources": {"type": "array", "items": {"type": "string"}},
+          "source_paths": {"type": "array", "items": {"type": "string"}},
+          "extensions": {"type": "object"}
+        }
+      }
+    },
+    {
+      "name": "asset_stage_run",
+      "domain": "orchestration",
+      "description": "Run one pipeline stage against a project workspace: refresh artefacts, VLM sign-off, bounded fixes and progress update.",
+      "owning_service": "asset_stage_run",
+      "prompt_file": "stage_runner.md",
+      "write_layer": "reports",
+      "dry_run_supported": true,
+      "requires_review": true,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "stage_id"
+        ],
+        "properties": {
+          "stage_id": {
+            "type": "string"
+          },
+          "project": {
+            "type": "string"
+          },
+          "request": {
+            "type": "string"
+          },
+          "project_root": {
+            "type": "string"
+          },
+          "project_name": {
+            "type": "string"
+          },
+          "dry_run": {
+            "type": "boolean"
+          },
+          "max_fix_attempts": {
+            "type": "integer"
+          },
+          "refresh_artefacts": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    {
+      "name": "environment_capability_probe",
+      "domain": "capability",
+      "description": "Probe registered capabilities, active options, gates and install plans.",
+      "owning_service": "environment_capability_probe",
+      "prompt_file": "capability.md",
+      "write_layer": "governance",
+      "dry_run_supported": true,
+      "requires_review": false,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "registry_path": {
+            "type": "string"
+          },
+          "output": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "governance_external_model_run",
+      "domain": "external_models",
+      "description": "Run a manifest-declared external model lane.",
+      "owning_service": "governance_external_model_run",
+      "prompt_file": "external_models.md",
+      "write_layer": "governance",
+      "dry_run_supported": true,
+      "requires_review": true,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["manifest"],
+        "properties": {
+          "manifest": {"type": "string"},
+          "dry_run": {"type": "boolean"}
+        }
+      }
+    },
+    {
+      "name": "governance_mutation_validate",
+      "domain": "governance",
+      "description": "Validate mutation plans and return all errors.",
+      "owning_service": "governance_mutation_validate",
+      "prompt_file": "validation.md",
+      "write_layer": "governance",
+      "dry_run_supported": true,
+      "requires_review": true,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "version", "validate_only", "operations", "rollback_notes", "evidence"],
+        "properties": {
+          "id": {"type": "string"},
+          "version": {"type": "string"},
+          "asset_id": {"type": "string"},
+          "project_id": {"type": "string"},
+          "status": {"type": "string"},
+          "validate_only": {"type": "boolean"},
+          "operations": {"type": "array", "items": {"type": "object"}},
+          "rollback_notes": {"type": "string"},
+          "evidence": {"type": "array", "items": {"type": "object"}},
+          "extensions": {"type": "object"}
+        }
+      }
+    },
+    {
+      "name": "governance_progress_report",
+      "domain": "progress",
+      "description": "Rebuild the progress record and operator contact sheet for a project.",
+      "owning_service": "governance_progress_report",
+      "prompt_file": "progress.md",
+      "write_layer": "governance",
+      "dry_run_supported": true,
+      "requires_review": false,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "project": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "governance_project_create",
+      "domain": "project",
+      "description": "Create or open a persistent project workspace.",
+      "owning_service": "governance_project_create",
+      "prompt_file": "projects.md",
+      "write_layer": "governance",
+      "dry_run_supported": true,
+      "requires_review": true,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {"type": "string"},
+          "project_root": {"type": "string"}
+        }
+      }
+    },
+    {
+      "name": "governance_record",
+      "domain": "governance",
+      "description": "Write a governance provenance record.",
+      "owning_service": "governance_record",
+      "prompt_file": "governance.md",
+      "write_layer": "governance",
+      "dry_run_supported": true,
+      "requires_review": true,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string"},
+          "version": {"type": "string"},
+          "evidence": {"type": "array", "items": {"type": "object"}},
+          "source_rights": {"type": "array", "items": {"type": "object"}},
+          "retention": {"type": "object"},
+          "reviewer": {"type": "object"},
+          "task_scope": {"type": "string"},
+          "gate_results": {"type": "array", "items": {"type": "object"}},
+          "stage_reports": {"type": "array", "items": {"type": "object"}},
+          "asset_validation_status": {"type": "string"},
+          "rights_id": {"type": "string"},
+          "source_id": {"type": "string"},
+          "rights_status": {"type": "string"},
+          "licence_expression": {"type": "string"},
+          "license_expression": {"type": "string"},
+          "terms_uri": {"type": ["string", "null"]},
+          "creator": {"type": ["string", "null"]},
+          "source_revision": {"type": ["string", "null"]},
+          "attribution": {"type": ["string", "null"]},
+          "permitted_uses": {"type": "array", "items": {"type": "string"}},
+          "redistribution_allowed": {"type": "boolean"},
+          "derivatives_allowed": {"type": "boolean"},
+          "privacy_status": {"type": "string"},
+          "consent_evidence_ids": {"type": "array", "items": {"type": "string"}},
+          "rights_evidence_ids": {"type": "array", "items": {"type": "string"}},
+          "rights_expires_at": {"type": ["string", "null"]},
+          "retention_policy": {"type": "string"},
+          "retention_expires_at": {"type": ["string", "null"]},
+          "deletion_required": {"type": "boolean"},
+          "retention_evidence_ids": {"type": "array", "items": {"type": "string"}},
+          "reviewer_id": {"type": "string"},
+          "review_status": {"type": "string"},
+          "reviewed_at": {"type": ["string", "null"]},
+          "review_evidence_ids": {"type": "array", "items": {"type": "string"}},
+          "extensions": {"type": "object"}
+        }
+      }
+    },
+    {
+      "name": "governance_vlm_review",
+      "domain": "review",
+      "description": "Run the stage VLM review rubric against evidence images and record the verdict.",
+      "owning_service": "governance_vlm_review",
+      "prompt_file": "vlm_review.md",
+      "write_layer": "governance",
+      "dry_run_supported": true,
+      "requires_review": true,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "project": {
+            "type": "string"
+          },
+          "stage_id": {
+            "type": "string"
+          },
+          "image_paths": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "provider": {
+            "type": "string"
+          },
+          "dry_run": {
+            "type": "boolean"
+          },
+          "attempt": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    {
+      "name": "material_physical_properties_propose",
+      "domain": "materials",
+      "description": "Create physical property proposal records such as mass, density and friction with uncertainty.",
+      "owning_service": "material_physical_properties_propose",
+      "prompt_file": "materials.md",
+      "write_layer": "material",
+      "dry_run_supported": true,
+      "requires_review": true,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "properties": {"type": "array", "items": {"type": "string"}},
+          "evidence_ids": {"type": "array", "items": {"type": "string"}},
+          "material_class": {"type": "string"},
+          "measured_values": {"type": "object"},
+          "units": {"type": "object"},
+          "extensions": {"type": "object"}
+        }
+      }
+    },
+    {
+      "name": "material_propose",
+      "domain": "materials",
+      "description": "Create material proposal records from manifest evidence.",
+      "owning_service": "material_propose",
+      "prompt_file": "materials.md",
+      "write_layer": "material",
+      "dry_run_supported": true,
+      "requires_review": false,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "components": {"type": "array", "items": {"type": "object"}},
+          "material_library_id": {"type": "string"},
+          "declared_material": {"type": "string"},
+          "evidence_ids": {"type": "array", "items": {"type": "string"}},
+          "extensions": {"type": "object"}
+        }
+      }
+    },
+    {
+      "name": "material_texture_defaults_validate",
+      "domain": "texturing",
+      "description": "Validate texture defaults against physical property evidence.",
+      "owning_service": "material_texture_defaults_validate",
+      "prompt_file": "texturing.md",
+      "write_layer": "material",
+      "dry_run_supported": true,
+      "requires_review": false,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "material_class": {"type": "string"},
+          "profile": {"type": "string"},
+          "visible_cues": {"type": "array", "items": {"type": "string"}},
+          "extensions": {"type": "object"}
+        }
+      }
+    },
+    {
+      "name": "material_texture_prompt",
+      "domain": "texturing",
+      "description": "Create texture prompts from material and property manifests.",
+      "owning_service": "material_texture_prompt",
+      "prompt_file": "texturing.md",
+      "write_layer": "material",
+      "dry_run_supported": true,
+      "requires_review": false,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "material_manifest": {"type": ["string", "object"]},
+          "property_manifest": {"type": ["string", "object"]},
+          "output": {"type": "string"},
+          "material_class": {"type": "string"},
+          "profile": {"type": "string"},
+          "extensions": {"type": "object"}
+        }
+      }
+    },
+    {
+      "name": "material_texture_variation_workflow",
+      "domain": "texturing",
+      "description": "Create an image review, texture variety and mesh deformation workflow contract.",
+      "owning_service": "material_texture_variation_workflow",
+      "prompt_file": "texturing.md",
+      "write_layer": "material",
+      "dry_run_supported": true,
+      "requires_review": true,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "image_path": {
+            "type": "string"
+          },
+          "asset_id": {
+            "type": "string"
+          },
+          "texture_variants": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {"type": "string"},
+                {"type": "object"}
+              ]
+            }
+          },
+          "mesh_deformations": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {"type": "string"},
+                {"type": "object"}
+              ]
+            }
+          },
+          "appearance_segments": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {"type": "string"},
+                {"type": "object"}
+              ]
+            }
+          },
+          "output": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "physics_nonvisual_materials_propose",
+      "domain": "nonvisual_materials",
+      "description": "Create nonvisual material proposal records such as thermal, acoustic and electrical properties with uncertainty.",
+      "owning_service": "physics_nonvisual_materials_propose",
+      "prompt_file": "nonvisual_materials.md",
+      "write_layer": "physics",
+      "dry_run_supported": true,
+      "requires_review": true,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "properties": {"type": "array", "items": {"type": "string"}},
+          "evidence_ids": {"type": "array", "items": {"type": "string"}},
+          "measured_values": {"type": "object"},
+          "units": {"type": "object"},
+          "extensions": {"type": "object"}
+        }
+      }
+    },
+    {
+      "name": "physics_plan",
+      "domain": "physics_articulation",
+      "description": "Create a physics authoring plan from validated properties.",
+      "owning_service": "physics_plan",
+      "prompt_file": "physics_articulation.md",
+      "write_layer": "physics",
+      "dry_run_supported": true,
+      "requires_review": true,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "properties": {"type": "array", "items": {"type": "object"}},
+          "usd_input_path": {"type": ["string", "null"]},
+          "usd_output_path": {"type": ["string", "null"]},
+          "rigid_bodies": {"type": "array", "items": {"type": "object"}},
+          "colliders": {"type": "array", "items": {"type": "object"}},
+          "extensions": {"type": "object"}
+        }
+      }
+    },
+    {
+      "name": "scene_layout_validate",
+      "domain": "layout",
+      "description": "Validate asset layout plans and return all errors.",
+      "owning_service": "scene_layout_validate",
+      "prompt_file": "layout.md",
+      "write_layer": "scene",
+      "dry_run_supported": true,
+      "requires_review": false,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "version", "validate_only", "placements", "evidence"],
+        "properties": {
+          "id": {"type": "string"},
+          "version": {"type": "string"},
+          "asset_id": {"type": "string"},
+          "project_id": {"type": "string"},
+          "status": {"type": "string"},
+          "validate_only": {"type": "boolean"},
+          "placements": {"type": "array", "items": {"type": "object"}},
+          "evidence": {"type": "array", "items": {"type": "object"}},
+          "extensions": {"type": "object"}
+        }
+      }
+    }
+  ]
+}

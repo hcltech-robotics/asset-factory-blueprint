@@ -1,0 +1,91 @@
+name: Core verification
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: core-verification-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contracts:
+    name: Contracts on ${{ matrix.os }} and Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install uv
+        run: python -m pip install uv==0.7.13
+      - name: Verify and install the locked source appliance
+        run: |
+          uv lock --check
+          uv sync --frozen --all-extras --python ${{ matrix.python-version }}
+      - name: Lint Python
+        run: uv run --frozen ruff check src scripts
+      - name: Compile Python
+        run: uv run --frozen python -m compileall -q src scripts
+      - name: Run repository tests
+        run: uv run --frozen pytest -q tests
+      - name: Exercise the stdio tool-service contract
+        run: uv run --frozen python scripts/ci/stdio_tool_server_smoke.py
+      - name: Check generated diagrams
+        run: uv run --frozen python scripts/generate_diagrams.py --check
+      - name: Exercise the typed workflow
+        run: uv run --frozen python -m asset_factory_blueprint.cli workflow run --request examples/run-requests/warehouse_pick_cell.json --project-root .ci-projects
+      - name: Validate the generated record graph
+        run: uv run --frozen python -m asset_factory_blueprint.cli project validate --project .ci-projects/warehouse_pick_cell
+      - name: Build documentation strictly
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
+        run: uv run --frozen mkdocs build --strict
+      - name: Generate release evidence
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
+        run: uv run --frozen afb release evidence --output-dir .ci-release-evidence
+      - name: Build wheel and source archive
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
+        run: uv run --frozen python -m build --sdist --wheel --outdir dist
+      - name: Verify and exercise the source appliance archive
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
+        shell: bash
+        run: |
+          archive="$(find dist -maxdepth 1 -type f -name '*.tar.gz' -print -quit)"
+          test -n "$archive"
+          tar -tzf "$archive" > .ci-sdist-files.txt
+          for required in \
+            uv.lock \
+            configs/tool-surface.json \
+            schemas/simready-asset-manifest.schema.json \
+            scripts/ci/stdio_tool_server_smoke.py \
+            examples/run-requests/warehouse_pick_cell.json
+          do
+            grep -F "/$required" .ci-sdist-files.txt
+          done
+          mkdir .ci-source-appliance
+          tar -xzf "$archive" -C .ci-source-appliance
+          appliance="$(find .ci-source-appliance -mindepth 1 -maxdepth 1 -type d -print -quit)"
+          cd "$appliance"
+          uv lock --check
+          uv sync --frozen --extra validation --extra mesh --extra vision
+          uv run --frozen python scripts/ci/stdio_tool_server_smoke.py
+          uv run --frozen afb workflow run --request examples/run-requests/warehouse_pick_cell.json --project-root .archive-projects
+          uv run --frozen afb project validate --project .archive-projects/warehouse_pick_cell
+      - name: Build and smoke-test the deployment image
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
+        shell: bash
+        run: |
+          docker build --file deploy/Dockerfile --tag asset-factory-blueprint:ci .
+          docker run --rm --entrypoint python asset-factory-blueprint:ci -m asset_factory_blueprint.cli --help
+          printf '%s\n' '{"operation":"health"}' | docker run --rm -i --entrypoint afb asset-factory-blueprint:ci tool-server --transport stdio --allowed-tools asset_library_search

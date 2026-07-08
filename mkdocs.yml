@@ -1,0 +1,70 @@
+site_name: Asset Factory Blueprint
+site_description: Documentation for the asset factory blueprint for governed OpenUSD asset pipelines.
+site_url: https://hcltech-robotics.github.io/asset-factory-blueprint/
+docs_dir: docs
+site_dir: site
+strict: true
+use_directory_urls: false
+
+theme:
+  name: mkdocs
+  nav_style: dark
+  highlightjs: false
+
+extra_css:
+  - assets/stylesheets/site.css
+
+markdown_extensions:
+  - fenced_code
+  - sane_lists
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Index: index.md
+  - Quickstart: quickstart.md
+  - Walkthrough: walkthrough.md
+  - Runthrough: runthrough.md
+  - Blueprint:
+      - Blueprint: blueprint.md
+      - Reference architecture: reference-architecture.md
+      - Runtime architecture: runtime-architecture.md
+  - Pipeline:
+      - Intake and sources: pipeline/00-intake-and-sources.md
+      - Reconstruction: pipeline/01-reconstruction.md
+      - Segmentation: pipeline/02-segmentation.md
+      - Material and physical inference: pipeline/03-material-inference.md
+      - Texturing: pipeline/04-texturing.md
+      - Physics and articulation: pipeline/05-physics-articulation.md
+      - Nonvisual materials: pipeline/06-nonvisual-materials.md
+      - SimReady verification: pipeline/07-simready-verification.md
+      - Texture defaults: pipeline/texture-defaults.md
+  - Operations:
+      - Orchestrator: platform/orchestrator.md
+      - Agentic operation: platform/agentic-operation.md
+      - Direct partial invocation: platform/direct-partial-invocation.md
+      - Libraries: platform/libraries.md
+      - Infrastructure: platform/infrastructure.md
+      - Deployment: platform/deployment.md
+      - External model runners: platform/external-model-runners.md
+      - Toolchain: toolchain.md
+      - RL environment: extensions/rl-environment.md
+  - Governance:
+      - Agent system: agent-system.md
+      - Governance: platform/governance.md
+      - Manifest contracts: manifest-contracts.md
+      - Layer ownership and variants: platform/layer-ownership-and-variants.md
+      - Layout and mutation plans: platform/layout-and-mutation-plans.md
+      - Citation and reproducibility: citation-and-reproducibility.md
+      - Reference-run capsule: reference-run-capsule.md
+  - Reference:
+      - Requirements: requirements.md
+      - Support matrix: support-matrix.md
+      - Environment reference: environment-reference.md
+      - Troubleshooting: troubleshooting.md
+      - Repository structure: repository-structure.md
+      - Project workspaces: project-workspaces.md
+      - Provider abstraction: provider-abstraction.md
+      - Skill SDK: skill-sdk.md
+      - Source map: source-map.md

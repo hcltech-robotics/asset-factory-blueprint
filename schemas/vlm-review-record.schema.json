@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hcltech-robotics.github.io/asset-factory-blueprint/schemas/v1/vlm-review-record.schema.json",
+  "title": "vlm review record",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "asset_id",
+    "stage_id",
+    "verdict",
+    "findings",
+    "evidence",
+    "rubric_checksum",
+    "reviewer",
+    "attempt",
+    "review_status"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*\\.[0-9]+(?:\\.[0-9]+)?(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "asset_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "stage_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "proposal",
+        "validated",
+        "review_required",
+        "blocked",
+        "released",
+        "not_validated"
+      ]
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "approve",
+        "revise",
+        "blocked",
+        "skipped"
+      ]
+    },
+    "verdict_reason": {
+      "type": "string"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "finding_id",
+          "defect_tag",
+          "severity",
+          "description"
+        ],
+        "properties": {
+          "finding_id": {
+            "type": "string"
+          },
+          "defect_tag": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "blocker",
+              "major",
+              "minor",
+              "note"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "suggested_fix_id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "evidence_id",
+          "kind",
+          "uri",
+          "checksum"
+        ],
+        "properties": {
+          "evidence_id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "uri": {
+            "type": "string"
+          },
+          "checksum": {
+            "type": "string",
+            "anyOf": [
+              {"pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"},
+              {"const": "sha256:example"}
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "reviewer": {
+      "type": "object",
+      "required": [
+        "provider",
+        "model",
+        "role"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "rubric_checksum": {
+      "type": "string"
+    },
+    "rubric_path": {
+      "type": "string"
+    },
+    "attempt": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "fix_attempts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "provider_trace": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "provider",
+          "model",
+          "role",
+          "prompt_checksum"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "not_reviewed",
+        "review_required",
+        "approved",
+        "rejected"
+      ]
+    },
+    "raw_secrets_recorded": {
+      "type": "boolean"
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

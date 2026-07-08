@@ -1,0 +1,111 @@
+{
+  "version": "1.0",
+  "library_root": "library",
+  "local_index_root": "library/local",
+  "download_root": "library/downloads",
+  "user_backings_file": "library/local/backings.json",
+  "curated_indexes": [
+    "library/material-exemplars.json",
+    "library/asset-packs.json",
+    "library/physical-properties.json",
+    "library/knowledge/index.json"
+  ],
+  "backings": [
+    {
+      "backing_id": "user_materials",
+      "kind": "local_folder",
+      "description": "Operator-owned material and MDL folders.",
+      "domains": [
+        "materials",
+        "textures"
+      ],
+      "path_env": "AFB_MATERIALS_ROOT",
+      "enabled": true
+    },
+    {
+      "backing_id": "user_textures",
+      "kind": "local_folder",
+      "description": "Operator-owned PBR texture set folders.",
+      "domains": [
+        "textures"
+      ],
+      "path_env": "AFB_TEXTURES_ROOT",
+      "enabled": true
+    },
+    {
+      "backing_id": "user_usd_assets",
+      "kind": "local_folder",
+      "description": "Operator-owned USD asset folders.",
+      "domains": [
+        "usd_assets"
+      ],
+      "path_env": "AFB_USD_ASSETS_ROOT",
+      "enabled": true
+    },
+    {
+      "backing_id": "omniverse_estate",
+      "kind": "local_folder",
+      "description": "Local Omniverse content estate: installed material and asset libraries.",
+      "domains": [
+        "materials",
+        "textures",
+        "usd_assets"
+      ],
+      "path_env": "AFB_OMNIVERSE_CONTENT_ROOT",
+      "candidate_paths": [
+        "~/AppData/Local/ov/data",
+        "~/.local/share/ov/data"
+      ],
+      "enabled": true
+    },
+    {
+      "backing_id": "usd_search",
+      "kind": "usd_search",
+      "description": "USD Search API endpoint indexing a Nucleus or storage estate.",
+      "domains": [
+        "usd_assets"
+      ],
+      "url_env": "AFB_USD_SEARCH_URL",
+      "api_key_env": "AFB_USD_SEARCH_API_KEY",
+      "enabled": true
+    },
+    {
+      "backing_id": "ambientcg",
+      "kind": "remote_pack_source",
+      "description": "ambientCG public domain PBR texture and material sets.",
+      "domains": [
+        "textures",
+        "materials"
+      ],
+      "licence": "CC0",
+      "api_base": "https://ambientcg.com/api/v2/full_json",
+      "web_url": "https://ambientcg.com",
+      "enabled": true
+    },
+    {
+      "backing_id": "polyhaven",
+      "kind": "remote_pack_source",
+      "description": "Poly Haven public domain textures, HDRIs and models.",
+      "domains": [
+        "textures",
+        "usd_assets"
+      ],
+      "licence": "CC0",
+      "api_base": "https://api.polyhaven.com",
+      "web_url": "https://polyhaven.com",
+      "enabled": true
+    },
+    {
+      "backing_id": "vmaterials",
+      "kind": "manual_pack",
+      "description": "NVIDIA vMaterials measured MDL material catalogue; free download after registration.",
+      "domains": [
+        "materials"
+      ],
+      "licence": "NVIDIA vMaterials EULA",
+      "web_url": "https://developer.nvidia.com/vmaterials",
+      "path_env": "AFB_VMATERIALS_ROOT",
+      "enabled": true
+    }
+  ]
+}

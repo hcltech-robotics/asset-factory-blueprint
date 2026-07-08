@@ -1,0 +1,272 @@
+{
+  "version": "1.0",
+  "capabilities": [
+    {
+      "capability_id": "reconstruction.image_to_3d",
+      "description": "Single-image mesh generation for stage 1.",
+      "options": [
+        {
+          "option_id": "trellisv2",
+          "role": "primary",
+          "kind": "reconstruction_backend",
+          "backend_id": "trellisv2",
+          "gated": false
+        },
+        {
+          "option_id": "hunyuan3d",
+          "role": "fallback",
+          "kind": "reconstruction_backend",
+          "backend_id": "hunyuan3d",
+          "gated": true,
+          "gate": "huggingface_terms",
+          "gate_note": "accept the model licence on the Hugging Face model page before download"
+        },
+        {
+          "option_id": "triposg",
+          "role": "fallback",
+          "kind": "reconstruction_backend",
+          "backend_id": "triposg",
+          "gated": false
+        },
+        {
+          "option_id": "partcrafter",
+          "role": "fallback",
+          "kind": "reconstruction_backend",
+          "backend_id": "partcrafter",
+          "gated": false,
+          "note": "part-aware; preferred when a segmentation prior with part structure exists"
+        }
+      ]
+    },
+    {
+      "capability_id": "reconstruction.multiview_to_3d",
+      "description": "Multi-view mesh generation from several photos of the same object.",
+      "options": [
+        {
+          "option_id": "hunyuan3d-mv",
+          "role": "primary",
+          "kind": "reconstruction_backend",
+          "backend_id": "hunyuan3d-mv",
+          "gated": true,
+          "gate": "huggingface_terms",
+          "gate_note": "accept the model licence on the Hugging Face model page before download"
+        },
+        {
+          "option_id": "dust3r",
+          "role": "fallback",
+          "kind": "reconstruction_backend",
+          "backend_id": "dust3r",
+          "gated": true,
+          "gate": "research_licence",
+          "gate_note": "research-only licence; confirm the use case before enabling"
+        }
+      ]
+    },
+    {
+      "capability_id": "reconstruction.video_to_3d",
+      "description": "Video-led mesh generation through frame sampling into the multi-view lane.",
+      "options": [
+        {
+          "option_id": "video-multiview",
+          "role": "primary",
+          "kind": "reconstruction_backend",
+          "backend_id": "video-multiview",
+          "gated": false,
+          "note": "samples frames locally, then delegates to the multi-view capability chain"
+        }
+      ]
+    },
+    {
+      "capability_id": "segmentation.image_prior",
+      "description": "Image segmentation priors for stage 2.",
+      "options": [
+        {
+          "option_id": "official_sam31",
+          "role": "primary",
+          "kind": "checkpoint",
+          "python_modules": [
+            "torch"
+          ],
+          "env_any": [
+            "SAM3_SOURCE_PATH",
+            "AFB_SAM3_CHECKPOINT"
+          ],
+          "gated": true,
+          "gate": "checkpoint_distribution",
+          "gate_note": "checkpoint access requires the upstream distribution channel"
+        },
+        {
+          "option_id": "ultralytics_sam3",
+          "role": "fallback",
+          "kind": "pip",
+          "python_modules": [
+            "ultralytics"
+          ],
+          "pip_packages": [
+            "ultralytics"
+          ],
+          "gated": false
+        },
+        {
+          "option_id": "appearance_cv",
+          "role": "fallback",
+          "kind": "pip",
+          "python_modules": [
+            "numpy",
+            "PIL"
+          ],
+          "pip_packages": [
+            "numpy",
+            "pillow"
+          ],
+          "gated": false,
+          "note": "deterministic appearance heuristic; always available once imaging packages are installed"
+        }
+      ]
+    },
+    {
+      "capability_id": "texturing.image_generation",
+      "description": "PBR texture map generation for stage 4.",
+      "options": [
+        {
+          "option_id": "openai_images",
+          "role": "primary",
+          "kind": "provider",
+          "provider": "openai",
+          "env_all": [
+            "OPENAI_API_KEY"
+          ],
+          "gated": false
+        },
+        {
+          "option_id": "local_flux",
+          "role": "fallback",
+          "kind": "provider",
+          "provider": "local_flux",
+          "gated": false,
+          "note": "local generation lane; needs the configured local endpoint"
+        },
+        {
+          "option_id": "hf_flux_schnell",
+          "role": "fallback",
+          "kind": "provider",
+          "provider": "hf_flux_schnell",
+          "env_all": [
+            "HF_TOKEN"
+          ],
+          "gated": true,
+          "gate": "huggingface_terms",
+          "gate_note": "hosted inference needs a Hugging Face token with access to the model"
+        }
+      ]
+    },
+    {
+      "capability_id": "review.vlm_signoff",
+      "description": "Vision-language sign-off for every pipeline stage.",
+      "options": [
+        {
+          "option_id": "openai_vision",
+          "role": "primary",
+          "kind": "provider",
+          "provider": "openai",
+          "env_all": [
+            "OPENAI_API_KEY"
+          ],
+          "gated": false
+        },
+        {
+          "option_id": "nvidia_nim_vision",
+          "role": "fallback",
+          "kind": "provider",
+          "provider": "nvidia_nim",
+          "env_any": [
+            "NVIDIA_API_KEY",
+            "AFB_LLM_API_KEY"
+          ],
+          "gated": false
+        },
+        {
+          "option_id": "local_vision",
+          "role": "fallback",
+          "kind": "provider",
+          "provider": "openai_compatible",
+          "gated": false,
+          "note": "local OpenAI-compatible endpoint with a vision-capable model"
+        }
+      ]
+    },
+    {
+      "capability_id": "usd.runtime",
+      "description": "OpenUSD runtime for layer checks and package verification.",
+      "options": [
+        {
+          "option_id": "usd_core",
+          "role": "primary",
+          "kind": "pip",
+          "python_modules": [
+            "pxr"
+          ],
+          "pip_packages": [
+            "usd-core"
+          ],
+          "gated": false
+        }
+      ]
+    },
+    {
+      "capability_id": "mesh.processing",
+      "description": "Mesh healing, conditioning and decimation for stages 1 and 2.",
+      "options": [
+        {
+          "option_id": "trimesh_stack",
+          "role": "primary",
+          "kind": "pip",
+          "python_modules": [
+            "trimesh",
+            "networkx",
+            "fast_simplification"
+          ],
+          "pip_packages": [
+            "trimesh",
+            "networkx",
+            "scipy",
+            "fast-simplification"
+          ],
+          "gated": false
+        }
+      ]
+    },
+    {
+      "capability_id": "simready.isaac_load",
+      "description": "Isaac Sim load checks for the stage 7 isaac-load gate.",
+      "options": [
+        {
+          "option_id": "isaac_sim_local",
+          "role": "primary",
+          "kind": "manual",
+          "env_any": [
+            "AFB_ISAAC_SIM_ROOT"
+          ],
+          "gated": false,
+          "note": "local Isaac Sim installation; configure the root in runtime config or environment"
+        }
+      ]
+    },
+    {
+      "capability_id": "library.usd_search",
+      "description": "Semantic USD asset search over the operator's estate through a USD Search API endpoint.",
+      "options": [
+        {
+          "option_id": "usd_search_endpoint",
+          "role": "primary",
+          "kind": "manual",
+          "env_all": [
+            "AFB_USD_SEARCH_URL"
+          ],
+          "gated": false,
+          "note": "deploy or point at a USD Search API service and set AFB_USD_SEARCH_URL plus AFB_USD_SEARCH_API_KEY where required"
+        }
+      ]
+    }
+  ]
+}

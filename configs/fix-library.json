@@ -1,0 +1,375 @@
+{
+  "version": "1.0",
+  "default_max_attempts": 2,
+  "fixes": [
+    {
+      "fix_id": "heal_mesh_holes",
+      "stage": "reconstruction",
+      "defect_tags": [
+        "mesh_holes"
+      ],
+      "symptom": "renders show gaps or the mesh is reported non-watertight",
+      "cause": "generative backends often emit open shells and unwelded seams",
+      "action": {
+        "kind": "tool",
+        "tool": "asset_mesh_condition",
+        "params_template": {
+          "operations": [
+            {
+              "operation": "heal",
+              "fill_holes": true,
+              "cap_boundaries": true
+            }
+          ]
+        }
+      },
+      "max_attempts": 2,
+      "reverify": [
+        "schema-valid",
+        "vlm-signoff"
+      ],
+      "escalation": "review_required"
+    },
+    {
+      "fix_id": "smooth_lumpy_region",
+      "stage": "reconstruction",
+      "defect_tags": [
+        "lumpy_surface"
+      ],
+      "symptom": "a region the source photos show as smooth renders lumpy or melted",
+      "cause": "reconstruction noise on low-texture regions",
+      "action": {
+        "kind": "tool",
+        "tool": "asset_mesh_condition",
+        "params_template": {
+          "operations": [
+            {
+              "operation": "smooth",
+              "iterations": 12
+            }
+          ]
+        }
+      },
+      "max_attempts": 2,
+      "reverify": [
+        "vlm-signoff"
+      ],
+      "escalation": "review_required"
+    },
+    {
+      "fix_id": "prune_floating_fragments",
+      "stage": "reconstruction",
+      "defect_tags": [
+        "fragmented_parts",
+        "extra_geometry"
+      ],
+      "symptom": "disconnected shards or geometry not present in the source photos",
+      "cause": "backend hallucination or background bleed into the reconstruction",
+      "action": {
+        "kind": "tool",
+        "tool": "asset_mesh_condition",
+        "params_template": {
+          "operations": [
+            {
+              "operation": "heal",
+              "prune_components": true,
+              "min_component_fraction": 0.01
+            }
+          ]
+        }
+      },
+      "max_attempts": 1,
+      "reverify": [
+        "vlm-signoff"
+      ],
+      "escalation": "review_required"
+    },
+    {
+      "fix_id": "rerun_reconstruction_fallback_backend",
+      "stage": "reconstruction",
+      "defect_tags": [
+        "missing_parts",
+        "wrong_proportions",
+        "wrong_scale"
+      ],
+      "symptom": "structural defects that mesh conditioning cannot repair",
+      "cause": "the selected backend could not recover the object structure from the conditioning views",
+      "action": {
+        "kind": "capability_fallback",
+        "capability_id": "reconstruction.image_to_3d",
+        "note": "regenerate with the next ready backend from the capability registry, reusing the segmentation prior"
+      },
+      "max_attempts": 1,
+      "reverify": [
+        "schema-valid",
+        "vlm-signoff"
+      ],
+      "escalation": "review_required"
+    },
+    {
+      "fix_id": "rerun_segmentation_prior_stronger_method",
+      "stage": "segmentation",
+      "defect_tags": [
+        "missing_segment",
+        "mask_misaligned",
+        "merged_segments",
+        "oversplit_segments"
+      ],
+      "symptom": "segment masks do not carve the object into the expected regions",
+      "cause": "the appearance heuristic or the selected segmentation model underperformed on this image",
+      "action": {
+        "kind": "tool",
+        "tool": "asset_image_segmentation_prior",
+        "params_template": {
+          "method": "sam3.1"
+        }
+      },
+      "max_attempts": 2,
+      "reverify": [
+        "segmentation-segments",
+        "vlm-signoff"
+      ],
+      "escalation": "review_required"
+    },
+    {
+      "fix_id": "relabel_segments",
+      "stage": "segmentation",
+      "defect_tags": [
+        "wrong_semantic_label"
+      ],
+      "symptom": "a mask covers the right region under the wrong semantic label",
+      "cause": "label assignment from weak appearance priors",
+      "action": {
+        "kind": "tool",
+        "tool": "asset_image_segmentation_prior",
+        "params_template": {
+          "method": "auto"
+        }
+      },
+      "max_attempts": 1,
+      "reverify": [
+        "vlm-signoff"
+      ],
+      "escalation": "review_required"
+    },
+    {
+      "fix_id": "reproposal_material_with_review",
+      "stage": "material-inference",
+      "defect_tags": [
+        "implausible_material",
+        "material_contradicts_photo",
+        "missing_component_material"
+      ],
+      "symptom": "the material story contradicts the photos or leaves components uncovered",
+      "cause": "weak metadata or a wrong constrained-library pick",
+      "action": {
+        "kind": "tool",
+        "tool": "material_propose",
+        "params_template": {}
+      },
+      "max_attempts": 1,
+      "reverify": [
+        "material-evidence",
+        "vlm-signoff"
+      ],
+      "escalation": "review_required"
+    },
+    {
+      "fix_id": "escalate_physical_value",
+      "stage": "material-inference",
+      "defect_tags": [
+        "implausible_physical_value"
+      ],
+      "symptom": "a proposed mass, density or friction value is grossly implausible",
+      "cause": "default priors applied without measurement",
+      "action": {
+        "kind": "escalate",
+        "note": "numeric physical values are never auto-fixed; the proposal is marked review_required with the finding attached"
+      },
+      "max_attempts": 0,
+      "reverify": [],
+      "escalation": "review_required"
+    },
+    {
+      "fix_id": "regenerate_textures_reinforced_negative_prompt",
+      "stage": "texturing",
+      "defect_tags": [
+        "baked_lighting",
+        "text_or_watermark_artefacts",
+        "tiling_artefacts",
+        "seam_artefacts"
+      ],
+      "symptom": "generated maps carry lighting, text, seams or repetition artefacts",
+      "cause": "the texture generator ignored parts of the negative prompt",
+      "action": {
+        "kind": "tool",
+        "tool": "material_texture_variation_workflow",
+        "params_template": {
+          "texture_variants": []
+        }
+      },
+      "max_attempts": 2,
+      "reverify": [
+        "texture-uv",
+        "vlm-signoff"
+      ],
+      "escalation": "review_required"
+    },
+    {
+      "fix_id": "regenerate_textures_material_corrected",
+      "stage": "texturing",
+      "defect_tags": [
+        "wrong_material_appearance",
+        "resolution_too_low"
+      ],
+      "symptom": "maps do not read as the declared material or fall below the resolution policy",
+      "cause": "prompt drift from the material manifest or a low-resolution smoke path",
+      "action": {
+        "kind": "tool",
+        "tool": "material_texture_prompt",
+        "params_template": {}
+      },
+      "max_attempts": 1,
+      "reverify": [
+        "vlm-signoff"
+      ],
+      "escalation": "review_required"
+    },
+    {
+      "fix_id": "replace_decal_placement",
+      "stage": "texturing",
+      "defect_tags": [
+        "decal_misplaced"
+      ],
+      "symptom": "a decal sits on the wrong segment or at the wrong position, scale or orientation",
+      "cause": "placement derived from a misaligned segment or stale mask",
+      "action": {
+        "kind": "tool",
+        "tool": "material_texture_variation_workflow",
+        "params_template": {
+          "texture_variants": []
+        }
+      },
+      "max_attempts": 1,
+      "reverify": [
+        "vlm-signoff"
+      ],
+      "escalation": "review_required"
+    },
+    {
+      "fix_id": "replan_articulation_axis",
+      "stage": "physics-articulation",
+      "defect_tags": [
+        "joint_axis_wrong",
+        "joint_limits_wrong",
+        "missing_articulation"
+      ],
+      "symptom": "a joint contradicts the visible mechanism or a movable part has no joint",
+      "cause": "part graph built without mechanism evidence",
+      "action": {
+        "kind": "tool",
+        "tool": "articulation_plan",
+        "params_template": {}
+      },
+      "max_attempts": 1,
+      "reverify": [
+        "vlm-signoff"
+      ],
+      "escalation": "review_required"
+    },
+    {
+      "fix_id": "replan_grasp_points",
+      "stage": "physics-articulation",
+      "defect_tags": [
+        "grasp_point_unreachable"
+      ],
+      "symptom": "a grasp point sits on an unreachable or ungraspable surface",
+      "cause": "grasp proposal ignored collider or approach clearance",
+      "action": {
+        "kind": "tool",
+        "tool": "articulation_plan",
+        "params_template": {}
+      },
+      "max_attempts": 1,
+      "reverify": [
+        "vlm-signoff"
+      ],
+      "escalation": "review_required"
+    },
+    {
+      "fix_id": "escalate_physics_plan",
+      "stage": "physics-articulation",
+      "defect_tags": [
+        "collider_mismatch",
+        "implausible_mass_distribution"
+      ],
+      "symptom": "collider fit or mass distribution is implausible for the visible geometry",
+      "cause": "approximation strategy chosen without task context",
+      "action": {
+        "kind": "escalate",
+        "note": "collider and mass changes affect contact behaviour; they are escalated with the finding attached rather than auto-applied"
+      },
+      "max_attempts": 0,
+      "reverify": [],
+      "escalation": "review_required"
+    },
+    {
+      "fix_id": "escalate_nonvisual_values",
+      "stage": "nonvisual-materials",
+      "defect_tags": [
+        "implausible_value_range",
+        "material_class_mismatch",
+        "missing_unit_or_uncertainty"
+      ],
+      "symptom": "nonvisual property records are implausible or incomplete",
+      "cause": "priors applied without measurement or spec evidence",
+      "action": {
+        "kind": "tool",
+        "tool": "physics_nonvisual_materials_propose",
+        "params_template": {}
+      },
+      "max_attempts": 1,
+      "reverify": [
+        "nonvisual-evidence"
+      ],
+      "escalation": "review_required"
+    },
+    {
+      "fix_id": "repackage_asset",
+      "stage": "simready-verification",
+      "defect_tags": [
+        "package_visually_incomplete",
+        "material_binding_visibly_wrong"
+      ],
+      "symptom": "the packaged render is missing textures, parts or bindings that upstream stages produced",
+      "cause": "layer assembly or reference resolution regression",
+      "action": {
+        "kind": "repackage",
+        "note": "recompose the asset layer stack from the recorded stage manifests and rerun package validation"
+      },
+      "max_attempts": 1,
+      "reverify": [
+        "schema-valid",
+        "vlm-signoff"
+      ],
+      "escalation": "review_required"
+    },
+    {
+      "fix_id": "escalate_package_mismatch",
+      "stage": "simready-verification",
+      "defect_tags": [
+        "render_mismatch_with_source",
+        "silhouette_mismatch"
+      ],
+      "symptom": "the packaged asset no longer matches the source object",
+      "cause": "an upstream fix or variant changed the asset beyond its bounds",
+      "action": {
+        "kind": "escalate",
+        "note": "cross-stage regressions need a human decision about which upstream stage to rerun"
+      },
+      "max_attempts": 0,
+      "reverify": [],
+      "escalation": "review_required"
+    }
+  ]
+}

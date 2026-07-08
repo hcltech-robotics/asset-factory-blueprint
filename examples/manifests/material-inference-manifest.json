@@ -1,0 +1,59 @@
+{
+  "id": "material_example",
+  "version": "1.0",
+  "status": "proposal",
+  "asset_id": "warehouse_bin",
+  "material_class": "rubber",
+  "source_manifest_id": "source_example",
+  "material_library_id": "default_material_library",
+  "component_materials": [
+    {
+      "prim_path": "/World/Bin",
+      "component_label": "bin",
+      "candidate_materials": [
+        "rubber"
+      ],
+      "selected_material": "rubber",
+      "selection_status": "proposal",
+      "pbr_binding_target": "/Materials/Rubber",
+      "visual_evidence_ids": [
+        "render_001"
+      ],
+      "metadata_evidence_ids": [
+        "spec_001"
+      ],
+      "confidence": 0.72,
+      "uncertainty_reason": "requires reviewer confirmation",
+      "requires_human_review": true
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "render_001",
+      "kind": "render",
+      "uri": "evidence/render.png",
+      "checksum": "sha256:example"
+    }
+  ],
+  "provider_trace": [],
+  "review_status": "review_required",
+  "physical_property_proposals": [
+    {
+      "prim_path": "/World/Bin",
+      "property_name": "static_friction",
+      "property_group": "contact",
+      "value": 0.8,
+      "unit": "coefficient",
+      "range_low": 0.6,
+      "range_high": 1.0,
+      "distribution": "uniform",
+      "method": "material_prior",
+      "confidence": 0.5,
+      "evidence_ids": [
+        "spec_001"
+      ],
+      "validation_status": "review_required",
+      "notes": "requires measurement for task-critical use"
+    }
+  ]
+}

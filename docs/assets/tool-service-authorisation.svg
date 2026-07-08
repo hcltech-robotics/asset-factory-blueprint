@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="620" viewBox="0 0 1360 620" role="img" aria-labelledby="title desc">
+  <title id="title">Tool service authorisation</title>
+  <desc id="desc">Caller authentication and an independently issued single-use mutation capability meet at the bounded tool service, with durable jobs, approval consumption and audit output.</desc>
+  <defs>
+    <style>
+      .bg { fill: transparent; }
+      .box { fill: #0a100c; stroke: #3d4a42; stroke-width: 2; }
+      .boxHot { fill: #0b1608; stroke: #76b900; stroke-width: 2.3; }
+      .boxAccent { fill: #160929; stroke: #5f1ebe; stroke-width: 2.3; }
+      .inner { fill: #0d130f; stroke: #7d8780; stroke-width: 1.9; }
+      .innerHot { fill: #0d1809; stroke: #76b900; stroke-width: 1.9; }
+      .innerAccent { fill: #1b0c31; stroke: #5f1ebe; stroke-width: 1.9; }
+      .label { fill: #edf3ef; font-family: Aptos, Helvetica, sans-serif; font-size: 20px; font-weight: 680; }
+      .small { fill: #c6cec8; font-family: Aptos, Helvetica, sans-serif; font-size: 13px; font-weight: 620; }
+      .line { stroke: #e6ece8; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+      .greenLine { stroke: #76b900; stroke-width: 2.4; fill: none; marker-end: url(#arrowGreen); }
+      .accentLine { stroke: #5f1ebe; stroke-width: 2.4; fill: none; marker-end: url(#arrowAccent); }
+    </style>
+    <marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#e6ece8"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#76b900"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#5f1ebe"/>
+    </marker>
+  </defs>
+  <rect class="box" x="40" y="170" width="210" height="210" rx="8"/>
+  <text class="label" x="145.0" y="212" text-anchor="middle">Client</text>
+  <rect class="inner" x="62" y="259" width="166" height="34" rx="4"/>
+  <text class="small" x="145.0" y="280.5" text-anchor="middle" style="font-size:13px">bearer token</text>
+  <rect class="inner" x="62" y="305" width="166" height="34" rx="4"/>
+  <text class="small" x="145.0" y="326.5" text-anchor="middle" style="font-size:13px">tool + params</text>
+  <rect class="box" x="310" y="170" width="210" height="210" rx="8"/>
+  <text class="label" x="415.0" y="212" text-anchor="middle" style="font-size:18px">Authentication</text>
+  <rect class="inner" x="332" y="259" width="166" height="34" rx="4"/>
+  <text class="small" x="415.0" y="280.0" text-anchor="middle" style="font-size:12px">caller identity</text>
+  <rect class="inner" x="332" y="305" width="166" height="34" rx="4"/>
+  <text class="small" x="415.0" y="326.5" text-anchor="middle" style="font-size:13px">network policy</text>
+  <rect class="boxAccent" x="590" y="145" width="250" height="260" rx="8"/>
+  <text class="label" x="715.0" y="187" text-anchor="middle">Tool service</text>
+  <rect class="innerAccent" x="612" y="236" width="206" height="34" rx="4"/>
+  <text class="small" x="715.0" y="257.0" text-anchor="middle" style="font-size:12px">allowlist + schema</text>
+  <rect class="inner" x="612" y="282" width="206" height="34" rx="4"/>
+  <text class="small" x="715.0" y="303.5" text-anchor="middle" style="font-size:13px">request bounds</text>
+  <rect class="inner" x="612" y="328" width="206" height="34" rx="4"/>
+  <text class="small" x="715.0" y="349.5" text-anchor="middle" style="font-size:13px">job state</text>
+  <rect class="box" x="910" y="170" width="180" height="210" rx="8"/>
+  <text class="label" x="1000.0" y="212" text-anchor="middle">Worker</text>
+  <rect class="inner" x="932" y="259" width="136" height="34" rx="4"/>
+  <text class="small" x="1000.0" y="280.0" text-anchor="middle" style="font-size:12px">bounded attempt</text>
+  <rect class="inner" x="932" y="305" width="136" height="34" rx="4"/>
+  <text class="small" x="1000.0" y="326.0" text-anchor="middle" style="font-size:12px">no silent resume</text>
+  <rect class="box" x="1160" y="170" width="160" height="210" rx="8"/>
+  <text class="label" x="1240.0" y="212" text-anchor="middle" style="font-size:17px">Artefacts</text>
+  <rect class="inner" x="1182" y="236" width="116" height="34" rx="4"/>
+  <text class="small" x="1240.0" y="257.5" text-anchor="middle" style="font-size:13px">manifests</text>
+  <rect class="inner" x="1182" y="282" width="116" height="34" rx="4"/>
+  <text class="small" x="1240.0" y="303.5" text-anchor="middle" style="font-size:13px">reports</text>
+  <rect class="inner" x="1182" y="328" width="116" height="34" rx="4"/>
+  <text class="small" x="1240.0" y="349.5" text-anchor="middle" style="font-size:13px">evidence</text>
+  <path class="line" d="M250 275 L306 275"/>
+  <path class="line" d="M520 275 L586 275"/>
+  <path class="accentLine" d="M840 275 L906 275"/>
+  <path class="line" d="M1090 275 L1156 275"/>
+  <rect class="boxAccent" x="250" y="455" width="300" height="120" rx="8"/>
+  <text class="label" x="400.0" y="497" text-anchor="middle" style="font-size:18px">Approval issuer</text>
+  <rect class="inner" x="272" y="519" width="256" height="16" rx="4"/>
+  <text class="small" x="400.0" y="530.0" text-anchor="middle" style="font-size:10px">independent secret</text>
+  <rect class="innerAccent" x="272" y="543" width="256" height="16" rx="4"/>
+  <text class="small" x="400.0" y="554.0" text-anchor="middle" style="font-size:10px">one-use approval</text>
+  <rect class="box" x="660" y="455" width="300" height="120" rx="8"/>
+  <text class="label" x="810.0" y="497" text-anchor="middle" style="font-size:18px">Durable ledger</text>
+  <rect class="inner" x="682" y="519" width="256" height="16" rx="4"/>
+  <text class="small" x="810.0" y="530.0" text-anchor="middle" style="font-size:10px">state + retries</text>
+  <rect class="inner" x="682" y="543" width="256" height="16" rx="4"/>
+  <text class="small" x="810.0" y="554.0" text-anchor="middle" style="font-size:10px">used approvals</text>
+  <rect class="box" x="1060" y="455" width="260" height="120" rx="8"/>
+  <text class="label" x="1190.0" y="497" text-anchor="middle" style="font-size:18px">Audit output</text>
+  <rect class="inner" x="1082" y="519" width="216" height="16" rx="4"/>
+  <text class="small" x="1190.0" y="530.0" text-anchor="middle" style="font-size:10px">append-only events</text>
+  <rect class="inner" x="1082" y="543" width="216" height="16" rx="4"/>
+  <text class="small" x="1190.0" y="554.0" text-anchor="middle" style="font-size:10px">redacted metadata</text>
+  <path class="accentLine" d="M550 515 L570 515 L570 345 L590 345"/>
+  <path class="line" d="M715 405 L715 430 L810 430 L810 455"/>
+  <path class="line" d="M1000 380 L1000 430 L900 430 L900 455"/>
+  <path class="line" d="M960 515 L1056 515"/>
+</svg>

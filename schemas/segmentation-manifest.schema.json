@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hcltech-robotics.github.io/asset-factory-blueprint/schemas/v1/segmentation-manifest.schema.json",
+  "title": "segmentation manifest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "asset_id",
+    "source_manifest_id",
+    "segmentation_kind",
+    "appearance_segments",
+    "segment_masks",
+    "material_regions",
+    "evidence",
+    "provider_trace",
+    "review_status"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*\\.[0-9]+(?:\\.[0-9]+)?(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "asset_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "proposal",
+        "validated",
+        "review_required",
+        "blocked",
+        "released",
+        "not_validated"
+      ]
+    },
+    "source_manifest_id": {
+      "type": "string"
+    },
+    "reconstruction_manifest_id": {
+      "type": "string"
+    },
+    "segmentation_kind": {
+      "type": "string"
+    },
+    "segmentation_status": {
+      "type": "string"
+    },
+    "appearance_segments": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "segment_id",
+          "label",
+          "semantic_class",
+          "semantic_label",
+          "prim_path",
+          "mask_path",
+          "material_name",
+          "material_prim_path",
+          "confidence",
+          "selection_status"
+        ],
+        "properties": {
+          "segment_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "semantic_class": {
+            "type": "string",
+            "minLength": 1
+          },
+          "semantic_label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "prim_path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mask_path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "material_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "material_prim_path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "selection_status": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "segment_masks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "segment_id",
+          "mask_path",
+          "checksum",
+          "status"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "material_regions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "segment_id",
+          "prim_path",
+          "material_name",
+          "material_prim_path",
+          "semantic_class"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "evidence_id",
+          "kind",
+          "uri",
+          "checksum"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "provider_trace": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "provider",
+          "model",
+          "role",
+          "prompt_checksum"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "provider": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "prompt_checksum": {
+            "type": "string"
+          },
+          "request_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "not_reviewed",
+        "review_required",
+        "approved",
+        "rejected"
+      ]
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

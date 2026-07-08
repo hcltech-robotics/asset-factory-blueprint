@@ -1,0 +1,508 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hcltech-robotics.github.io/asset-factory-blueprint/schemas/v1/simready-asset-manifest.schema.json",
+  "title": "SimReady asset candidate manifest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "asset_id",
+    "package_id",
+    "usd_root_path",
+    "usd_layer_stack",
+    "units_policy",
+    "axis_policy",
+    "material_manifest_id",
+    "physics_articulation_manifest_id",
+    "simready_profile",
+    "simready_conformance",
+    "validation_results",
+    "isaac_sim_load_check",
+    "performance_budget",
+    "promotion_status"
+  ],
+  "$defs": {
+    "gateStatus": {
+      "type": "string",
+      "enum": ["pass", "blocked", "skipped", "not_run"]
+    },
+    "simreadyProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile_id",
+        "profile_version",
+        "profile_version_status",
+        "target_runtime",
+        "specification_uri"
+      ],
+      "properties": {
+        "profile_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profile_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profile_version_status": {
+          "type": "string",
+          "enum": ["pinned", "unresolved"]
+        },
+        "target_runtime": {
+          "type": "string",
+          "minLength": 1
+        },
+        "specification_uri": {
+          "type": "string",
+          "format": "uri"
+        },
+        "profile_catalogue_status": {
+          "type": "string",
+          "enum": ["known_robotics_profile", "vendor_profile"]
+        }
+      }
+    },
+    "featureResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["feature_id", "feature_version", "status", "requirement_ids"],
+      "properties": {
+        "feature_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "feature_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "#/$defs/gateStatus"
+        },
+        "requirement_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "requirementResult": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "requirement_id",
+        "requirement_name",
+        "requirement_version",
+        "status",
+        "validator",
+        "official_validator",
+        "evidence_path",
+        "message"
+      ],
+      "properties": {
+        "requirement_id": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9]*(?:\\.[A-Z0-9]+)+$"
+        },
+        "requirement_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "requirement_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "#/$defs/gateStatus"
+        },
+        "validator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "official_validator": {
+          "type": "boolean"
+        },
+        "evidence_path": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "validatorRecord": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "validator_id",
+        "status",
+        "available",
+        "executed",
+        "report_path",
+        "validated_usd_sha256",
+        "validated_composition_fingerprint",
+        "profile_id",
+        "profile_version",
+        "feature_results",
+        "requirement_results",
+        "reason"
+      ],
+      "properties": {
+        "validator_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "#/$defs/gateStatus"
+        },
+        "available": {
+          "type": "boolean"
+        },
+        "executed": {
+          "type": "boolean"
+        },
+        "report_path": {
+          "type": "string"
+        },
+        "report_sha256": {
+          "type": "string",
+          "pattern": "^(?:[a-f0-9]{64})?$"
+        },
+        "validated_usd_sha256": {
+          "type": "string",
+          "pattern": "^(?:[a-f0-9]{64})?$"
+        },
+        "validated_composition_fingerprint": {
+          "type": "string",
+          "pattern": "^(?:[a-f0-9]{64})?$"
+        },
+        "profile_id": {
+          "type": "string"
+        },
+        "profile_version": {
+          "type": "string"
+        },
+        "feature_results": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "requirement_results": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "runtimeRecord": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "runtime_id",
+        "status",
+        "available",
+        "executed",
+        "report_path",
+        "validated_usd_sha256",
+        "validated_composition_fingerprint",
+        "required_test_ids",
+        "behavioural_tests",
+        "reason"
+      ],
+      "properties": {
+        "runtime_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "#/$defs/gateStatus"
+        },
+        "available": {
+          "type": "boolean"
+        },
+        "executed": {
+          "type": "boolean"
+        },
+        "report_path": {
+          "type": "string"
+        },
+        "report_sha256": {
+          "type": "string",
+          "pattern": "^(?:[a-f0-9]{64})?$"
+        },
+        "validated_usd_sha256": {
+          "type": "string",
+          "pattern": "^(?:[a-f0-9]{64})?$"
+        },
+        "validated_composition_fingerprint": {
+          "type": "string",
+          "pattern": "^(?:[a-f0-9]{64})?$"
+        },
+        "required_test_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "behavioural_tests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["test_id", "status"]
+          }
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*\\.[0-9]+(?:\\.[0-9]+)?(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "asset_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["proposal", "validated", "review_required", "blocked", "released", "not_validated"]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["evidence_id", "kind", "uri", "checksum"],
+        "properties": {
+          "evidence_id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "uri": {
+            "type": "string"
+          },
+          "checksum": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "provider_trace": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["provider", "model", "role", "prompt_checksum"],
+        "properties": {
+          "provider": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "prompt_checksum": {
+            "type": "string"
+          },
+          "request_id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "review_status": {
+      "type": "string",
+      "enum": ["not_reviewed", "review_required", "approved", "rejected"]
+    },
+    "package_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "usd_root_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "usd_layer_stack": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "units_policy": {
+      "type": "string",
+      "minLength": 1
+    },
+    "axis_policy": {
+      "type": "string",
+      "minLength": 1
+    },
+    "material_manifest_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "physics_articulation_manifest_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "simready_profile": {
+      "$ref": "#/$defs/simreadyProfile"
+    },
+    "simready_conformance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "certification_claimed",
+        "claim_scope",
+        "profile",
+        "features",
+        "requirements",
+        "openusd_compliance",
+        "articulation_schema",
+        "official_validator",
+        "runtime_validation"
+      ],
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/gateStatus"
+        },
+        "certification_claimed": {
+          "const": false
+        },
+        "claim_scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profile": {
+          "$ref": "#/$defs/simreadyProfile"
+        },
+        "features": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/featureResult"
+          }
+        },
+        "requirements": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/requirementResult"
+          }
+        },
+        "openusd_compliance": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["checker_id", "checker_version", "status", "asset_path", "asset_sha256", "reason"],
+          "properties": {
+            "checker_id": {"const": "openusd-compliance-checker"},
+            "checker_version": {"type": "string"},
+            "status": {"$ref": "#/$defs/gateStatus"},
+            "asset_path": {"type": "string"},
+            "asset_sha256": {"type": "string", "pattern": "^(?:[a-f0-9]{64})?$"},
+            "reason": {"type": "string"},
+            "report_path": {"type": "string"},
+            "report_sha256": {"type": "string", "pattern": "^(?:[a-f0-9]{64})?$"}
+          }
+        },
+        "articulation_schema": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["status", "required", "evidence_path", "articulation_root_paths", "joint_results", "reason"],
+          "properties": {
+            "status": {"$ref": "#/$defs/gateStatus"},
+            "required": {"type": "boolean"},
+            "evidence_path": {"type": "string"},
+            "articulation_root_paths": {"type": "array", "items": {"type": "string"}},
+            "joint_results": {"type": "array", "items": {"type": "object"}},
+            "reason": {"type": "string"}
+          }
+        },
+        "official_validator": {
+          "$ref": "#/$defs/validatorRecord"
+        },
+        "runtime_validation": {
+          "$ref": "#/$defs/runtimeRecord"
+        },
+        "semantic_label_requirement_uri": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "validation_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["gate_id", "gate_type", "status", "evidence_path", "repair_action", "rerun_required"],
+        "properties": {
+          "gate_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "gate_type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "$ref": "#/$defs/gateStatus"
+          },
+          "evidence_path": {
+            "type": "string"
+          },
+          "repair_action": {
+            "type": "string"
+          },
+          "rerun_required": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "isaac_sim_load_check": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["pending", "pass", "blocked", "skipped"]
+        }
+      }
+    },
+    "performance_budget": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "promotion_status": {
+      "type": "string",
+      "enum": ["draft", "validated", "review_required", "failed", "released"]
+    }
+  }
+}

@@ -1,0 +1,4 @@
+name: evaluation-validation-lead
+model_role: planner
+temperature: 0.2
+max_tokens: 4096

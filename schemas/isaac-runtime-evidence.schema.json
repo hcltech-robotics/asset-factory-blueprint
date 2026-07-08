@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hcltech-robotics.github.io/asset-factory-blueprint/schemas/v1/isaac-runtime-evidence.schema.json",
+  "title": "Isaac runtime evidence",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "report_identity",
+    "protocol_identity",
+    "execution_identity",
+    "runtime_identity",
+    "status",
+    "usd_path",
+    "usd_label",
+    "usd_sha256",
+    "package_dependency_fingerprint",
+    "package_inventory",
+    "profile_id",
+    "profile_version",
+    "loaded",
+    "width",
+    "height",
+    "min_seconds",
+    "physics_dt",
+    "validation_parameters",
+    "behavioural_tests",
+    "runtime_availability",
+    "errors",
+    "attestation"
+  ],
+  "properties": {
+    "report_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": {"const": "asset-factory.isaac-runtime-evidence"},
+        "version": {"const": "1.0"}
+      }
+    },
+    "protocol_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": {"const": "asset-factory.isaac-runtime-validation"},
+        "version": {"const": "1.0"}
+      }
+    },
+    "execution_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "producer_id",
+        "producer_version",
+        "producer_sha256",
+        "started_at",
+        "completed_at",
+        "python_version",
+        "platform",
+        "architecture"
+      ],
+      "properties": {
+        "producer_id": {"const": "asset-factory-blueprint.isaac-load-check"},
+        "producer_version": {"const": "1.0"},
+        "producer_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "started_at": {"type": "string", "format": "date-time"},
+        "completed_at": {"type": "string", "format": "date-time"},
+        "python_version": {"type": "string", "minLength": 1},
+        "platform": {"type": "string", "minLength": 1},
+        "architecture": {"type": "string"}
+      }
+    },
+    "runtime_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "renderer", "physics_backend", "headless"],
+      "properties": {
+        "id": {"const": "nvidia-isaac-sim"},
+        "version": {"type": "string"},
+        "renderer": {"const": "RayTracedLighting"},
+        "physics_backend": {"const": "PhysX"},
+        "headless": {"const": true}
+      }
+    },
+    "status": {"type": "string", "enum": ["pass", "blocked"]},
+    "usd_path": {"type": "string", "minLength": 1},
+    "usd_label": {
+      "type": "string",
+      "pattern": "^(?:project:///|package://)[A-Za-z0-9/._~%+-]+$"
+    },
+    "usd_sha256": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "composition_fingerprint": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "package_dependency_fingerprint": {
+      "type": "string",
+      "anyOf": [
+        {"pattern": "^sha256:[A-Fa-f0-9]{64}$"},
+        {"const": ""}
+      ]
+    },
+    "package_inventory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"}
+        }
+      }
+    },
+    "profile_id": {"type": "string"},
+    "profile_version": {"type": "string"},
+    "loaded": {"type": "boolean"},
+    "width": {"type": "integer", "minimum": 64, "maximum": 4096},
+    "height": {"type": "integer", "minimum": 64, "maximum": 4096},
+    "min_seconds": {"type": "number", "minimum": 0.1, "maximum": 300.0},
+    "physics_dt": {"type": "number", "minimum": 0.0001, "maximum": 0.1},
+    "validation_parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "width",
+        "height",
+        "min_seconds",
+        "physics_dt",
+        "settle_steps",
+        "impulse_steps",
+        "minimum_drop_metres",
+        "minimum_impulse_motion_metres",
+        "settled_speed_metres_per_second",
+        "repeatability_tolerance_metres"
+      ],
+      "properties": {
+        "width": {"type": "integer", "minimum": 64, "maximum": 4096},
+        "height": {"type": "integer", "minimum": 64, "maximum": 4096},
+        "min_seconds": {"type": "number", "minimum": 0.1, "maximum": 300.0},
+        "physics_dt": {"type": "number", "minimum": 0.0001, "maximum": 0.1},
+        "settle_steps": {"type": "integer", "minimum": 1, "maximum": 5000},
+        "impulse_steps": {"type": "integer", "minimum": 1, "maximum": 5000},
+        "minimum_drop_metres": {"type": "number", "minimum": 0.0, "maximum": 10.0},
+        "minimum_impulse_motion_metres": {"type": "number", "minimum": 0.0, "maximum": 10.0},
+        "settled_speed_metres_per_second": {"type": "number", "minimum": 0.0, "maximum": 100.0},
+        "repeatability_tolerance_metres": {"type": "number", "minimum": 0.0, "maximum": 10.0}
+      }
+    },
+    "behavioural_tests": {"type": "array", "items": {"type": "object"}},
+    "runtime_availability": {"type": "object"},
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "status", "algorithm", "key_id", "payload_digest", "signature"],
+      "properties": {
+        "schema_version": {"const": "1.0.0"},
+        "status": {"type": "string", "enum": ["signed", "unsigned"]},
+        "algorithm": {"const": "hmac-sha256"},
+        "key_id": {"type": "string"},
+        "payload_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "signature": {"type": "string"}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "pass"}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "loaded": {"const": true},
+          "runtime_identity": {
+            "properties": {"version": {"type": "string", "minLength": 1}}
+          },
+          "attestation": {
+            "properties": {
+              "status": {"const": "signed"},
+              "key_id": {"type": "string", "minLength": 1},
+              "signature": {"type": "string", "pattern": "^hmac-sha256:[0-9a-f]{64}$"}
+            }
+          }
+        }
+      }
+    }
+  ]
+}

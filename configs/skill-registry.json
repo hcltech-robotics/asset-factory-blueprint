@@ -1,0 +1,298 @@
+{
+  "version": "1.0",
+  "skills": [
+    {
+      "name": "asset-factory-orchestrator",
+      "category": "planning",
+      "package": "skills/asset-factory-orchestrator",
+      "provider_roles": [
+        "planner"
+      ],
+      "inputs": [
+        "skill-context",
+        "run-request"
+      ],
+      "outputs": [
+        "planning-report"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "asset-programme-strategist",
+      "category": "intake",
+      "package": "skills/asset-programme-strategist",
+      "provider_roles": [
+        "planner"
+      ],
+      "inputs": [
+        "skill-context",
+        "natural-language-brief",
+        "source-references",
+        "run-request"
+      ],
+      "outputs": [
+        "run-request",
+        "intake-report"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "capability-steward",
+      "category": "capability",
+      "package": "skills/capability-steward",
+      "provider_roles": [
+        "planner"
+      ],
+      "inputs": [
+        "skill-context",
+        "run-request"
+      ],
+      "outputs": [
+        "capability-report"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "evaluation-validation-lead",
+      "category": "validation",
+      "package": "skills/evaluation-validation-lead",
+      "provider_roles": [
+        "validator_judge"
+      ],
+      "inputs": [
+        "skill-context",
+        "run-request"
+      ],
+      "outputs": [
+        "validation-report"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "external-model-runner-lead",
+      "category": "runtime",
+      "package": "skills/external-model-runner-lead",
+      "provider_roles": [
+        "validator_judge"
+      ],
+      "inputs": [
+        "skill-context",
+        "run-request"
+      ],
+      "outputs": [
+        "runtime-report"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "governance-provenance-lead",
+      "category": "governance",
+      "package": "skills/governance-provenance-lead",
+      "provider_roles": [
+        "validator_judge"
+      ],
+      "inputs": [
+        "skill-context",
+        "run-request"
+      ],
+      "outputs": [
+        "governance-report"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "infrastructure-orchestration-lead",
+      "category": "infrastructure",
+      "package": "skills/infrastructure-orchestration-lead",
+      "provider_roles": [
+        "validator_judge"
+      ],
+      "inputs": [
+        "skill-context",
+        "run-request"
+      ],
+      "outputs": [
+        "infrastructure-report"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "library-curator",
+      "category": "library",
+      "package": "skills/library-curator",
+      "provider_roles": [
+        "planner"
+      ],
+      "inputs": [
+        "skill-context",
+        "run-request"
+      ],
+      "outputs": [
+        "library-report"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "material-inference-lead",
+      "category": "materials",
+      "package": "skills/material-inference-lead",
+      "provider_roles": [
+        "validator_judge"
+      ],
+      "inputs": [
+        "skill-context",
+        "run-request"
+      ],
+      "outputs": [
+        "materials-report"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "nonvisual-materials-lead",
+      "category": "properties",
+      "package": "skills/nonvisual-materials-lead",
+      "provider_roles": [
+        "validator_judge"
+      ],
+      "inputs": [
+        "skill-context",
+        "run-request"
+      ],
+      "outputs": [
+        "properties-report"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "physics-articulation-lead",
+      "category": "physics",
+      "package": "skills/physics-articulation-lead",
+      "provider_roles": [
+        "validator_judge"
+      ],
+      "inputs": [
+        "skill-context",
+        "run-request"
+      ],
+      "outputs": [
+        "physics-report"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "reconstruction-lead",
+      "category": "geometry",
+      "package": "skills/reconstruction-lead",
+      "provider_roles": [
+        "validator_judge"
+      ],
+      "inputs": [
+        "skill-context",
+        "run-request"
+      ],
+      "outputs": [
+        "geometry-report"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "rl-environment-design-lead",
+      "category": "rl",
+      "package": "skills/rl-environment-design-lead",
+      "provider_roles": [
+        "validator_judge"
+      ],
+      "inputs": [
+        "skill-context",
+        "run-request"
+      ],
+      "outputs": [
+        "rl-report"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "segmentation-lead",
+      "category": "segmentation",
+      "package": "skills/segmentation-lead",
+      "provider_roles": [
+        "vision_reasoner",
+        "material_reasoner"
+      ],
+      "inputs": [
+        "skill-context",
+        "run-request"
+      ],
+      "outputs": [
+        "segmentation-manifest"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "simready-verification-lead",
+      "category": "isaac",
+      "package": "skills/simready-verification-lead",
+      "provider_roles": [
+        "validator_judge"
+      ],
+      "inputs": [
+        "skill-context",
+        "run-request"
+      ],
+      "outputs": [
+        "isaac-report"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "source-ingestion-lead",
+      "category": "source",
+      "package": "skills/source-ingestion-lead",
+      "provider_roles": [
+        "validator_judge"
+      ],
+      "inputs": [
+        "skill-context",
+        "run-request"
+      ],
+      "outputs": [
+        "source-report"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "stage-invoker",
+      "category": "orchestration",
+      "package": "skills/stage-invoker",
+      "provider_roles": [
+        "planner",
+        "vlm_reviewer"
+      ],
+      "inputs": [
+        "skill-context",
+        "run-request"
+      ],
+      "outputs": [
+        "stage-run-report"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "texturing-lead",
+      "category": "textures",
+      "package": "skills/texturing-lead",
+      "provider_roles": [
+        "validator_judge"
+      ],
+      "inputs": [
+        "skill-context",
+        "run-request"
+      ],
+      "outputs": [
+        "textures-report"
+      ],
+      "enabled": true
+    }
+  ]
+}

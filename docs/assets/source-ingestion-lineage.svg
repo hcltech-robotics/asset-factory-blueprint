@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="620" viewBox="0 0 1360 620" role="img" aria-labelledby="title desc">
+  <title id="title">Source ingestion lineage</title>
+  <desc id="desc">Programme intent and original source metadata become an immutable project copy, source record and explicit downstream route while checksums, rights and unit policy carry forward.</desc>
+  <defs>
+    <style>
+      .bg { fill: transparent; }
+      .box { fill: #0a100c; stroke: #3d4a42; stroke-width: 2; }
+      .boxHot { fill: #0b1608; stroke: #76b900; stroke-width: 2.3; }
+      .boxAccent { fill: #160929; stroke: #5f1ebe; stroke-width: 2.3; }
+      .inner { fill: #0d130f; stroke: #7d8780; stroke-width: 1.9; }
+      .innerHot { fill: #0d1809; stroke: #76b900; stroke-width: 1.9; }
+      .innerAccent { fill: #1b0c31; stroke: #5f1ebe; stroke-width: 1.9; }
+      .label { fill: #edf3ef; font-family: Aptos, Helvetica, sans-serif; font-size: 20px; font-weight: 680; }
+      .small { fill: #c6cec8; font-family: Aptos, Helvetica, sans-serif; font-size: 13px; font-weight: 620; }
+      .line { stroke: #e6ece8; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+      .greenLine { stroke: #76b900; stroke-width: 2.4; fill: none; marker-end: url(#arrowGreen); }
+      .accentLine { stroke: #5f1ebe; stroke-width: 2.4; fill: none; marker-end: url(#arrowAccent); }
+    </style>
+    <marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#e6ece8"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#76b900"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#5f1ebe"/>
+    </marker>
+  </defs>
+  <rect class="box" x="40" y="100" width="240" height="240" rx="8"/>
+  <text class="label" x="160.0" y="142" text-anchor="middle">Programme intake</text>
+  <rect class="inner" x="62" y="204" width="196" height="34" rx="4"/>
+  <text class="small" x="160.0" y="225.0" text-anchor="middle" style="font-size:12px">task + simulator</text>
+  <rect class="inner" x="62" y="250" width="196" height="34" rx="4"/>
+  <text class="small" x="160.0" y="271.5" text-anchor="middle" style="font-size:13px">evidence needs</text>
+  <path class="line" d="M280 220 L296 220"/>
+  <rect class="box" x="300" y="100" width="240" height="240" rx="8"/>
+  <text class="label" x="420.0" y="142" text-anchor="middle">Original source</text>
+  <rect class="inner" x="322" y="204" width="196" height="34" rx="4"/>
+  <text class="small" x="420.0" y="225.5" text-anchor="middle" style="font-size:13px">path metadata</text>
+  <rect class="inner" x="322" y="250" width="196" height="34" rx="4"/>
+  <text class="small" x="420.0" y="271.0" text-anchor="middle" style="font-size:12px">original checksum</text>
+  <path class="accentLine" d="M540 220 L556 220"/>
+  <rect class="boxAccent" x="560" y="100" width="240" height="240" rx="8"/>
+  <text class="label" x="680.0" y="142" text-anchor="middle">Immutable copy</text>
+  <rect class="innerAccent" x="582" y="204" width="196" height="34" rx="4"/>
+  <text class="small" x="680.0" y="225.5" text-anchor="middle" style="font-size:13px">source-assets/</text>
+  <rect class="inner" x="582" y="250" width="196" height="34" rx="4"/>
+  <text class="small" x="680.0" y="271.5" text-anchor="middle" style="font-size:13px">copy checksum</text>
+  <path class="line" d="M800 220 L816 220"/>
+  <rect class="box" x="820" y="100" width="240" height="240" rx="8"/>
+  <text class="label" x="940.0" y="142" text-anchor="middle">Source record</text>
+  <rect class="inner" x="842" y="204" width="196" height="34" rx="4"/>
+  <text class="small" x="940.0" y="225.0" text-anchor="middle" style="font-size:12px">rights + retention</text>
+  <rect class="inner" x="842" y="250" width="196" height="34" rx="4"/>
+  <text class="small" x="940.0" y="271.5" text-anchor="middle" style="font-size:13px">units + axis</text>
+  <path class="accentLine" d="M1060 220 L1076 220"/>
+  <rect class="box" x="1080" y="100" width="240" height="240" rx="8"/>
+  <text class="label" x="1200.0" y="142" text-anchor="middle">Route decision</text>
+  <rect class="inner" x="1102" y="204" width="196" height="34" rx="4"/>
+  <text class="small" x="1200.0" y="225.0" text-anchor="middle" style="font-size:12px">downstream stages</text>
+  <rect class="inner" x="1102" y="250" width="196" height="34" rx="4"/>
+  <text class="small" x="1200.0" y="270.5" text-anchor="middle" style="font-size:11px">block if incomplete</text>
+  <rect class="boxAccent" x="430" y="420" width="500" height="130" rx="8"/>
+  <text class="label" x="680.0" y="462" text-anchor="middle">Lineage carried forward</text>
+  <rect class="innerAccent" x="452" y="484" width="456" height="21" rx="4"/>
+  <text class="small" x="680.0" y="498.5" text-anchor="middle" style="font-size:12px">checksums + ids</text>
+  <rect class="inner" x="452" y="513" width="456" height="21" rx="4"/>
+  <text class="small" x="680.0" y="528.0" text-anchor="middle" style="font-size:13px">rights + units</text>
+  <path class="accentLine" d="M940 340 L940 385 L680 385 L680 420"/>
+</svg>

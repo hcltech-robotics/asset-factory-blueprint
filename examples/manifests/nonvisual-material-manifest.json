@@ -1,0 +1,37 @@
+{
+  "id": "nonvisual_example",
+  "version": "1.0",
+  "status": "proposal",
+  "asset_id": "warehouse_bin",
+  "source_manifest_id": "source_example",
+  "material_manifest_id": "material_example",
+  "properties": [
+    {
+      "prim_path": "/World/Bin",
+      "property_name": "thermal_conductivity",
+      "property_group": "thermal",
+      "value": 0.16,
+      "unit": "W/(m K)",
+      "range_low": 0.13,
+      "range_high": 0.2,
+      "distribution": "uniform",
+      "method": "material_prior",
+      "confidence": 0.5,
+      "evidence_ids": [
+        "spec_001"
+      ],
+      "validation_status": "review_required",
+      "notes": "requires measurement for task-critical use"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "spec_001",
+      "kind": "spec",
+      "uri": "evidence/spec.md",
+      "checksum": "sha256:example"
+    }
+  ],
+  "uncertainty_policy": "review task-critical values",
+  "review_status": "review_required"
+}

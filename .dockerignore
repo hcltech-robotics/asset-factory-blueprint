@@ -1,0 +1,14 @@
+.git
+.github
+.venv
+.cache
+**/__pycache__
+**/*.pyc
+*.egg-info
+artifacts
+projects
+site
+build
+dist
+library/downloads/*
+!library/downloads/.gitkeep

@@ -1,0 +1,313 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hcltech-robotics.github.io/asset-factory-blueprint/schemas/v1/physics-articulation-manifest.schema.json",
+  "title": "physics and articulation manifest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "asset_id",
+    "material_manifest_id",
+    "usd_input_path",
+    "usd_output_path",
+    "physics_authoring_plan",
+    "rigid_bodies",
+    "colliders",
+    "physics_materials",
+    "mass_properties",
+    "part_graph",
+    "joints",
+    "drives",
+    "limits",
+    "articulation_roots",
+    "collision_filters",
+    "affordances",
+    "validation_gates",
+    "validation_scenarios"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*\\.[0-9]+(?:\\.[0-9]+)?(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "asset_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "proposal",
+        "validated",
+        "review_required",
+        "blocked",
+        "released",
+        "not_validated"
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "evidence_id",
+          "kind",
+          "uri",
+          "checksum"
+        ],
+        "properties": {
+          "evidence_id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "uri": {
+            "type": "string"
+          },
+          "checksum": {
+            "type": "string",
+            "anyOf": [
+              {"pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"},
+              {"const": "sha256:example"}
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "provider_trace": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "provider",
+          "model",
+          "role",
+          "prompt_checksum"
+        ],
+        "properties": {
+          "provider": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "prompt_checksum": {
+            "type": "string"
+          },
+          "request_id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "not_reviewed",
+        "review_required",
+        "approved",
+        "rejected"
+      ]
+    },
+    "usd_input_path": {
+      "type": "string"
+    },
+    "usd_output_path": {
+      "type": "string"
+    },
+    "physics_authoring_plan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "rigid_bodies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "prim_path",
+          "rigid_body_enabled",
+          "kinematic_enabled",
+          "simulation_owner",
+          "starts_asleep",
+          "source_evidence_ids",
+          "authoring_status"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "colliders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "prim_path",
+          "collision_enabled",
+          "approximation",
+          "reason",
+          "validation_status"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "physics_materials": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "mass_properties": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "prim_path",
+          "mass",
+          "density",
+          "center_of_mass",
+          "diagonal_inertia",
+          "principal_axes",
+          "method",
+          "unit_policy",
+          "confidence"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "validation_gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "tuning_scenarios": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "part_graph": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "joints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "joint_name",
+          "joint_type",
+          "body0",
+          "body1",
+          "axis",
+          "local_pos0",
+          "local_rot0",
+          "local_pos1",
+          "local_rot1",
+          "lower_limit",
+          "upper_limit",
+          "limit_unit",
+          "collision_enabled",
+          "source_evidence_ids",
+          "status"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "drives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "limits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "articulation_roots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "collision_filters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "affordances": {
+      "type": "object",
+      "required": [
+        "grasp_points"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "grasp_points": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "grasp_id",
+              "frame",
+              "approach_vector",
+              "gripper_width",
+              "confidence",
+              "evidence_ids",
+              "validation_status"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "affordance_labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "validation_scenarios": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "material_manifest_id": {
+      "type": "string"
+    },
+    "nonvisual_material_manifest_id": {
+      "type": "string"
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

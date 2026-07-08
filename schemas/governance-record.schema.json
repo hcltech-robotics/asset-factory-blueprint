@@ -1,0 +1,288 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hcltech-robotics.github.io/asset-factory-blueprint/schemas/v1/governance-record.schema.json",
+  "title": "governance record",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "id",
+    "version",
+    "status",
+    "evidence"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*\\.[0-9]+(?:\\.[0-9]+)?(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "asset_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "proposal",
+        "validated",
+        "review_required",
+        "blocked",
+        "released",
+        "not_validated"
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidenceRecord"
+      }
+    },
+    "provider_trace": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/providerTrace"
+      }
+    },
+    "source_rights": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sourceRights"
+      }
+    },
+    "retention": {
+      "$ref": "#/$defs/retention"
+    },
+    "reviewer": {
+      "$ref": "#/$defs/reviewer"
+    },
+    "release_decisions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/releaseDecision"
+      }
+    },
+    "raw_secrets_recorded": {
+      "const": false
+    },
+    "rights_status": {
+      "type": "string",
+      "enum": ["unknown", "pending", "cleared", "restricted", "rejected"]
+    },
+    "retention_policy": {
+      "type": "string"
+    },
+    "review_status": {
+      "type": "string",
+      "enum": ["not_reviewed", "review_required", "approved", "rejected"]
+    },
+    "release_status": {
+      "type": "string",
+      "enum": ["not_evaluated", "review_required", "ready_for_release", "approved", "blocked"]
+    },
+    "release_allowed": {
+      "type": "boolean"
+    },
+    "promotion_blockers": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "promotion_record": {
+      "type": "object"
+    },
+    "operator_decision": {
+      "type": "object"
+    },
+    "task_scope": {
+      "type": "string"
+    },
+    "asset_fingerprint": {
+      "type": "string",
+      "pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"
+    },
+    "provenance": {
+      "type": "object"
+    },
+    "validation_gates": {
+      "type": "array",
+      "items": {"type": "object"}
+    },
+    "validation_status": {
+      "type": "string"
+    },
+    "blocked_reasons": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"version": {"pattern": "^2\\."}},
+        "required": ["version"]
+      },
+      "then": {
+        "required": [
+          "source_rights",
+          "retention",
+          "reviewer",
+          "release_decisions",
+          "raw_secrets_recorded",
+          "release_status",
+          "release_allowed",
+          "extensions"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "evidenceRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_id", "kind", "uri", "checksum"],
+      "properties": {
+        "evidence_id": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "minLength": 1},
+        "uri": {"type": "string", "minLength": 1},
+        "checksum": {
+          "type": "string",
+          "anyOf": [
+            {"pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"},
+            {"const": "sha256:example"}
+          ]
+        },
+        "media_type": {"type": "string"},
+        "created_at": {"type": "string", "format": "date-time"},
+        "extensions": {"type": "object", "additionalProperties": true}
+      }
+    },
+    "providerTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "model", "role", "prompt_checksum"],
+      "properties": {
+        "provider": {"type": "string"},
+        "model": {"type": "string"},
+        "role": {"type": "string"},
+        "prompt_checksum": {"type": "string"},
+        "request_id": {"type": "string"},
+        "model_revision": {"type": "string"},
+        "weights_checksum": {"type": "string"},
+        "extensions": {"type": "object", "additionalProperties": true}
+      }
+    },
+    "sourceRights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rights_id",
+        "source_id",
+        "rights_status",
+        "licence_expression",
+        "permitted_uses",
+        "redistribution_allowed",
+        "derivatives_allowed",
+        "privacy_status",
+        "evidence_ids"
+      ],
+      "properties": {
+        "rights_id": {"type": "string", "minLength": 1},
+        "source_id": {"type": "string", "minLength": 1},
+        "rights_status": {
+          "type": "string",
+          "enum": ["unknown", "pending", "cleared", "restricted", "rejected"]
+        },
+        "licence_expression": {"type": "string", "minLength": 1},
+        "terms_uri": {"type": ["string", "null"], "format": "uri-reference"},
+        "creator": {"type": ["string", "null"]},
+        "revision": {"type": ["string", "null"]},
+        "attribution": {"type": ["string", "null"]},
+        "permitted_uses": {"type": "array", "items": {"type": "string"}},
+        "redistribution_allowed": {"type": "boolean"},
+        "derivatives_allowed": {"type": "boolean"},
+        "privacy_status": {
+          "type": "string",
+          "enum": ["not_applicable", "unknown", "cleared", "restricted", "rejected"]
+        },
+        "consent_evidence_ids": {"type": "array", "items": {"type": "string"}},
+        "evidence_ids": {"type": "array", "items": {"type": "string"}},
+        "expires_at": {"type": ["string", "null"], "format": "date-time"},
+        "extensions": {"type": "object", "additionalProperties": true}
+      }
+    },
+    "retention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy", "deletion_required", "evidence_ids"],
+      "properties": {
+        "policy": {
+          "type": "string",
+          "enum": ["project", "delete_after_project", "fixed_period", "indefinite", "legal_hold"]
+        },
+        "expires_at": {"type": ["string", "null"], "format": "date-time"},
+        "deletion_required": {"type": "boolean"},
+        "evidence_ids": {"type": "array", "items": {"type": "string"}},
+        "extensions": {"type": "object", "additionalProperties": true}
+      }
+    },
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewer_id", "review_status", "evidence_ids"],
+      "properties": {
+        "reviewer_id": {"type": "string"},
+        "review_status": {
+          "type": "string",
+          "enum": ["not_reviewed", "review_required", "approved", "rejected"]
+        },
+        "reviewed_at": {"type": ["string", "null"], "format": "date-time"},
+        "evidence_ids": {"type": "array", "items": {"type": "string"}},
+        "extensions": {"type": "object", "additionalProperties": true}
+      }
+    },
+    "releaseDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decision_id",
+        "scope",
+        "policy_version",
+        "evaluated_at",
+        "evaluation_order",
+        "release_allowed",
+        "release_status",
+        "required_uses",
+        "required_gates",
+        "blockers"
+      ],
+      "properties": {
+        "decision_id": {"type": "string"},
+        "scope": {
+          "type": "string",
+          "enum": ["visualisation", "rigid_body_manipulation", "articulated_training", "redistribution"]
+        },
+        "policy_version": {"type": "string"},
+        "evaluated_at": {"type": "string", "format": "date-time"},
+        "evaluation_order": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "release_allowed": {"type": "boolean"},
+        "release_status": {"type": "string", "enum": ["approved", "blocked"]},
+        "required_uses": {"type": "array", "items": {"type": "string"}},
+        "required_gates": {"type": "array", "items": {"type": "string"}},
+        "blockers": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,318 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hcltech-robotics.github.io/asset-factory-blueprint/schemas/v1/run-request.schema.json",
+  "title": "run request",
+  "type": "object",
+  "required": [
+    "id",
+    "version",
+    "objective",
+    "sources",
+    "requested_outputs"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*\\.[0-9]+(?:\\.[0-9]+)?(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "asset_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "proposal",
+        "validated",
+        "review_required",
+        "blocked",
+        "released",
+        "not_validated"
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "evidence_id",
+          "kind",
+          "uri",
+          "checksum"
+        ],
+        "properties": {
+          "evidence_id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "uri": {
+            "type": "string"
+          },
+          "checksum": {
+            "type": "string",
+            "anyOf": [
+              {"pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"},
+              {"const": "sha256:example"}
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "provider_trace": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "provider",
+          "model",
+          "role",
+          "prompt_checksum"
+        ],
+        "properties": {
+          "provider": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "prompt_checksum": {
+            "type": "string"
+          },
+          "request_id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "not_reviewed",
+        "review_required",
+        "approved",
+        "rejected"
+      ]
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "requested_outputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "simready_profile": {
+          "type": "object",
+          "required": [
+            "profile_id",
+            "profile_version"
+          ],
+          "properties": {
+            "profile_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "profile_version": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]*\\.[0-9]+(?:\\.[0-9]+)?(?:[-+][0-9A-Za-z.-]+)?$"
+            },
+            "target_runtime": {
+              "type": "string",
+              "minLength": 1
+            },
+            "specification_uri": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "additionalProperties": false
+        },
+        "physics_evidence": {
+          "type": "object",
+          "required": [
+            "status",
+            "prim_path",
+            "mass",
+            "center_of_mass",
+            "diagonal_inertia",
+            "principal_axes",
+            "method",
+            "unit_policy",
+            "uncertainty",
+            "source_evidence_ids",
+            "evidence",
+            "approval",
+            "evidence_fingerprint",
+            "attestation"
+          ],
+          "properties": {
+            "status": {"const": "accepted"},
+            "prim_path": {"type": "string", "pattern": "^/[^\\s]*$"},
+            "mass": {"type": "number", "exclusiveMinimum": 0},
+            "center_of_mass": {
+              "type": "array",
+              "prefixItems": [{"type": "number"}, {"type": "number"}, {"type": "number"}],
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "diagonal_inertia": {
+              "type": "array",
+              "prefixItems": [
+                {"type": "number", "exclusiveMinimum": 0},
+                {"type": "number", "exclusiveMinimum": 0},
+                {"type": "number", "exclusiveMinimum": 0}
+              ],
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "principal_axes": {
+              "type": "array",
+              "prefixItems": [
+                {"type": "number"},
+                {"type": "number"},
+                {"type": "number"},
+                {"type": "number"}
+              ],
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "method": {
+              "enum": ["measured", "manufacturer_specification", "computed_from_measured_density"]
+            },
+            "unit_policy": {
+              "oneOf": [
+                {"const": "si_m_kg_s"},
+                {
+                  "type": "object",
+                  "required": ["mass", "length", "inertia"],
+                  "properties": {
+                    "mass": {"const": "kg"},
+                    "length": {"const": "m"},
+                    "inertia": {"const": "kg*m^2"}
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "uncertainty": {
+              "type": "object",
+              "required": ["mass", "diagonal_inertia"],
+              "properties": {
+                "mass": {"type": "number", "minimum": 0},
+                "diagonal_inertia": {
+                  "type": "array",
+                  "prefixItems": [
+                    {"type": "number", "minimum": 0},
+                    {"type": "number", "minimum": 0},
+                    {"type": "number", "minimum": 0}
+                  ],
+                  "minItems": 3,
+                  "maxItems": 3
+                }
+              },
+              "additionalProperties": false
+            },
+            "source_evidence_ids": {
+              "type": "array",
+              "items": {"type": "string", "minLength": 1},
+              "minItems": 1,
+              "uniqueItems": true
+            },
+            "evidence": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["evidence_id", "path", "sha256"],
+                "properties": {
+                  "evidence_id": {"type": "string", "minLength": 1},
+                  "path": {"type": "string", "minLength": 1},
+                  "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+                },
+                "additionalProperties": false
+              }
+            },
+            "approval": {
+              "type": "object",
+              "required": ["status", "decision_id", "reviewer", "decided_at"],
+              "properties": {
+                "status": {"const": "accepted"},
+                "decision_id": {"type": "string", "minLength": 1},
+                "reviewer": {"type": "string", "minLength": 1},
+                "decided_at": {"type": "string", "format": "date-time"}
+              },
+              "additionalProperties": false
+            },
+            "evidence_fingerprint": {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            },
+            "attestation": {
+              "type": "object",
+              "required": ["schema_version", "algorithm", "key_id", "payload_sha256", "signature"],
+              "properties": {
+                "schema_version": {"const": "1.0.0"},
+                "algorithm": {"const": "HMAC-SHA256"},
+                "key_id": {"type": "string", "pattern": "^afb-physics-[a-f0-9]{32}$"},
+                "payload_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+                "signature": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": true
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "version": {"not": {"pattern": "^2\\."}}
+      },
+      "required": ["version"]
+    },
+    {
+      "properties": {
+        "id": {"$ref": "#/properties/id"},
+        "version": {"pattern": "^2\\.[0-9]+(?:\\.[0-9]+)?(?:[-+][0-9A-Za-z.-]+)?$"},
+        "objective": {"$ref": "#/properties/objective"},
+        "sources": {"$ref": "#/properties/sources"},
+        "requested_outputs": {"$ref": "#/properties/requested_outputs"},
+        "constraints": {"$ref": "#/properties/constraints"},
+        "extensions": {"$ref": "#/properties/extensions"}
+      },
+      "required": ["id", "version", "objective", "sources", "requested_outputs", "extensions"],
+      "additionalProperties": false
+    }
+  ]
+}

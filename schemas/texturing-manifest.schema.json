@@ -1,0 +1,325 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hcltech-robotics.github.io/asset-factory-blueprint/schemas/v1/texturing-manifest.schema.json",
+  "title": "texturing manifest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "asset_id",
+    "material_manifest_id",
+    "uv_readiness_status",
+    "texture_generation_status",
+    "texture_blocked_reasons",
+    "texture_requests",
+    "texture_outputs",
+    "render_evidence",
+    "validation_status"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*\\.[0-9]+(?:\\.[0-9]+)?(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "asset_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "proposal",
+        "validated",
+        "review_required",
+        "blocked",
+        "released",
+        "not_validated"
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "evidence_id",
+          "kind",
+          "uri",
+          "checksum"
+        ],
+        "properties": {
+          "evidence_id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "uri": {
+            "type": "string"
+          },
+          "checksum": {
+            "type": "string",
+            "anyOf": [
+              {"pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"},
+              {"const": "sha256:example"}
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "provider_trace": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "provider",
+          "model",
+          "role",
+          "prompt_checksum"
+        ],
+        "properties": {
+          "provider": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "prompt_checksum": {
+            "type": "string"
+          },
+          "request_id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "texture_map_policy_trace": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "role",
+          "map_kind",
+          "variant_id",
+          "policy",
+          "output_path",
+          "output_sha256"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "not_reviewed",
+        "review_required",
+        "approved",
+        "rejected"
+      ]
+    },
+    "material_manifest_id": {
+      "type": "string"
+    },
+    "uv_readiness_status": {
+      "type": "string"
+    },
+    "texture_generation_status": {
+      "type": "string",
+      "enum": [
+        "not_requested",
+        "blocked",
+        "generated",
+        "validated"
+      ]
+    },
+    "texture_blocked_reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "texture_requests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "material_name",
+          "prim_paths",
+          "texture_intent",
+          "prompt",
+          "negative_prompt",
+          "provider_role",
+          "seed",
+          "resolution",
+          "tileable",
+          "allowed_variation_bounds"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "texture_outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "base_color_path",
+          "normal_path",
+          "roughness_path",
+          "metallic_path",
+          "height_or_displacement_path",
+          "usd_output_path",
+          "checksum",
+          "generation_method",
+          "is_generated_texture",
+          "status"
+        ],
+        "properties": {
+          "base_color_path": {
+            "type": "string"
+          },
+          "normal_path": {
+            "type": "string"
+          },
+          "roughness_path": {
+            "type": "string"
+          },
+          "metallic_path": {
+            "type": "string"
+          },
+          "height_or_displacement_path": {
+            "type": "string"
+          },
+          "usd_output_path": {
+            "type": "string"
+          },
+          "checksum": {
+            "type": "string",
+            "pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"
+          },
+          "generation_method": {
+            "type": "string"
+          },
+          "is_generated_texture": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "source_image_review": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "display_surface": {
+          "type": "string"
+        },
+        "source_image_path": {
+          "type": "string"
+        },
+        "source_image_checksum": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "source_assets_mutated": {
+          "type": "boolean"
+        }
+      }
+    },
+    "texture_variants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "mesh_deformation_requests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "variant_id",
+          "deformation_kind",
+          "amplitude_m",
+          "height_or_displacement_path",
+          "status"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "variant_usd_path": {
+      "type": "string"
+    },
+    "deformation_usd_path": {
+      "type": "string"
+    },
+    "render_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "validation_status": {
+      "type": "string"
+    },
+    "decals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "decal_id",
+          "target",
+          "placement",
+          "source",
+          "status"
+        ],
+        "properties": {
+          "decal_id": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "semantic_label": {
+            "type": "string"
+          },
+          "placement": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "source": {
+            "type": "string"
+          },
+          "source_evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

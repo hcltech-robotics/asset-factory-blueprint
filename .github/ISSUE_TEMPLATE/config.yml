@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security report
+    url: https://github.com/hcltech-robotics/asset-factory-blueprint/security/advisories/new
+    about: Report vulnerabilities privately.
+  - name: Support guidance
+    url: https://github.com/hcltech-robotics/asset-factory-blueprint/blob/main/SUPPORT.md
+    about: Check the support boundary and diagnostic bundle before filing.

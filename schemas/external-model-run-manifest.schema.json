@@ -1,0 +1,247 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hcltech-robotics.github.io/asset-factory-blueprint/schemas/v1/external-model-run-manifest.schema.json",
+  "title": "external model run manifest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "run_id",
+    "model_id",
+    "model_kind",
+    "input_manifest",
+    "output_manifest",
+    "input_schema",
+    "output_schema",
+    "gpu_requirements",
+    "runtime_env",
+    "command_or_endpoint_redacted",
+    "allowed_paths",
+    "status",
+    "artefacts",
+    "logs_path",
+    "wandb_run_id"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*\\.[0-9]+(?:\\.[0-9]+)?(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "asset_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "proposal",
+        "validated",
+        "review_required",
+        "blocked",
+        "released",
+        "not_validated"
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "evidence_id",
+          "kind",
+          "uri",
+          "checksum"
+        ],
+        "properties": {
+          "evidence_id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "uri": {
+            "type": "string"
+          },
+          "checksum": {
+            "type": "string",
+            "anyOf": [
+              {"pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"},
+              {"const": "sha256:example"}
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "provider_trace": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "provider",
+          "model",
+          "role",
+          "prompt_checksum"
+        ],
+        "properties": {
+          "provider": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "prompt_checksum": {
+            "type": "string"
+          },
+          "request_id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "not_reviewed",
+        "review_required",
+        "approved",
+        "rejected"
+      ]
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "attempt_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attempt_id", "run_id", "stage_id", "attempt_number", "request_digest"],
+      "properties": {
+        "attempt_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"},
+        "run_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"},
+        "stage_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"},
+        "attempt_number": {"type": "integer", "minimum": 1},
+        "request_digest": {"type": "string", "pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"}
+      }
+    },
+    "model_id": {
+      "type": "string"
+    },
+    "model_kind": {
+      "type": "string"
+    },
+    "input_manifest": {
+      "type": "string"
+    },
+    "output_manifest": {
+      "type": "string"
+    },
+    "input_schema": {
+      "type": "string"
+    },
+    "output_schema": {
+      "type": "string"
+    },
+    "gpu_requirements": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "runtime_env": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "environment_bom": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operating_system", "python", "hardware", "accelerator", "container", "simulation"],
+      "properties": {
+        "operating_system": {"type": "object"},
+        "python": {"type": "object"},
+        "hardware": {"type": "object"},
+        "accelerator": {"type": "object"},
+        "container": {"type": "object"},
+        "simulation": {"type": "object"},
+        "extensions": {"type": "object", "additionalProperties": true}
+      }
+    },
+    "model_bom": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "provider",
+        "kind",
+        "model_id",
+        "revision",
+        "weights_checksum",
+        "licence_expression",
+        "resolution_status",
+        "runtime"
+      ],
+      "properties": {
+        "role": {"type": "string"},
+        "provider": {"type": "string"},
+        "kind": {"type": "string"},
+        "model_id": {"type": "string"},
+        "revision": {"type": "string"},
+        "weights_checksum": {"type": "string"},
+        "licence_expression": {"type": "string"},
+        "resolution_status": {"type": "string"},
+        "runtime": {"type": "string"},
+        "extensions": {"type": "object", "additionalProperties": true}
+      }
+    },
+    "command_or_endpoint_redacted": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "allowed_paths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "artefacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "logs_path": {
+      "type": "string"
+    },
+    "wandb_run_id": {
+      "type": "string"
+    },
+    "provenance_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"version": {"pattern": "^2\\."}},
+        "required": ["version"]
+      },
+      "then": {
+        "required": ["attempt_identity", "environment_bom", "model_bom", "provenance_id", "extensions"]
+      }
+    }
+  ]
+}

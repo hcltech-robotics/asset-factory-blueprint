@@ -1,0 +1,53 @@
+{
+  "id": "knowledge",
+  "version": "1.0",
+  "domain": "knowledge",
+  "description": "Curated knowledge corpus for agents: how USD works, how assets are created here, how validation promotes work, how physics binds and how PBR and MDL materials are authored.",
+  "items": [
+    {
+      "item_id": "knowledge_usd_fundamentals",
+      "name": "USD fundamentals",
+      "domain": "knowledge",
+      "source": "curated",
+      "uri": "library/knowledge/usd-fundamentals.md",
+      "tags": ["usd", "openusd", "stage", "layer", "prim", "composition", "reference", "variant", "schema", "xform", "metadata", "defaultprim"],
+      "description": "Stages, layers, prims, composition arcs, schemas, geometry conventions and the grounding rule."
+    },
+    {
+      "item_id": "knowledge_asset_creation",
+      "name": "Asset creation in this factory",
+      "domain": "knowledge",
+      "source": "curated",
+      "uri": "library/knowledge/asset-creation.md",
+      "tags": ["asset", "layer", "authoring", "packaging", "naming", "variants", "layer-stack", "geo", "mtl", "phy", "art", "sem"],
+      "description": "The asset layer stack, authoring rules, packaging and exemplar-first authoring."
+    },
+    {
+      "item_id": "knowledge_validation",
+      "name": "How validation works here",
+      "domain": "knowledge",
+      "source": "curated",
+      "uri": "library/knowledge/validation.md",
+      "tags": ["validation", "gates", "promotion", "proposal", "review", "vlm", "signoff", "governance", "blocked"],
+      "description": "Gate families, promotion states and what agents must never do."
+    },
+    {
+      "item_id": "knowledge_physx_binding",
+      "name": "PhysX and physical property binding",
+      "domain": "knowledge",
+      "source": "curated",
+      "uri": "library/knowledge/physx-binding.md",
+      "tags": ["physics", "physx", "usdphysics", "rigid", "collider", "mass", "friction", "joint", "articulation", "drive", "grasp"],
+      "description": "UsdPhysics schema names, joints and articulations and how proposals become authored opinions."
+    },
+    {
+      "item_id": "knowledge_pbr_mdl",
+      "name": "PBR, MDL and material authoring",
+      "domain": "knowledge",
+      "source": "curated",
+      "uri": "library/knowledge/pbr-mdl-materials.md",
+      "tags": ["pbr", "mdl", "material", "texture", "basecolor", "roughness", "metallic", "normal", "omnipbr", "vmaterials", "usdpreviewsurface"],
+      "description": "The metallic-roughness model, MDL in Omniverse, map policy and library-grounded texture work."
+    }
+  ]
+}

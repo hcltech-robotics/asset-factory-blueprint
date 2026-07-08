@@ -1,0 +1,597 @@
+{
+  "id": "material-exemplars",
+  "version": "1.0",
+  "domain": "materials",
+  "description": "Curated exemplar PBR and MDL materials patterned on the Omniverse reference catalogues. Agents ground material proposals against these entries instead of inventing material prims.",
+  "items": [
+    {
+      "item_id": "metal_steel_stainless_brushed",
+      "name": "Stainless steel brushed",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "metal",
+        "steel",
+        "stainless",
+        "brushed"
+      ],
+      "material_class": "stainless_steel",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.62,
+          0.62,
+          0.64
+        ],
+        "metallic": 1.0,
+        "roughness": 0.35
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Metal/Stainless_Steel_Brushed",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    },
+    {
+      "item_id": "metal_steel_carbon",
+      "name": "Carbon steel",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "metal",
+        "steel",
+        "carbon"
+      ],
+      "material_class": "steel",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.55,
+          0.55,
+          0.56
+        ],
+        "metallic": 1.0,
+        "roughness": 0.45
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Metal/Steel_Carbon",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    },
+    {
+      "item_id": "metal_iron_rusted",
+      "name": "Rusted iron",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "metal",
+        "iron",
+        "rust",
+        "rusty",
+        "corroded",
+        "weathered"
+      ],
+      "material_class": "cast_iron",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.42,
+          0.26,
+          0.18
+        ],
+        "metallic": 0.85,
+        "roughness": 0.75
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Metal/Iron_Rusted",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    },
+    {
+      "item_id": "metal_steel_painted_worn",
+      "name": "Painted steel worn",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "metal",
+        "steel",
+        "painted",
+        "worn",
+        "chipped",
+        "industrial"
+      ],
+      "material_class": "painted_metal",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.35,
+          0.4,
+          0.45
+        ],
+        "metallic": 0.2,
+        "roughness": 0.55
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Metal/Steel_Painted",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    },
+    {
+      "item_id": "metal_aluminium_anodized",
+      "name": "Anodised aluminium",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "metal",
+        "aluminium",
+        "anodised"
+      ],
+      "material_class": "aluminium",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.8,
+          0.8,
+          0.82
+        ],
+        "metallic": 1.0,
+        "roughness": 0.3
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Metal/Aluminum_Anodized",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    },
+    {
+      "item_id": "metal_copper_polished",
+      "name": "Polished copper",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "metal",
+        "copper",
+        "polished"
+      ],
+      "material_class": "copper",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.9,
+          0.6,
+          0.45
+        ],
+        "metallic": 1.0,
+        "roughness": 0.15
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Metal/Copper",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    },
+    {
+      "item_id": "metal_brass_aged",
+      "name": "Aged brass",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "metal",
+        "brass",
+        "aged",
+        "patina"
+      ],
+      "material_class": "brass",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.78,
+          0.65,
+          0.4
+        ],
+        "metallic": 1.0,
+        "roughness": 0.4
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Metal/Brass",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    },
+    {
+      "item_id": "metal_galvanized",
+      "name": "Galvanised steel",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "metal",
+        "steel",
+        "galvanised",
+        "zinc",
+        "industrial",
+        "ladder"
+      ],
+      "material_class": "steel",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.66,
+          0.68,
+          0.69
+        ],
+        "metallic": 1.0,
+        "roughness": 0.5
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Metal/Zinc",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    },
+    {
+      "item_id": "plastic_abs_smooth",
+      "name": "ABS plastic smooth",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "plastic",
+        "abs",
+        "smooth"
+      ],
+      "material_class": "abs_plastic",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.2,
+          0.2,
+          0.22
+        ],
+        "metallic": 0.0,
+        "roughness": 0.4
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Plastic/ABS",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    },
+    {
+      "item_id": "plastic_polypropylene_textured",
+      "name": "Polypropylene textured",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "plastic",
+        "polypropylene",
+        "textured",
+        "bin",
+        "crate"
+      ],
+      "material_class": "polypropylene",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.25,
+          0.3,
+          0.5
+        ],
+        "metallic": 0.0,
+        "roughness": 0.6
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Plastic/Polypropylene",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    },
+    {
+      "item_id": "plastic_polycarbonate_clear",
+      "name": "Polycarbonate clear",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "plastic",
+        "polycarbonate",
+        "clear",
+        "transparent"
+      ],
+      "material_class": "polycarbonate",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.9,
+          0.9,
+          0.92
+        ],
+        "metallic": 0.0,
+        "roughness": 0.1
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Plastic/Polycarbonate_Clear",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    },
+    {
+      "item_id": "rubber_smooth_black",
+      "name": "Smooth black rubber",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "rubber",
+        "black",
+        "smooth",
+        "grip",
+        "tyre"
+      ],
+      "material_class": "rubber_natural",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.05,
+          0.05,
+          0.05
+        ],
+        "metallic": 0.0,
+        "roughness": 0.8
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Rubber/Rubber_Smooth",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    },
+    {
+      "item_id": "rubber_nitrile_textured",
+      "name": "Nitrile rubber textured",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "rubber",
+        "nitrile",
+        "textured",
+        "seal",
+        "gasket"
+      ],
+      "material_class": "rubber_nitrile",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.08,
+          0.08,
+          0.09
+        ],
+        "metallic": 0.0,
+        "roughness": 0.85
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Rubber/Rubber_Textured",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    },
+    {
+      "item_id": "wood_oak_varnished",
+      "name": "Varnished oak",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "wood",
+        "oak",
+        "varnished",
+        "furniture"
+      ],
+      "material_class": "oak_wood",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.5,
+          0.36,
+          0.22
+        ],
+        "metallic": 0.0,
+        "roughness": 0.35
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Wood/Oak",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    },
+    {
+      "item_id": "wood_pine_raw",
+      "name": "Raw pine",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "wood",
+        "pine",
+        "raw",
+        "pallet",
+        "crate"
+      ],
+      "material_class": "pine_wood",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.68,
+          0.55,
+          0.38
+        ],
+        "metallic": 0.0,
+        "roughness": 0.7
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Wood/Pine",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    },
+    {
+      "item_id": "glass_soda_lime_clear",
+      "name": "Clear soda lime glass",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "glass",
+        "clear",
+        "window",
+        "bottle"
+      ],
+      "material_class": "glass_soda_lime",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.95,
+          0.96,
+          0.96
+        ],
+        "metallic": 0.0,
+        "roughness": 0.05
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Glass/Glass_Clear",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    },
+    {
+      "item_id": "concrete_rough",
+      "name": "Rough concrete",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "concrete",
+        "rough",
+        "floor",
+        "industrial",
+        "warehouse"
+      ],
+      "material_class": "concrete",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.55,
+          0.54,
+          0.52
+        ],
+        "metallic": 0.0,
+        "roughness": 0.9
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Concrete/Concrete_Rough",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    },
+    {
+      "item_id": "ceramic_porcelain_glazed",
+      "name": "Glazed porcelain",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "ceramic",
+        "porcelain",
+        "glazed",
+        "mug",
+        "drinkware"
+      ],
+      "material_class": "ceramic_porcelain",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.92,
+          0.9,
+          0.88
+        ],
+        "metallic": 0.0,
+        "roughness": 0.12
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Ceramic/Porcelain",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    },
+    {
+      "item_id": "cardboard_kraft",
+      "name": "Kraft cardboard",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "cardboard",
+        "kraft",
+        "box",
+        "packaging",
+        "warehouse"
+      ],
+      "material_class": "cardboard",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.62,
+          0.47,
+          0.33
+        ],
+        "metallic": 0.0,
+        "roughness": 0.85
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Paper/Cardboard",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    },
+    {
+      "item_id": "foam_polyurethane_grey",
+      "name": "Grey polyurethane foam",
+      "domain": "materials",
+      "source": "curated",
+      "tags": [
+        "foam",
+        "polyurethane",
+        "padding",
+        "packaging"
+      ],
+      "material_class": "foam_polyurethane",
+      "format": "mdl",
+      "licence": "referenced catalogue entry",
+      "pbr_defaults": {
+        "base_color": [
+          0.45,
+          0.45,
+          0.46
+        ],
+        "metallic": 0.0,
+        "roughness": 0.95
+      },
+      "obtain": {
+        "backing_id": "vmaterials",
+        "catalogue_ref": "vMaterials 2/Foam/Foam",
+        "note": "resolve from the local vMaterials or Omniverse base material install; the entry is a grounding reference, not a bundled asset"
+      }
+    }
+  ]
+}

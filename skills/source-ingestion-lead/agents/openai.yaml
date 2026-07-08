@@ -1,0 +1,4 @@
+name: source-ingestion-lead
+model_role: planner
+temperature: 0.2
+max_tokens: 4096

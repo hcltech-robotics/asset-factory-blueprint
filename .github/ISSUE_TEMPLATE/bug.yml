@@ -1,0 +1,50 @@
+name: Defect report
+description: Report a reproducible fault in a declared interface.
+title: "[Defect] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: Do not attach credentials, private source assets, signed URLs or unrestricted workspaces.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Signed tag and commit SHA, or commit SHA when no tag exists.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Operating system, Python, OpenUSD, simulator, GPU and driver versions that apply.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Commands, smallest redistributable input and expected exit code.
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed result
+      description: Include the relevant redacted report, manifest finding or traceback.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Data check
+      options:
+        - label: I removed credentials, private paths and source material I cannot redistribute.
+          required: true

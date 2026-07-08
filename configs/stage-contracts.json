@@ -1,0 +1,165 @@
+{
+  "version": "2.0",
+  "source_kinds": {
+    "cad": [".step", ".stp", ".iges", ".igs"],
+    "usd": [".usd", ".usda", ".usdc", ".usdz"],
+    "robot_description": [".urdf", ".mjcf", ".xml"],
+    "image": [".png", ".jpg", ".jpeg", ".webp"],
+    "video": [".mp4", ".mov", ".avi", ".mkv"],
+    "mesh": [".ply", ".obj", ".stl", ".glb", ".gltf"],
+    "point_cloud": [".las", ".laz", ".e57", ".pcd"]
+  },
+  "output_aliases": {
+    "simready_package": ["simready", "simready package", "openusd", "openusd package", "usd", "usd package", "final usd"],
+    "textured_asset": ["texture", "textures", "textured asset", "texture variant", "texture variants", "visual variant", "visual variants", "decal", "decals", "deformation", "deformations", "deformation variant", "deformation variants", "dent", "dents", "bump", "bumps"],
+    "physics_asset": ["physics", "physics asset", "rigid body", "rigid bodies", "collider", "colliders", "articulation", "physics and articulation"],
+    "nonvisual_materials": ["nonvisual", "nonvisual materials", "thermal", "acoustic", "electrical"],
+    "rl_environment": ["rl", "rl environment", "isaac lab", "isaac lab environment"],
+    "evaluation_report": ["evaluation", "validation report"]
+  },
+  "output_targets": {
+    "simready_package": ["simready-verification"],
+    "textured_asset": ["texturing"],
+    "physics_asset": ["physics-articulation"],
+    "nonvisual_materials": ["nonvisual-materials"],
+    "rl_environment": ["rl-environment"],
+    "evaluation_report": ["evaluation"]
+  },
+  "source_targets": {
+    "cad": ["source-ingestion", "reconstruction", "segmentation", "material-inference"],
+    "usd": ["source-ingestion", "reconstruction", "segmentation", "material-inference"],
+    "robot_description": ["source-ingestion", "reconstruction", "physics-articulation"],
+    "image": ["source-ingestion", "reconstruction", "segmentation", "material-inference"],
+    "video": ["source-ingestion", "reconstruction", "segmentation", "material-inference"],
+    "mesh": ["source-ingestion", "reconstruction", "segmentation", "material-inference"],
+    "point_cloud": ["source-ingestion", "reconstruction", "segmentation", "material-inference"]
+  },
+  "stages": {
+    "orchestrate": {
+      "consumes": ["run-request"],
+      "produces": ["run-plan"],
+      "depends_on": [],
+      "preconditions": ["run request validates"],
+      "resources": {"cpu": 1, "gpu": 0},
+      "max_attempts": 3,
+      "execution_mode": "local"
+    },
+    "intake": {
+      "consumes": ["run-plan"],
+      "produces": ["intake-manifest"],
+      "depends_on": ["orchestrate"],
+      "preconditions": ["objective and requested outputs are explicit"],
+      "resources": {"cpu": 1, "gpu": 0},
+      "max_attempts": 3,
+      "execution_mode": "local"
+    },
+    "source-ingestion": {
+      "consumes": ["intake-manifest"],
+      "produces": ["source-asset-manifest", "source-assets"],
+      "depends_on": ["intake"],
+      "preconditions": ["source paths are confined and readable", "source rights are recorded"],
+      "resources": {"cpu": 1, "gpu": 0},
+      "max_attempts": 3,
+      "execution_mode": "local"
+    },
+    "reconstruction": {
+      "consumes": ["source-assets"],
+      "produces": ["reconstruction-manifest", "canonical-geometry"],
+      "depends_on": ["source-ingestion"],
+      "preconditions": ["a compatible source type and pinned reconstruction backend are available"],
+      "resources": {"cpu": 4, "gpu": 1},
+      "max_attempts": 2,
+      "execution_mode": "external"
+    },
+    "segmentation": {
+      "consumes": ["canonical-geometry"],
+      "produces": ["segmentation-manifest", "semantic-segments"],
+      "depends_on": ["reconstruction"],
+      "preconditions": ["source or conditioned geometry is inspectable"],
+      "resources": {"cpu": 2, "gpu": 1},
+      "max_attempts": 2,
+      "execution_mode": "local"
+    },
+    "material-inference": {
+      "consumes": ["semantic-segments"],
+      "produces": ["material-inference-manifest", "material-evidence"],
+      "depends_on": ["segmentation"],
+      "preconditions": ["semantic segments have source lineage"],
+      "resources": {"cpu": 1, "gpu": 0},
+      "max_attempts": 2,
+      "execution_mode": "service"
+    },
+    "texturing": {
+      "consumes": ["semantic-segments", "material-evidence"],
+      "produces": ["texturing-manifest", "appearance-layers"],
+      "depends_on": ["segmentation", "material-inference"],
+      "preconditions": ["UV readiness and material targets are declared"],
+      "resources": {"cpu": 2, "gpu": 1},
+      "max_attempts": 2,
+      "execution_mode": "service"
+    },
+    "physics-articulation": {
+      "consumes": ["canonical-geometry", "material-evidence"],
+      "produces": ["physics-articulation-manifest", "physics-layer"],
+      "depends_on": ["reconstruction", "material-inference"],
+      "preconditions": ["units, scale and geometry hierarchy are known"],
+      "resources": {"cpu": 2, "gpu": 0},
+      "max_attempts": 2,
+      "execution_mode": "local"
+    },
+    "nonvisual-materials": {
+      "consumes": ["material-evidence"],
+      "produces": ["nonvisual-material-manifest"],
+      "depends_on": ["material-inference"],
+      "preconditions": ["hidden properties cite measurements or bounded priors"],
+      "resources": {"cpu": 1, "gpu": 0},
+      "max_attempts": 2,
+      "execution_mode": "service"
+    },
+    "simready-verification": {
+      "consumes": ["source-asset-manifest", "canonical-geometry", "semantic-segments", "material-evidence", "physics-layer"],
+      "produces": ["simready-asset-manifest", "simready-candidate-package", "simready-conformance", "runtime-evidence"],
+      "depends_on": ["source-ingestion", "reconstruction", "segmentation", "material-inference", "physics-articulation"],
+      "preconditions": ["the composed USD opens", "a named SimReady Profile is selected"],
+      "resources": {"cpu": 4, "gpu": 1},
+      "max_attempts": 2,
+      "execution_mode": "local"
+    },
+    "rl-environment": {
+      "consumes": ["simready-candidate-package"],
+      "produces": ["rl-environment-manifest"],
+      "depends_on": ["simready-verification"],
+      "preconditions": ["required Profile and behavioural gates pass"],
+      "resources": {"cpu": 4, "gpu": 1},
+      "max_attempts": 3,
+      "execution_mode": "local"
+    },
+    "evaluation": {
+      "consumes": ["run-plan"],
+      "produces": ["evaluation-manifest"],
+      "depends_on": ["orchestrate"],
+      "preconditions": ["declared validation gates have machine-readable results"],
+      "resources": {"cpu": 1, "gpu": 0},
+      "max_attempts": 3,
+      "execution_mode": "local"
+    },
+    "infrastructure": {
+      "consumes": ["run-plan"],
+      "produces": ["infrastructure-plan"],
+      "depends_on": ["orchestrate"],
+      "preconditions": ["resource requirements are explicit"],
+      "resources": {"cpu": 1, "gpu": 0},
+      "max_attempts": 3,
+      "execution_mode": "local"
+    },
+    "governance": {
+      "consumes": ["source-asset-manifest", "evaluation-manifest"],
+      "produces": ["governance-record", "release-decision"],
+      "depends_on": ["source-ingestion", "evaluation"],
+      "preconditions": ["rights, retention, provenance, conformance and operator evidence are explicit"],
+      "resources": {"cpu": 1, "gpu": 0},
+      "max_attempts": 3,
+      "execution_mode": "manual"
+    }
+  }
+}

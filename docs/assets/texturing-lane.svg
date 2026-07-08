@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="620" viewBox="0 0 1360 620" role="img" aria-labelledby="title desc">
+  <title id="title">Texturing lane</title>
+  <desc id="desc">Material manifests drive prompting, PBR generation, decal placement and consistency checks, fed by indexed sources.</desc>
+  <defs>
+    <style>
+      .bg { fill: transparent; }
+      .box { fill: #0a100c; stroke: #3d4a42; stroke-width: 2; }
+      .boxHot { fill: #0b1608; stroke: #76b900; stroke-width: 2.3; }
+      .boxAccent { fill: #160929; stroke: #5f1ebe; stroke-width: 2.3; }
+      .inner { fill: #0d130f; stroke: #7d8780; stroke-width: 1.9; }
+      .innerHot { fill: #0d1809; stroke: #76b900; stroke-width: 1.9; }
+      .innerAccent { fill: #1b0c31; stroke: #5f1ebe; stroke-width: 1.9; }
+      .label { fill: #edf3ef; font-family: Aptos, Helvetica, sans-serif; font-size: 20px; font-weight: 680; }
+      .small { fill: #c6cec8; font-family: Aptos, Helvetica, sans-serif; font-size: 13px; font-weight: 620; }
+      .line { stroke: #e6ece8; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+      .greenLine { stroke: #76b900; stroke-width: 2.4; fill: none; marker-end: url(#arrowGreen); }
+      .accentLine { stroke: #5f1ebe; stroke-width: 2.4; fill: none; marker-end: url(#arrowAccent); }
+    </style>
+    <marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#e6ece8"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#76b900"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#5f1ebe"/>
+    </marker>
+  </defs>
+  <rect class="box" x="60" y="120" width="232" height="230" rx="8"/>
+  <text class="label" x="176.0" y="162" text-anchor="middle">Material manifest</text>
+  <rect class="inner" x="82" y="196" width="188" height="34" rx="4"/>
+  <text class="small" x="176.0" y="217.5" text-anchor="middle" style="font-size:13px">classes</text>
+  <rect class="inner" x="82" y="242" width="188" height="34" rx="4"/>
+  <text class="small" x="176.0" y="263.5" text-anchor="middle" style="font-size:13px">bindings</text>
+  <rect class="inner" x="82" y="288" width="188" height="34" rx="4"/>
+  <text class="small" x="176.0" y="309.5" text-anchor="middle" style="font-size:13px">map policy</text>
+  <path class="line" d="M292 235 L308 235"/>
+  <rect class="box" x="312" y="120" width="232" height="230" rx="8"/>
+  <text class="label" x="428.0" y="162" text-anchor="middle">Prompting</text>
+  <rect class="inner" x="334" y="196" width="188" height="34" rx="4"/>
+  <text class="small" x="428.0" y="217.5" text-anchor="middle" style="font-size:13px">prompt</text>
+  <rect class="inner" x="334" y="242" width="188" height="34" rx="4"/>
+  <text class="small" x="428.0" y="263.0" text-anchor="middle" style="font-size:12px">negative prompt</text>
+  <rect class="inner" x="334" y="288" width="188" height="34" rx="4"/>
+  <text class="small" x="428.0" y="309.5" text-anchor="middle" style="font-size:13px">seeds</text>
+  <path class="accentLine" d="M544 235 L560 235"/>
+  <rect class="boxAccent" x="564" y="120" width="232" height="230" rx="8"/>
+  <text class="label" x="680.0" y="162" text-anchor="middle">Generation</text>
+  <rect class="innerAccent" x="586" y="196" width="188" height="34" rx="4"/>
+  <text class="small" x="680.0" y="217.5" text-anchor="middle" style="font-size:13px">PBR map sets</text>
+  <rect class="inner" x="586" y="242" width="188" height="34" rx="4"/>
+  <text class="small" x="680.0" y="263.5" text-anchor="middle" style="font-size:13px">variants</text>
+  <rect class="inner" x="586" y="288" width="188" height="34" rx="4"/>
+  <text class="small" x="680.0" y="309.5" text-anchor="middle" style="font-size:13px">deformations</text>
+  <path class="line" d="M796 235 L812 235"/>
+  <rect class="box" x="816" y="120" width="232" height="230" rx="8"/>
+  <text class="label" x="932.0" y="162" text-anchor="middle">Decals</text>
+  <rect class="inner" x="838" y="196" width="188" height="34" rx="4"/>
+  <text class="small" x="932.0" y="217.0" text-anchor="middle" style="font-size:12px">segment targets</text>
+  <rect class="inner" x="838" y="242" width="188" height="34" rx="4"/>
+  <text class="small" x="932.0" y="263.5" text-anchor="middle" style="font-size:13px">placement</text>
+  <rect class="inner" x="838" y="288" width="188" height="34" rx="4"/>
+  <text class="small" x="932.0" y="309.5" text-anchor="middle" style="font-size:13px">evidence</text>
+  <path class="line" d="M1048 235 L1064 235"/>
+  <rect class="box" x="1068" y="120" width="232" height="230" rx="8"/>
+  <text class="label" x="1184.0" y="162" text-anchor="middle">Consistency</text>
+  <rect class="inner" x="1090" y="196" width="188" height="34" rx="4"/>
+  <text class="small" x="1184.0" y="217.5" text-anchor="middle" style="font-size:13px">policy checks</text>
+  <rect class="inner" x="1090" y="242" width="188" height="34" rx="4"/>
+  <text class="small" x="1184.0" y="263.0" text-anchor="middle" style="font-size:12px">render evidence</text>
+  <rect class="innerAccent" x="1090" y="288" width="188" height="34" rx="4"/>
+  <text class="small" x="1184.0" y="309.5" text-anchor="middle" style="font-size:13px">VLM review</text>
+  <rect class="box" x="420" y="420" width="520" height="150" rx="8"/>
+  <text class="label" x="680.0" y="462" text-anchor="middle">Sources</text>
+  <rect class="inner" x="442" y="484" width="476" height="18" rx="4"/>
+  <text class="small" x="680.0" y="497.0" text-anchor="middle" style="font-size:12px">indexed backings</text>
+  <rect class="inner" x="442" y="510" width="476" height="18" rx="4"/>
+  <text class="small" x="680.0" y="523.0" text-anchor="middle" style="font-size:12px">cached packs</text>
+  <rect class="inner" x="442" y="536" width="476" height="18" rx="4"/>
+  <text class="small" x="680.0" y="549.0" text-anchor="middle" style="font-size:12px">live providers</text>
+  <path class="accentLine" d="M680 420 L680 380 L680 380 L680 350"/>
+</svg>

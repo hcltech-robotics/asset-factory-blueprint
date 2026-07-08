@@ -1,0 +1,283 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hcltech-robotics.github.io/asset-factory-blueprint/schemas/v1/reference-run-capsule.schema.json",
+  "title": "reference run capsule",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "capsule_id",
+    "format_version",
+    "created_at",
+    "outcome",
+    "project_id",
+    "run_id",
+    "request_digest",
+    "capsule_request_digest",
+    "provenance_id",
+    "origin_provenance_id",
+    "origin_release_decision_id",
+    "release_scope",
+    "release_decision",
+    "simready_profile",
+    "attempt_ids",
+    "source_media_included",
+    "source_media_count",
+    "outputs_included",
+    "output_file_count",
+    "source_duplicates_excluded_from_outputs",
+    "rights_gate",
+    "sanitisation",
+    "schema_inventory",
+    "payload_inventory_sha256",
+    "inventory",
+    "container_metadata"
+  ],
+  "properties": {
+    "capsule_id": {
+      "type": "string",
+      "pattern": "^capsule_[A-Fa-f0-9]{32}$"
+    },
+    "format_version": {
+      "const": "1.0"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "outcome": {
+      "enum": ["positive", "negative"]
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "request_digest": {
+      "type": "string",
+      "pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"
+    },
+    "capsule_request_digest": {
+      "type": "string",
+      "pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"
+    },
+    "provenance_id": {
+      "type": "string",
+      "pattern": "^prov_[A-Fa-f0-9]{32}$"
+    },
+    "origin_provenance_id": {
+      "type": "string",
+      "pattern": "^prov_[A-Fa-f0-9]{32}$"
+    },
+    "origin_release_decision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "release_scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "release_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decision_id",
+        "scope",
+        "policy_version",
+        "release_status",
+        "release_allowed",
+        "required_uses",
+        "required_gates",
+        "blockers"
+      ],
+      "properties": {
+        "decision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {"type": "string", "minLength": 1},
+        "policy_version": {"type": "string", "minLength": 1},
+        "release_status": {
+          "enum": ["approved", "blocked"]
+        },
+        "release_allowed": {
+          "type": "boolean"
+        },
+        "required_uses": {"type": "array", "items": {"type": "string"}},
+        "required_gates": {"type": "array", "items": {"type": "string"}},
+        "blockers": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "\\S"}
+        }
+      }
+    },
+    "simready_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile_id", "profile_version"],
+      "properties": {
+        "profile_id": {"type": "string"},
+        "profile_version": {"type": "string"}
+      }
+    },
+    "attempt_ids": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "source_media_included": {"type": "boolean"},
+    "source_media_count": {"type": "integer", "minimum": 0},
+    "outputs_included": {"type": "boolean"},
+    "output_file_count": {"type": "integer", "minimum": 0},
+    "source_duplicates_excluded_from_outputs": {"type": "integer", "minimum": 0},
+    "rights_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "evaluated_at",
+        "source_count",
+        "redistribution_allowed",
+        "licence_expression"
+      ],
+      "properties": {
+        "status": {"const": "pass"},
+        "evaluated_at": {"type": "string", "format": "date-time"},
+        "source_count": {"type": "integer", "minimum": 1},
+        "redistribution_allowed": {"const": true},
+        "licence_expression": {"type": "string", "minLength": 1}
+      }
+    },
+    "sanitisation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "absolute_paths_removed",
+        "private_endpoints_removed",
+        "secret_values_removed",
+        "signed_urls_removed",
+        "unsafe_keys_removed"
+      ],
+      "properties": {
+        "absolute_paths_removed": {"type": "integer", "minimum": 0},
+        "private_endpoints_removed": {"type": "integer", "minimum": 0},
+        "secret_values_removed": {"type": "integer", "minimum": 0},
+        "signed_urls_removed": {"type": "integer", "minimum": 0},
+        "unsafe_keys_removed": {"type": "integer", "minimum": 0}
+      }
+    },
+    "schema_inventory": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/schemaEntry"}
+    },
+    "payload_inventory_sha256": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "inventory": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/inventoryEntry"}
+    },
+    "container_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["capsule.json", "checksums.sha256"],
+      "properties": {
+        "capsule.json": {"$ref": "#/$defs/containerEntry"},
+        "checksums.sha256": {"$ref": "#/$defs/containerEntry"}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"outcome": {"const": "positive"}},
+        "required": ["outcome"]
+      },
+      "then": {
+        "properties": {
+          "outputs_included": {"const": true},
+          "output_file_count": {"minimum": 1},
+          "inventory": {
+            "allOf": [
+              {"contains": {"properties": {"path": {"const": "validation/task-fitness-evidence.json"}}, "required": ["path"]}},
+              {"contains": {"properties": {"path": {"const": "validation/task-fitness-protocol.json"}}, "required": ["path"]}},
+              {"contains": {"properties": {"path": {"pattern": "^validation/fitness-evidence-files/"}}, "required": ["path"]}},
+              {"contains": {"properties": {"path": {"const": "validation/official-validator-results.json"}}, "required": ["path"]}},
+              {"contains": {"properties": {"path": {"const": "validation/official-validator-raw.json"}}, "required": ["path"]}},
+              {"contains": {"properties": {"path": {"const": "validation/openusd-compliance.json"}}, "required": ["path"]}},
+              {"contains": {"properties": {"path": {"const": "validation/package-dependency-closure.json"}}, "required": ["path"]}}
+            ]
+          },
+          "simready_profile": {
+            "properties": {
+              "profile_id": {"type": "string", "minLength": 1},
+              "profile_version": {"type": "string", "minLength": 1}
+            }
+          },
+          "release_decision": {
+            "properties": {
+              "release_status": {"const": "approved"},
+              "release_allowed": {"const": true},
+              "blockers": {"maxItems": 0}
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "release_decision": {
+            "properties": {
+              "release_status": {"const": "blocked"},
+              "release_allowed": {"const": false},
+              "blockers": {"minItems": 1}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "schemaEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "schema_id", "sha256"],
+      "properties": {
+        "path": {"type": "string", "pattern": "^schemas/[^/]+\\.schema\\.json$"},
+        "schema_id": {"type": "string", "format": "uri"},
+        "sha256": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"}
+      }
+    },
+    "inventoryEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "role", "media_type", "size_bytes", "sha256", "licence_expression"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$"
+        },
+        "role": {"type": "string", "minLength": 1},
+        "media_type": {"type": "string", "minLength": 1},
+        "size_bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+        "licence_expression": {"type": "string", "minLength": 1},
+        "origin_sha256": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"}
+      }
+    },
+    "containerEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["licence_expression", "role"],
+      "properties": {
+        "licence_expression": {"type": "string", "minLength": 1},
+        "role": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

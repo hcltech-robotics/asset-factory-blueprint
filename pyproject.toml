@@ -1,0 +1,75 @@
+[build-system]
+requires = ["setuptools==83.0.0", "wheel==0.47.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "asset-factory-blueprint"
+version = "1.0.0"
+description = "Executable Asset Factory blueprint for governed OpenUSD asset pipelines"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+  { name = "Chris von Csefalvay" }
+]
+requires-python = ">=3.11,<3.14"
+keywords = ["openusd", "robotics", "simulation", "simready", "asset-pipeline"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13"
+]
+dependencies = [
+  "jsonschema>=4.23,<5",
+  "pydantic>=2.10,<3",
+  "pillow>=10.0,<13",
+  "numpy>=1.26,<3",
+  "trimesh>=4.0,<5",
+  "matplotlib>=3.8,<4"
+]
+
+[project.urls]
+Homepage = "https://github.com/hcltech-robotics/asset-factory-blueprint"
+Documentation = "https://github.com/hcltech-robotics/asset-factory-blueprint/tree/main/docs"
+Repository = "https://github.com/hcltech-robotics/asset-factory-blueprint.git"
+Issues = "https://github.com/hcltech-robotics/asset-factory-blueprint/issues"
+Changelog = "https://github.com/hcltech-robotics/asset-factory-blueprint/blob/main/CHANGELOG.md"
+
+[project.optional-dependencies]
+dev = [
+  "build>=1.2,<2",
+  "pytest>=8.0,<9",
+  "ruff>=0.6,<1"
+]
+docs = [
+  "mkdocs>=1.6,<2"
+]
+mesh = [
+  "fast-simplification>=0.1,<1",
+  "networkx>=3,<4",
+  "scipy>=1.11,<2"
+]
+validation = [
+  "MaterialX>=1.39.5,<1.40",
+  "usd-core>=26.5,<27"
+]
+vision = [
+  "opencv-python-headless>=4.9,<5.1"
+]
+
+[project.scripts]
+afb = "asset_factory_blueprint.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+asset_factory_blueprint = ["prompts/*.md"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"

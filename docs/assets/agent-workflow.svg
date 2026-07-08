@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="620" viewBox="0 0 1360 620" role="img" aria-labelledby="title desc">
+  <title id="title">Agent workflow</title>
+  <desc id="desc">Run requests route through the orchestrator and skill router into artefacts, across the ordered stage strip.</desc>
+  <defs>
+    <style>
+      .bg { fill: transparent; }
+      .box { fill: #0a100c; stroke: #3d4a42; stroke-width: 2; }
+      .boxHot { fill: #0b1608; stroke: #76b900; stroke-width: 2.3; }
+      .boxAccent { fill: #160929; stroke: #5f1ebe; stroke-width: 2.3; }
+      .inner { fill: #0d130f; stroke: #7d8780; stroke-width: 1.9; }
+      .innerHot { fill: #0d1809; stroke: #76b900; stroke-width: 1.9; }
+      .innerAccent { fill: #1b0c31; stroke: #5f1ebe; stroke-width: 1.9; }
+      .label { fill: #edf3ef; font-family: Aptos, Helvetica, sans-serif; font-size: 20px; font-weight: 680; }
+      .small { fill: #c6cec8; font-family: Aptos, Helvetica, sans-serif; font-size: 13px; font-weight: 620; }
+      .line { stroke: #e6ece8; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+      .greenLine { stroke: #76b900; stroke-width: 2.4; fill: none; marker-end: url(#arrowGreen); }
+      .accentLine { stroke: #5f1ebe; stroke-width: 2.4; fill: none; marker-end: url(#arrowAccent); }
+    </style>
+    <marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#e6ece8"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#76b900"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#5f1ebe"/>
+    </marker>
+  </defs>
+  <rect class="box" x="70" y="90" width="260" height="180" rx="8"/>
+  <text class="label" x="200.0" y="132" text-anchor="middle">Run request</text>
+  <rect class="inner" x="92" y="154" width="216" height="25" rx="4"/>
+  <text class="small" x="200.0" y="171.0" text-anchor="middle" style="font-size:13px">objective</text>
+  <rect class="inner" x="92" y="191" width="216" height="25" rx="4"/>
+  <text class="small" x="200.0" y="208.0" text-anchor="middle" style="font-size:13px">sources</text>
+  <rect class="inner" x="92" y="228" width="216" height="25" rx="4"/>
+  <text class="small" x="200.0" y="245.0" text-anchor="middle" style="font-size:13px">outputs</text>
+  <path class="line" d="M330 180 L386 180"/>
+  <rect class="box" x="390" y="90" width="260" height="180" rx="8"/>
+  <text class="label" x="520.0" y="132" text-anchor="middle">Orchestrator</text>
+  <rect class="innerAccent" x="412" y="154" width="216" height="25" rx="4"/>
+  <text class="small" x="520.0" y="171.0" text-anchor="middle" style="font-size:13px">stage routing</text>
+  <rect class="inner" x="412" y="191" width="216" height="25" rx="4"/>
+  <text class="small" x="520.0" y="208.0" text-anchor="middle" style="font-size:13px">provider roles</text>
+  <rect class="inner" x="412" y="228" width="216" height="25" rx="4"/>
+  <text class="small" x="520.0" y="245.0" text-anchor="middle" style="font-size:13px">gates</text>
+  <path class="accentLine" d="M650 180 L706 180"/>
+  <rect class="boxAccent" x="710" y="90" width="260" height="180" rx="8"/>
+  <text class="label" x="840.0" y="132" text-anchor="middle">Skill router</text>
+  <rect class="inner" x="732" y="154" width="216" height="25" rx="4"/>
+  <text class="small" x="840.0" y="171.0" text-anchor="middle" style="font-size:13px">SKILL.md</text>
+  <rect class="innerAccent" x="732" y="191" width="216" height="25" rx="4"/>
+  <text class="small" x="840.0" y="208.0" text-anchor="middle" style="font-size:13px">tool surface</text>
+  <rect class="inner" x="732" y="228" width="216" height="25" rx="4"/>
+  <text class="small" x="840.0" y="245.0" text-anchor="middle" style="font-size:13px">services</text>
+  <path class="line" d="M970 180 L1026 180"/>
+  <rect class="box" x="1030" y="90" width="260" height="180" rx="8"/>
+  <text class="label" x="1160.0" y="132" text-anchor="middle">Artefacts</text>
+  <rect class="inner" x="1052" y="154" width="216" height="25" rx="4"/>
+  <text class="small" x="1160.0" y="171.0" text-anchor="middle" style="font-size:13px">manifests</text>
+  <rect class="inner" x="1052" y="191" width="216" height="25" rx="4"/>
+  <text class="small" x="1160.0" y="208.0" text-anchor="middle" style="font-size:13px">reports</text>
+  <rect class="inner" x="1052" y="228" width="216" height="25" rx="4"/>
+  <text class="small" x="1160.0" y="245.0" text-anchor="middle" style="font-size:13px">evidence</text>
+  <rect class="box" x="24" y="380" width="124" height="74" rx="8"/>
+  <text class="label" x="86.0" y="414" text-anchor="middle" style="font-size:16px">Intake</text>
+  <path class="line" d="M148 417 L152 417"/>
+  <rect class="box" x="156" y="380" width="124" height="74" rx="8"/>
+  <text class="label" x="218.0" y="414" text-anchor="middle" style="font-size:16px">Sources</text>
+  <path class="line" d="M280 417 L284 417"/>
+  <rect class="boxAccent" x="288" y="380" width="124" height="74" rx="8"/>
+  <text class="label" x="350.0" y="414" text-anchor="middle" style="font-size:16px">Reconstruct</text>
+  <path class="line" d="M412 417 L416 417"/>
+  <rect class="box" x="420" y="380" width="124" height="74" rx="8"/>
+  <text class="label" x="482.0" y="414" text-anchor="middle" style="font-size:16px">Segment</text>
+  <path class="line" d="M544 417 L548 417"/>
+  <rect class="box" x="552" y="380" width="124" height="74" rx="8"/>
+  <text class="label" x="614.0" y="414" text-anchor="middle" style="font-size:16px">Materials</text>
+  <path class="line" d="M676 417 L680 417"/>
+  <rect class="box" x="684" y="380" width="124" height="74" rx="8"/>
+  <text class="label" x="746.0" y="414" text-anchor="middle" style="font-size:16px">Texture</text>
+  <path class="line" d="M808 417 L812 417"/>
+  <rect class="box" x="816" y="380" width="124" height="74" rx="8"/>
+  <text class="label" x="878.0" y="414" text-anchor="middle" style="font-size:16px">Physics</text>
+  <path class="line" d="M940 417 L944 417"/>
+  <rect class="box" x="948" y="380" width="124" height="74" rx="8"/>
+  <text class="label" x="1010.0" y="414" text-anchor="middle" style="font-size:16px">Nonvisual</text>
+  <path class="line" d="M1072 417 L1076 417"/>
+  <rect class="boxAccent" x="1080" y="380" width="124" height="74" rx="8"/>
+  <text class="label" x="1142.0" y="414" text-anchor="middle" style="font-size:16px">Verify</text>
+  <path class="line" d="M1204 417 L1208 417"/>
+  <rect class="box" x="1212" y="380" width="124" height="74" rx="8"/>
+  <text class="label" x="1274.0" y="414" text-anchor="middle" style="font-size:16px">Govern</text>
+  <path class="accentLine" d="M840 270 L840 334 L746 334 L746 380"/>
+</svg>

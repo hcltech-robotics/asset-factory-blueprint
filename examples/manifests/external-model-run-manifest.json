@@ -1,0 +1,33 @@
+{
+  "id": "external_run_example",
+  "version": "1.0",
+  "status": "proposal",
+  "run_id": "external_run_example",
+  "model_id": "local-reconstruction-runner",
+  "model_kind": "container",
+  "input_manifest": "examples/run-requests/warehouse_pick_cell.json",
+  "output_manifest": "artifacts/reconstruction-manifest.json",
+  "input_schema": "schemas/run-request.schema.json",
+  "output_schema": "schemas/reconstruction-manifest.schema.json",
+  "gpu_requirements": {
+    "cuda": true
+  },
+  "runtime_env": {
+    "AFB_ENV": "local"
+  },
+  "command_or_endpoint_redacted": [
+    "python",
+    "-m",
+    "asset_factory_blueprint.external_models",
+    "run"
+  ],
+  "allowed_paths": [
+    "projects",
+    "artifacts",
+    ".cache/afb"
+  ],
+  "artefacts": [],
+  "logs_path": "artifacts/external_run_example.log",
+  "wandb_run_id": "",
+  "evidence": []
+}

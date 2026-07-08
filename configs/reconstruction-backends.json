@@ -1,0 +1,434 @@
+{
+  "version": "1.0",
+  "adapter": {
+    "model_kind": "local-reconstruction-adapter",
+    "input_schema": "schemas/source-asset-manifest.schema.json",
+    "output_schema": "schemas/reconstruction-manifest.schema.json",
+    "runner": "scripts/reconstruction/run_reconstruction_backend.py",
+    "provisioner": "scripts/reconstruction/provision_reconstruction_backend.py"
+  },
+  "backends": [
+    {
+      "id": "trellisv2",
+      "display_name": "Trellis v2",
+      "aliases": [
+        "trellis",
+        "trellis2",
+        "trellis.2",
+        "trellisv2"
+      ],
+      "provider": "local",
+      "model_ref": "microsoft/TRELLIS.2-4B",
+      "accepted_inputs": [
+        "image/png",
+        "image/jpeg",
+        "image/webp"
+      ],
+      "produces": [
+        "model/gltf-binary",
+        "video/mp4"
+      ],
+      "path_env_vars": [
+        "AFB_TRELLISV2_ROOT",
+        "TRELLIS2_ROOT",
+        "TRELLIS_ROOT"
+      ],
+      "candidate_roots": [
+        ".cache/afb/backends/TRELLIS.2"
+      ],
+      "required_files": [
+        "app.py",
+        "example.py",
+        "setup.sh",
+        "trellis2/__init__.py"
+      ],
+      "weights_roots": [],
+      "adapter_script": "scripts/reconstruction/backend_adapters/trellis2_image_to_glb.py",
+      "native_command": [
+        "python",
+        "scripts/reconstruction/backend_adapters/trellis2_image_to_glb.py",
+        "--backend-root",
+        "{backend_root}",
+        "--image",
+        "{input_asset}",
+        "--output-dir",
+        "{output_dir}",
+        "--model-ref",
+        "{model_ref}"
+      ],
+      "primary_output_name": "asset.glb",
+      "gpu_requirements": {
+        "cuda": true,
+        "min_vram_gb": 24
+      },
+      "timeout_seconds": 7200,
+      "allowed_paths": [
+        "projects",
+        "artifacts",
+        ".cache/afb",
+        "library/downloads"
+      ]
+    },
+    {
+      "id": "hunyuan3d",
+      "display_name": "Hunyuan3D",
+      "aliases": [
+        "hy3d",
+        "hunyuan",
+        "hunyuan3d",
+        "hunyuan3d-2"
+      ],
+      "provider": "local",
+      "model_ref": "tencent/Hunyuan3D-2",
+      "accepted_inputs": [
+        "image/png",
+        "image/jpeg",
+        "image/webp"
+      ],
+      "produces": [
+        "model/gltf-binary",
+        "model/obj",
+        "model/ply"
+      ],
+      "path_env_vars": [
+        "AFB_HUNYUAN3D_ROOT",
+        "HUNYUAN3D_ROOT",
+        "HY3D_ROOT"
+      ],
+      "candidate_roots": [
+        ".cache/afb/backends/Hunyuan3D-2"
+      ],
+      "required_files": [
+        "minimal_demo.py",
+        "hy3dgen/shapegen/__init__.py",
+        "hy3dgen/texgen/__init__.py"
+      ],
+      "weights_roots": [],
+      "adapter_script": "scripts/reconstruction/backend_adapters/hunyuan3d_image_to_glb.py",
+      "native_command": [
+        "python",
+        "scripts/reconstruction/backend_adapters/hunyuan3d_image_to_glb.py",
+        "--backend-root",
+        "{backend_root}",
+        "--image",
+        "{input_asset}",
+        "--output-dir",
+        "{output_dir}",
+        "--model-ref",
+        "{model_ref}",
+        "--no-texture"
+      ],
+      "primary_output_name": "asset.glb",
+      "gpu_requirements": {
+        "cuda": true,
+        "min_vram_gb": 16
+      },
+      "timeout_seconds": 7200,
+      "allowed_paths": [
+        "projects",
+        "artifacts",
+        ".cache/afb",
+        "library/downloads"
+      ]
+    },
+    {
+      "id": "triposg",
+      "display_name": "TripoSG",
+      "aliases": [
+        "tripo",
+        "triposg",
+        "tripo-sg"
+      ],
+      "provider": "local",
+      "model_ref": "VAST-AI/TripoSG",
+      "accepted_inputs": [
+        "image/png",
+        "image/jpeg",
+        "image/webp"
+      ],
+      "produces": [
+        "model/gltf-binary"
+      ],
+      "path_env_vars": [
+        "AFB_TRIPOSG_ROOT",
+        "TRIPOSG_ROOT",
+        "TRIPO_SG_ROOT"
+      ],
+      "candidate_roots": [
+        ".cache/afb/backends/TripoSG"
+      ],
+      "required_files": [
+        "scripts/inference_triposg.py",
+        "requirements.txt"
+      ],
+      "weights_roots": [],
+      "adapter_script": "scripts/reconstruction/backend_adapters/triposg_image_to_glb.py",
+      "native_command": [
+        "python",
+        "scripts/reconstruction/backend_adapters/triposg_image_to_glb.py",
+        "--backend-root",
+        "{backend_root}",
+        "--image",
+        "{input_asset}",
+        "--output-dir",
+        "{output_dir}",
+        "--model-ref",
+        "{model_ref}"
+      ],
+      "primary_output_name": "asset.glb",
+      "gpu_requirements": {
+        "cuda": true,
+        "min_vram_gb": 8
+      },
+      "timeout_seconds": 7200,
+      "allowed_paths": [
+        "projects",
+        "artifacts",
+        ".cache/afb",
+        "library/downloads"
+      ]
+    },
+    {
+      "id": "partcrafter",
+      "display_name": "PartCrafter",
+      "aliases": [
+        "partcrafter",
+        "part-crafter",
+        "triposg-partcrafter",
+        "tripo-partcrafter",
+        "structured-parts"
+      ],
+      "provider": "local",
+      "model_ref": "wgsxm/PartCrafter",
+      "backbone": {
+        "id": "triposg",
+        "role": "part_aware_vector_set_backbone",
+        "complete_mesh_backend": "triposg",
+        "part_manifest_name": "parts-manifest.json"
+      },
+      "accepted_inputs": [
+        "image/png",
+        "image/jpeg",
+        "image/webp"
+      ],
+      "produces": [
+        "model/gltf-binary",
+        "model/gltf-binary+parts",
+        "application/vnd.asset-factory.parts-manifest+json"
+      ],
+      "path_env_vars": [
+        "AFB_PARTCRAFTER_ROOT",
+        "PARTCRAFTER_ROOT"
+      ],
+      "candidate_roots": [
+        ".cache/afb/backends/PartCrafter"
+      ],
+      "required_files": [
+        "scripts/inference_partcrafter.py",
+        "settings/setup.sh"
+      ],
+      "weights_roots": [],
+      "adapter_script": "scripts/reconstruction/backend_adapters/partcrafter_image_to_parts.py",
+      "native_command": [
+        "python",
+        "scripts/reconstruction/backend_adapters/partcrafter_image_to_parts.py",
+        "--backend-root",
+        "{backend_root}",
+        "--image",
+        "{input_asset}",
+        "--output-dir",
+        "{output_dir}",
+        "--model-ref",
+        "{model_ref}"
+      ],
+      "primary_output_name": "asset.glb",
+      "gpu_requirements": {
+        "cuda": true,
+        "min_vram_gb": 8
+      },
+      "timeout_seconds": 7200,
+      "allowed_paths": [
+        "projects",
+        "artifacts",
+        ".cache/afb",
+        "library/downloads"
+      ]
+    },
+    {
+      "id": "hunyuan3d-mv",
+      "display_name": "Hunyuan3D multi-view",
+      "aliases": [
+        "hy3d-mv",
+        "hunyuan-mv",
+        "hunyuan3d-2mv",
+        "hunyuan-multiview"
+      ],
+      "provider": "local",
+      "model_ref": "tencent/Hunyuan3D-2mv",
+      "accepted_inputs": [
+        "image/png",
+        "image/jpeg",
+        "image/webp"
+      ],
+      "input_arity": "multi_image",
+      "produces": [
+        "model/gltf-binary"
+      ],
+      "path_env_vars": [
+        "AFB_HUNYUAN3D_ROOT",
+        "HUNYUAN3D_ROOT",
+        "HY3D_ROOT"
+      ],
+      "candidate_roots": [
+        ".cache/afb/backends/Hunyuan3D-2"
+      ],
+      "required_files": [
+        "hy3dgen/shapegen/__init__.py"
+      ],
+      "weights_roots": [],
+      "adapter_script": "scripts/reconstruction/backend_adapters/hunyuan3d_multiview_to_glb.py",
+      "native_command": [
+        "python",
+        "scripts/reconstruction/backend_adapters/hunyuan3d_multiview_to_glb.py",
+        "--backend-root",
+        "{backend_root}",
+        "--images",
+        "{input_assets}",
+        "--output-dir",
+        "{output_dir}",
+        "--model-ref",
+        "{model_ref}"
+      ],
+      "primary_output_name": "asset.glb",
+      "gpu_requirements": {
+        "cuda": true,
+        "min_vram_gb": 16
+      },
+      "timeout_seconds": 7200,
+      "allowed_paths": [
+        "projects",
+        "artifacts",
+        ".cache/afb",
+        "library/downloads"
+      ]
+    },
+    {
+      "id": "dust3r",
+      "display_name": "DUSt3R multi-view geometry",
+      "aliases": [
+        "dust3r",
+        "duster",
+        "dust-3r"
+      ],
+      "provider": "local",
+      "model_ref": "naver/DUSt3R_ViTLarge_BaseDecoder_512_dpt",
+      "accepted_inputs": [
+        "image/png",
+        "image/jpeg",
+        "image/webp"
+      ],
+      "input_arity": "multi_image",
+      "produces": [
+        "model/gltf-binary",
+        "model/ply"
+      ],
+      "path_env_vars": [
+        "AFB_DUST3R_ROOT",
+        "DUST3R_ROOT"
+      ],
+      "candidate_roots": [
+        ".cache/afb/backends/dust3r"
+      ],
+      "required_files": [
+        "dust3r/model.py",
+        "dust3r/inference.py"
+      ],
+      "weights_roots": [],
+      "adapter_script": "scripts/reconstruction/backend_adapters/dust3r_images_to_glb.py",
+      "native_command": [
+        "python",
+        "scripts/reconstruction/backend_adapters/dust3r_images_to_glb.py",
+        "--backend-root",
+        "{backend_root}",
+        "--images",
+        "{input_assets}",
+        "--output-dir",
+        "{output_dir}",
+        "--model-ref",
+        "{model_ref}"
+      ],
+      "primary_output_name": "asset.glb",
+      "gpu_requirements": {
+        "cuda": true,
+        "min_vram_gb": 12
+      },
+      "timeout_seconds": 3600,
+      "allowed_paths": [
+        "projects",
+        "artifacts",
+        ".cache/afb",
+        "library/downloads"
+      ]
+    },
+    {
+      "id": "video-multiview",
+      "display_name": "Video frame sampling into multi-view reconstruction",
+      "aliases": [
+        "video",
+        "video-mv",
+        "video-reconstruction"
+      ],
+      "provider": "local",
+      "model_ref": "naver/DUSt3R_ViTLarge_BaseDecoder_512_dpt",
+      "accepted_inputs": [
+        "video/mp4",
+        "video/quicktime",
+        "video/x-matroska",
+        "video/avi"
+      ],
+      "input_arity": "video",
+      "produces": [
+        "model/gltf-binary",
+        "model/ply"
+      ],
+      "path_env_vars": [
+        "AFB_DUST3R_ROOT",
+        "DUST3R_ROOT"
+      ],
+      "candidate_roots": [
+        ".cache/afb/backends/dust3r"
+      ],
+      "required_files": [
+        "dust3r/model.py"
+      ],
+      "weights_roots": [],
+      "adapter_script": "scripts/reconstruction/backend_adapters/video_frames_to_glb.py",
+      "native_command": [
+        "python",
+        "scripts/reconstruction/backend_adapters/video_frames_to_glb.py",
+        "--backend-root",
+        "{backend_root}",
+        "--video",
+        "{input_asset}",
+        "--output-dir",
+        "{output_dir}",
+        "--model-ref",
+        "{model_ref}",
+        "--delegate",
+        "dust3r_images_to_glb"
+      ],
+      "primary_output_name": "asset.glb",
+      "gpu_requirements": {
+        "cuda": true,
+        "min_vram_gb": 12
+      },
+      "timeout_seconds": 7200,
+      "allowed_paths": [
+        "projects",
+        "artifacts",
+        ".cache/afb",
+        "library/downloads"
+      ]
+    }
+  ]
+}

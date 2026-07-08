@@ -1,0 +1,16 @@
+{
+  "id": "warehouse_pick_cell",
+  "version": "1.0",
+  "objective": "Create a SimReady warehouse pick cell asset package with material, physics and governance evidence.",
+  "sources": [
+    "examples/sources/bin.usd"
+  ],
+  "requested_outputs": [
+    "simready",
+    "texture"
+  ],
+  "constraints": {
+    "review_required": true,
+    "target_simulator": "isaac_sim"
+  }
+}

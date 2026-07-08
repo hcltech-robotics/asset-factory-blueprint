@@ -1,0 +1,64 @@
+{
+  "version": "1.0",
+  "material_profiles": [
+    {
+      "profile_id": "rubber_outdoor_grip",
+      "material_class": "rubber",
+      "finish": "matte",
+      "environment_context": "outdoor_grip",
+      "pbr_defaults": {
+        "base_color_prompt": "dark vulcanised rubber with measured wear cues",
+        "roughness": [
+          0.72,
+          0.9
+        ],
+        "metallic": [
+          0.0,
+          0.0
+        ],
+        "normal_intensity": [
+          0.25,
+          0.55
+        ],
+        "height_mm": [
+          0.0,
+          0.8
+        ],
+        "ao": [
+          0.4,
+          0.8
+        ]
+      },
+      "map_policy": {
+        "default_resolution": 2048,
+        "maps": [
+          "base_color",
+          "normal",
+          "roughness",
+          "ao"
+        ]
+      },
+      "wear_policy": {
+        "allowed": [
+          "scuffed",
+          "dusty"
+        ],
+        "blocked": [
+          "rusted"
+        ]
+      },
+      "forbidden_cues": [
+        "metal flakes",
+        "rust",
+        "transparent gel"
+      ],
+      "physics_alignment_rules": [
+        "visible tread may support qualitative grip review only"
+      ],
+      "requires_review_when": [
+        "claimed friction is task critical",
+        "material evidence is visual only"
+      ]
+    }
+  ]
+}

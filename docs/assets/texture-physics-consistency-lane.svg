@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="480" viewBox="0 0 1360 480" role="img" aria-labelledby="title desc">
+  <title id="title">Texture and physics consistency lane</title>
+  <desc id="desc">Visible cues, material classes and property claims pass a contradiction check before a review state is recorded.</desc>
+  <defs>
+    <style>
+      .bg { fill: transparent; }
+      .box { fill: #0a100c; stroke: #3d4a42; stroke-width: 2; }
+      .boxHot { fill: #0b1608; stroke: #76b900; stroke-width: 2.3; }
+      .boxAccent { fill: #160929; stroke: #5f1ebe; stroke-width: 2.3; }
+      .inner { fill: #0d130f; stroke: #7d8780; stroke-width: 1.9; }
+      .innerHot { fill: #0d1809; stroke: #76b900; stroke-width: 1.9; }
+      .innerAccent { fill: #1b0c31; stroke: #5f1ebe; stroke-width: 1.9; }
+      .label { fill: #edf3ef; font-family: Aptos, Helvetica, sans-serif; font-size: 20px; font-weight: 680; }
+      .small { fill: #c6cec8; font-family: Aptos, Helvetica, sans-serif; font-size: 13px; font-weight: 620; }
+      .line { stroke: #e6ece8; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+      .greenLine { stroke: #76b900; stroke-width: 2.4; fill: none; marker-end: url(#arrowGreen); }
+      .accentLine { stroke: #5f1ebe; stroke-width: 2.4; fill: none; marker-end: url(#arrowAccent); }
+    </style>
+    <marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#e6ece8"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#76b900"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#5f1ebe"/>
+    </marker>
+  </defs>
+  <rect class="box" x="60" y="150" width="232" height="220" rx="8"/>
+  <text class="label" x="176.0" y="192" text-anchor="middle">Visible cue</text>
+  <rect class="inner" x="82" y="221" width="188" height="34" rx="4"/>
+  <text class="small" x="176.0" y="242.5" text-anchor="middle" style="font-size:13px">rust</text>
+  <rect class="inner" x="82" y="267" width="188" height="34" rx="4"/>
+  <text class="small" x="176.0" y="288.5" text-anchor="middle" style="font-size:13px">gloss</text>
+  <rect class="inner" x="82" y="313" width="188" height="34" rx="4"/>
+  <text class="small" x="176.0" y="334.5" text-anchor="middle" style="font-size:13px">wear</text>
+  <path class="line" d="M292 260 L308 260"/>
+  <rect class="box" x="312" y="150" width="232" height="220" rx="8"/>
+  <text class="label" x="428.0" y="192" text-anchor="middle">Material class</text>
+  <rect class="innerAccent" x="334" y="244" width="188" height="34" rx="4"/>
+  <text class="small" x="428.0" y="265.5" text-anchor="middle" style="font-size:13px">library match</text>
+  <rect class="inner" x="334" y="290" width="188" height="34" rx="4"/>
+  <text class="small" x="428.0" y="311.0" text-anchor="middle" style="font-size:12px">exemplar ranges</text>
+  <path class="line" d="M544 260 L560 260"/>
+  <rect class="box" x="564" y="150" width="232" height="220" rx="8"/>
+  <text class="label" x="680.0" y="192" text-anchor="middle">Property claim</text>
+  <rect class="inner" x="586" y="221" width="188" height="34" rx="4"/>
+  <text class="small" x="680.0" y="242.5" text-anchor="middle" style="font-size:13px">friction</text>
+  <rect class="inner" x="586" y="267" width="188" height="34" rx="4"/>
+  <text class="small" x="680.0" y="288.5" text-anchor="middle" style="font-size:13px">mass</text>
+  <rect class="inner" x="586" y="313" width="188" height="34" rx="4"/>
+  <text class="small" x="680.0" y="334.5" text-anchor="middle" style="font-size:13px">stiffness</text>
+  <path class="accentLine" d="M796 260 L812 260"/>
+  <rect class="boxAccent" x="816" y="150" width="232" height="220" rx="8"/>
+  <text class="label" x="932.0" y="192" text-anchor="middle">Contradiction check</text>
+  <rect class="innerAccent" x="838" y="244" width="188" height="34" rx="4"/>
+  <text class="small" x="932.0" y="265.5" text-anchor="middle" style="font-size:13px">policy rules</text>
+  <rect class="inner" x="838" y="290" width="188" height="34" rx="4"/>
+  <text class="small" x="932.0" y="311.5" text-anchor="middle" style="font-size:13px">range tests</text>
+  <path class="line" d="M1048 260 L1064 260"/>
+  <rect class="box" x="1068" y="150" width="232" height="220" rx="8"/>
+  <text class="label" x="1184.0" y="192" text-anchor="middle">Review state</text>
+  <rect class="inner" x="1090" y="244" width="188" height="34" rx="4"/>
+  <text class="small" x="1184.0" y="265.5" text-anchor="middle" style="font-size:13px">approve</text>
+  <rect class="inner" x="1090" y="290" width="188" height="34" rx="4"/>
+  <text class="small" x="1184.0" y="311.0" text-anchor="middle" style="font-size:12px">block with reasons</text>
+</svg>

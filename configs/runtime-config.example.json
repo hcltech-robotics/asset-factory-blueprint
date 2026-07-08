@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "project_root": "projects",
+  "artifact_root": "artifacts",
+  "cache_root": ".cache/afb",
+  "provider_policy": "configs/provider-policy.json",
+  "skill_registry": "configs/skill-registry.json",
+  "require_review_for_uncertain_properties": true,
+  "wandb": {
+    "enabled": false,
+    "project": "asset-factory-blueprint"
+  },
+  "runtime": {
+    "isaac_sim_root": "",
+    "isaac_lab_root": "",
+    "openai_compatible_test_base_url": "http://localhost:11434/v1"
+  }
+}

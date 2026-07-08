@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this blueprint, cite the software release and the exact schema version used by your run."
+title: "Asset Factory Blueprint"
+type: software
+abstract: "An executable reference implementation for governed, evidence-backed OpenUSD asset pipelines."
+authors:
+  - family-names: "von Csefalvay"
+    given-names: "Chris"
+repository-code: "https://github.com/hcltech-robotics/asset-factory-blueprint"
+url: "https://github.com/hcltech-robotics/asset-factory-blueprint/tree/main/docs"
+version: 1.0.0
+date-released: 2026-07-10
+license: MIT
+keywords:
+  - OpenUSD
+  - robotics
+  - simulation
+  - asset pipeline
+  - provenance
+preferred-citation:
+  type: software
+  title: "Asset Factory Blueprint"
+  authors:
+    - family-names: "von Csefalvay"
+      given-names: "Chris"
+  version: 1.0.0
+  repository-code: "https://github.com/hcltech-robotics/asset-factory-blueprint"
+  url: "https://github.com/hcltech-robotics/asset-factory-blueprint/tree/main/docs"
