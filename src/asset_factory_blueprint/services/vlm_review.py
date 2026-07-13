@@ -28,7 +28,9 @@ def _is_source_glob(pattern: str) -> bool:
     return pattern.startswith("source-assets")
 
 
-def _collect_evidence_images(project_dir: Path, globs: list[str], explicit: list[str] | None) -> tuple[list[Path], bool]:
+def _collect_evidence_images(
+    project_dir: Path, globs: list[str], explicit: list[str] | None
+) -> tuple[list[Path], bool]:
     """Collect review evidence, stage outputs first, with a cap on source photos.
 
     Returns the image list and whether any stage-output image was found. Stage
@@ -147,6 +149,7 @@ def _record_skeleton(stage_id: str, asset_id: str, project_id: str, attempt: int
         "project_id": project_id,
         "stage_id": stage_id,
         "verdict": "skipped",
+        "action": "blocked",
         "verdict_reason": "",
         "confidence": 0.0,
         "findings": [],
@@ -205,7 +208,9 @@ def governance_vlm_review(params: dict[str, Any]) -> ToolResult:
     images: list[Path] = []
     has_stage_outputs = False
     if project_dir and project_dir.exists():
-        images, has_stage_outputs = _collect_evidence_images(project_dir, stage_policy.get("evidence_globs", []), explicit_images or None)
+        images, has_stage_outputs = _collect_evidence_images(
+            project_dir, stage_policy.get("evidence_globs", []), explicit_images or None
+        )
     elif explicit_images:
         images = [Path(item) for item in explicit_images if Path(item).exists()][:MAX_EVIDENCE_IMAGES]
         has_stage_outputs = bool(images)
@@ -226,7 +231,9 @@ def governance_vlm_review(params: dict[str, Any]) -> ToolResult:
     elif not images:
         skip_reason = "no review evidence images were found for this stage"
     elif not has_stage_outputs:
-        skip_reason = "no stage-output images exist yet; reviewing source photos alone would judge nothing this stage produced"
+        skip_reason = (
+            "no stage-output images exist yet; reviewing source photos alone would judge nothing this stage produced"
+        )
 
     if not skip_reason:
         import os
@@ -234,7 +241,10 @@ def governance_vlm_review(params: dict[str, Any]) -> ToolResult:
         from asset_factory_blueprint.providers import complete_vision
 
         provider_policy = load_json(str(params.get("provider_policy") or "configs/provider-policy.json"))
-        provider_name = str(params.get("provider") or provider_policy["role_defaults"].get(policy.get("provider_role", "vlm_reviewer"), "nvidia_nim"))
+        provider_name = str(
+            params.get("provider")
+            or provider_policy["role_defaults"].get(policy.get("provider_role", "vlm_reviewer"), "nvidia_nim")
+        )
         model = (
             params.get("model")
             or os.environ.get("AFB_VISION_MODEL")
@@ -244,6 +254,10 @@ def governance_vlm_review(params: dict[str, Any]) -> ToolResult:
         prompt = rubric
         if context:
             prompt = rubric + "\n\n## Stage context\n\n" + context
+        prompt += (
+            "\n\nFINAL OUTPUT RULE: Return exactly one valid JSON object beginning with { and ending with }. "
+            "Do not use headings or prose outside that object."
+        )
         max_edge = int(params.get("max_image_edge") or policy.get("max_image_edge") or 1024)
         send_images = _prepared_review_images(images, project_dir, stage_id, max_edge)
         completion = None
@@ -259,6 +273,8 @@ def governance_vlm_review(params: dict[str, Any]) -> ToolResult:
                     policy_path=str(params.get("provider_policy") or "configs/provider-policy.json"),
                     model=model,
                     max_tokens=int(params.get("max_tokens") or 1024),
+                    temperature=float(params.get("temperature") or 0.0),
+                    seed=params.get("seed"),
                 )
                 break
             except Exception as exc:
@@ -280,10 +296,38 @@ def governance_vlm_review(params: dict[str, Any]) -> ToolResult:
             ]
             payload = _parse_verdict_payload(completion.content)
             if payload is None:
+                try:
+                    completion = complete_vision(
+                        provider_name,
+                        prompt + "\nThe previous response was invalid. Output the JSON object now.",
+                        [path.as_posix() for path in send_images],
+                        policy_path=str(params.get("provider_policy") or "configs/provider-policy.json"),
+                        model=model,
+                        max_tokens=int(params.get("max_tokens") or 1024),
+                        temperature=float(params.get("temperature") or 0.0),
+                        seed=params.get("seed"),
+                    )
+                    payload = _parse_verdict_payload(completion.content)
+                except Exception:
+                    payload = None
+            if payload is None:
                 skip_reason = "reviewer response was not a valid JSON verdict"
             else:
                 verdict = str(payload.get("verdict") or "revise")
                 record["verdict"] = verdict if verdict in {"approve", "revise", "blocked"} else "revise"
+                action = str(payload.get("action") or "")
+                record["action"] = (
+                    action
+                    if action in {"approve", "revise_local", "regenerate", "blocked"}
+                    else (
+                        "approve"
+                        if record["verdict"] == "approve"
+                        else "blocked"
+                        if record["verdict"] == "blocked"
+                        else "revise_local"
+                    )
+                )
+                record["verdict_reason"] = str(payload.get("verdict_reason") or "")
                 try:
                     record["confidence"] = max(0.0, min(1.0, float(payload.get("confidence") or 0.0)))
                 except (TypeError, ValueError):
@@ -292,13 +336,13 @@ def governance_vlm_review(params: dict[str, Any]) -> ToolResult:
 
     if skip_reason:
         record["verdict"] = "skipped"
+        record["action"] = "blocked"
         record["verdict_reason"] = skip_reason
 
     # only findings whose tag comes from the stage's controlled vocabulary can
     # gate; a malformed tag like "none" on an otherwise clean review must not
     approved = record["verdict"] == "approve" and not any(
-        item["severity"] in {"blocker", "major"} and item.get("tag_in_vocabulary")
-        for item in record["findings"]
+        item["severity"] in {"blocker", "major"} and item.get("tag_in_vocabulary") for item in record["findings"]
     )
     record["status"] = "validated" if approved else ("blocked" if record["verdict"] == "blocked" else "review_required")
     record["review_status"] = "approved" if approved else "review_required"

@@ -22,6 +22,7 @@ ROLE_BY_STAGE = {
     "intake": ["planner"],
     "source-ingestion": ["planner"],
     "reconstruction": ["external_model_runner", "vision_reasoner"],
+    "mesh-verification": ["vision_reasoner", "vlm_reviewer", "validator_judge"],
     "segmentation": ["vision_reasoner", "material_reasoner"],
     "material-inference": ["material_reasoner"],
     "texturing": ["texture_prompt_writer", "texture_generator"],
@@ -36,7 +37,6 @@ ROLE_BY_STAGE = {
 
 
 VLM_REVIEWED_STAGES = {
-    "reconstruction",
     "segmentation",
     "material-inference",
     "texturing",
@@ -179,11 +179,19 @@ def build_run_plan(request: RunRequest) -> RunPlan:
         contract = contracts["stages"].get(item["id"], {})
         roles = ROLE_BY_STAGE.get(item["id"], ["planner"])
         gates = ["schema-valid"]
-        if item["id"] in {"source-ingestion", "segmentation", "material-inference", "nonvisual-materials"}:
+        if item["id"] in {
+            "source-ingestion",
+            "mesh-verification",
+            "segmentation",
+            "material-inference",
+            "nonvisual-materials",
+        }:
             gates.append("source-lineage")
         if item["id"] == "segmentation":
             gates.append("segmentation-segments")
-        if item["id"] in VLM_REVIEWED_STAGES:
+        if item["id"] == "mesh-verification":
+            gates.append("mesh-verification")
+        elif item["id"] in VLM_REVIEWED_STAGES:
             gates.append("vlm-signoff")
         if item["id"] == "simready-verification":
             gates.append("isaac-load")

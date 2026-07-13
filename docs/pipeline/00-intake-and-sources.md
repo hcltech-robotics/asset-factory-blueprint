@@ -1,6 +1,6 @@
 # Intake and source ingestion
 
-Intake records programme requirements. Source ingestion turns raw project material into immutable evidence. These records feed stage 1 or route CAD and USD sources directly to conversion.
+Intake records programme requirements. Source ingestion turns raw project material into immutable evidence. These records feed reconstruction or source conditioning, followed by mandatory mesh verification.
 
 <p align="center">
   <img src="../assets/source-ingestion-lineage.svg" alt="Programme intent and original source metadata become an immutable copy, source record and downstream route while lineage data carries forward." width="920">

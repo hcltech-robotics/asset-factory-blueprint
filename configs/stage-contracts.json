@@ -1,5 +1,5 @@
 {
-  "version": "2.0",
+  "version": "3.0",
   "source_kinds": {
     "cad": [".step", ".stp", ".iges", ".igs"],
     "usd": [".usd", ".usda", ".usdc", ".usdz"],
@@ -26,13 +26,13 @@
     "evaluation_report": ["evaluation"]
   },
   "source_targets": {
-    "cad": ["source-ingestion", "reconstruction", "segmentation", "material-inference"],
-    "usd": ["source-ingestion", "reconstruction", "segmentation", "material-inference"],
-    "robot_description": ["source-ingestion", "reconstruction", "physics-articulation"],
-    "image": ["source-ingestion", "reconstruction", "segmentation", "material-inference"],
-    "video": ["source-ingestion", "reconstruction", "segmentation", "material-inference"],
-    "mesh": ["source-ingestion", "reconstruction", "segmentation", "material-inference"],
-    "point_cloud": ["source-ingestion", "reconstruction", "segmentation", "material-inference"]
+    "cad": ["source-ingestion", "reconstruction", "mesh-verification", "segmentation", "material-inference"],
+    "usd": ["source-ingestion", "reconstruction", "mesh-verification", "segmentation", "material-inference"],
+    "robot_description": ["source-ingestion", "reconstruction", "mesh-verification", "physics-articulation"],
+    "image": ["source-ingestion", "reconstruction", "mesh-verification", "segmentation", "material-inference"],
+    "video": ["source-ingestion", "reconstruction", "mesh-verification", "segmentation", "material-inference"],
+    "mesh": ["source-ingestion", "reconstruction", "mesh-verification", "segmentation", "material-inference"],
+    "point_cloud": ["source-ingestion", "reconstruction", "mesh-verification", "segmentation", "material-inference"]
   },
   "stages": {
     "orchestrate": {
@@ -64,17 +64,26 @@
     },
     "reconstruction": {
       "consumes": ["source-assets"],
-      "produces": ["reconstruction-manifest", "canonical-geometry"],
+      "produces": ["reconstruction-manifest", "candidate-geometry"],
       "depends_on": ["source-ingestion"],
       "preconditions": ["a compatible source type and pinned reconstruction backend are available"],
       "resources": {"cpu": 4, "gpu": 1},
       "max_attempts": 2,
       "execution_mode": "external"
     },
+    "mesh-verification": {
+      "consumes": ["source-assets", "reconstruction-manifest", "candidate-geometry"],
+      "produces": ["mesh-verification-record", "canonical-geometry"],
+      "depends_on": ["reconstruction"],
+      "preconditions": ["candidate geometry is inspectable", "deterministic diagnostic renders are available", "a vision reviewer is resolved"],
+      "resources": {"cpu": 2, "gpu": 0},
+      "max_attempts": 3,
+      "execution_mode": "service"
+    },
     "segmentation": {
       "consumes": ["canonical-geometry"],
       "produces": ["segmentation-manifest", "semantic-segments"],
-      "depends_on": ["reconstruction"],
+      "depends_on": ["mesh-verification"],
       "preconditions": ["source or conditioned geometry is inspectable"],
       "resources": {"cpu": 2, "gpu": 1},
       "max_attempts": 2,
@@ -101,7 +110,7 @@
     "physics-articulation": {
       "consumes": ["canonical-geometry", "material-evidence"],
       "produces": ["physics-articulation-manifest", "physics-layer"],
-      "depends_on": ["reconstruction", "material-inference"],
+      "depends_on": ["mesh-verification", "material-inference"],
       "preconditions": ["units, scale and geometry hierarchy are known"],
       "resources": {"cpu": 2, "gpu": 0},
       "max_attempts": 2,
@@ -119,7 +128,7 @@
     "simready-verification": {
       "consumes": ["source-asset-manifest", "canonical-geometry", "semantic-segments", "material-evidence", "physics-layer"],
       "produces": ["simready-asset-manifest", "simready-candidate-package", "simready-conformance", "runtime-evidence"],
-      "depends_on": ["source-ingestion", "reconstruction", "segmentation", "material-inference", "physics-articulation"],
+      "depends_on": ["source-ingestion", "mesh-verification", "segmentation", "material-inference", "physics-articulation"],
       "preconditions": ["the composed USD opens", "a named SimReady Profile is selected"],
       "resources": {"cpu": 4, "gpu": 1},
       "max_attempts": 2,

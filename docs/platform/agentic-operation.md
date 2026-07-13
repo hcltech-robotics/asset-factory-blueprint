@@ -55,6 +55,10 @@ Every content stage carries the `vlm-signoff` gate. The reviewer receives a rubr
 
 Verdicts are recorded as `vlm-review-record` manifests under `reports/<stage>-vlm-review.json`. Each record contains the rubric checksum, reviewer identity and evidence checksums. An unavailable reviewer or an invalid response produces a `skipped` verdict and leaves the stage review required; the loop never fabricates approvals.
 
+Mesh verification is stricter than the generic content-stage sign-off. The mandatory verifier combines exact topology and integrity measurements with fixed-camera diagnostic renders and the vision judgement. The reviewer is expected to reject poor geometry and choose local repair or regeneration. It cannot override a failed deterministic quality check. Missing tools, evidence or reviewer availability blocks the stage rather than producing `skipped`. Reconstruction emits only candidate geometry and downstream work cannot begin until `mesh-verification-record` approves the exact candidate and quality-policy checksums.
+
+A regeneration changes the reconstruction conditions. The controller can remove the background, select another rights-cleared view of the intended asset or apply another registered source remediation before running the pinned backend with the next declared seed. Every inference attempt and review has preserved evidence. Inference failures, review-provider failures and mesh rejections are counted separately. A configured hard cap prevents unbounded send-backs and leaves unresolved candidates blocked.
+
 ## Fix library
 
 `configs/fix-library.json` maps defect tags to remediation recipes. Each recipe records the symptom, likely cause, action, attempt budget, verification step and escalation target. `heal_mesh_holes` runs `asset_mesh_condition`; `rerun_segmentation_prior_stronger_method` uses a stronger segmentation model; `regenerate_textures_reinforced_negative_prompt` re-prompts the texture generator. Numeric physical values are never auto-fixed and always escalate.
@@ -63,7 +67,7 @@ The `asset_fix_apply` tool resolves tags to recipes and logs every attempt in `r
 
 ## Capability stewardship
 
-The capability-steward skill and `scripts/discover_capabilities.py` probe installed reconstruction backends, segmentation models, texture generators, vision reviewers, the USD runtime, mesh processing and the Isaac lane. `configs/capability-registry.json` declares the primary option and ordered fallbacks for each capability, including licence or token gates.
+The capability-steward skill and `scripts/discover_capabilities.py` probe installed reconstruction backends, segmentation models, texture generators, vision reviewers, mandatory mesh verification, the USD runtime, mesh processing and the Isaac lane. `configs/capability-registry.json` declares the primary option and ordered fallbacks for each capability, including licence or token gates.
 
 ```bash
 afb capabilities
@@ -71,7 +75,7 @@ afb capabilities --install reconstruction.multiview_to_3d
 afb capabilities --install mesh.processing --live
 ```
 
-The probe reports which option serves each capability, flags capabilities running on fallbacks and plans installs on demand. Fix recipes of kind `capability_fallback` use the same registry to pick the next ready backend.
+The probe reports which option serves each capability, flags capabilities running on fallbacks and plans installs on demand. Fix recipes of kind `capability_fallback` use the same registry to pick the next ready backend and execute the reconstruction resubmission before re-review.
 
 ## Escalation contract
 

@@ -11,7 +11,7 @@ uv run afb info
 uv run afb capabilities
 ```
 
-`afb capabilities` reports the active reconstruction, segmentation, texturing and review options, plus licence and token gates. Add `--install` to plan missing components.
+`afb capabilities` reports the active reconstruction, mandatory mesh-verification, segmentation, texturing and review options, plus licence and token gates. Add `--install` to plan missing components.
 
 ## 2. Configure provider credentials
 

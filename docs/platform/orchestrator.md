@@ -30,7 +30,7 @@ Resolve missing evidence in a blocked plan before running downstream stages.
 
 Stages are selected by source suffix and requested outputs:
 
-- CAD and USD sources route through the reconstruction contract, which records that conversion is unnecessary when the source is already canonical USD and otherwise conditions owned geometry.
+- CAD and USD sources route through reconstruction or conditioning, then mandatory mesh verification before their geometry can be treated as canonical.
 - URDF and robot description XML route through source-ingestion, physics-articulation, simready-verification and rl-environment.
 - Images, video, point clouds and raw meshes route through source-ingestion, reconstruction, material-inference and evaluation.
 - Selecting material-inference always selects segmentation as well.

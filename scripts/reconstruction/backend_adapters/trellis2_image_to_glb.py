@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import random
 import sys
 from pathlib import Path
 
@@ -23,6 +24,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--cpu-image-cond", action="store_true")
     parser.add_argument("--skip-preprocess", action="store_true")
     parser.add_argument("--background-threshold", type=int, default=8)
+    parser.add_argument("--seed", type=int, default=17)
+    parser.add_argument("--deterministic", action="store_true")
     return parser
 
 
@@ -74,9 +77,6 @@ def cast_pipeline(pipeline, dtype_name: str) -> None:
     image_model = getattr(getattr(pipeline, "image_cond_model", None), "model", None)
     if image_model is not None:
         image_model.to(dtype=dtype)
-    rembg_model = getattr(getattr(pipeline, "rembg_model", None), "model", None)
-    if rembg_model is not None:
-        rembg_model.to(dtype=dtype)
 
 
 def patch_image_feature_extractor_device() -> None:
@@ -134,6 +134,25 @@ def prune_unused_models(pipeline, pipeline_type: str | None) -> None:
             del pipeline.models[name]
 
 
+def configure_reproducibility(seed: int, deterministic: bool) -> None:
+    """Set process-wide stochastic controls before any CUDA work begins."""
+    if deterministic:
+        os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
+    random.seed(seed)
+
+    import numpy as np
+    import torch
+
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+    if deterministic:
+        torch.backends.cudnn.benchmark = False
+        torch.backends.cudnn.deterministic = True
+        torch.use_deterministic_algorithms(True, warn_only=True)
+
+
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     backend_root = Path(args.backend_root).resolve()
@@ -144,6 +163,7 @@ def main(argv: list[str] | None = None) -> int:
         sys.path.insert(0, str(backend_root))
     os.environ.setdefault("OPENCV_IO_ENABLE_OPENEXR", "1")
     os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
+    configure_reproducibility(args.seed, args.deterministic)
     patch_dinov3_layer_alias()
 
     from PIL import Image
@@ -164,7 +184,14 @@ def main(argv: list[str] | None = None) -> int:
     if args.skip_preprocess:
         image = isolate_dark_background(image, args.background_threshold)
         run_kwargs["preprocess_image"] = False
-    mesh = pipeline.run(image, **run_kwargs)[0]
+    if args.dtype == "float32":
+        mesh = pipeline.run(image, **run_kwargs)[0]
+    else:
+        import torch
+
+        dtype = {"float16": torch.float16, "bfloat16": torch.bfloat16}[args.dtype]
+        with torch.autocast(device_type="cuda", dtype=dtype):
+            mesh = pipeline.run(image, **run_kwargs)[0]
     if hasattr(mesh, "simplify"):
         mesh.simplify(16777216)
     glb = o_voxel.postprocess.to_glb(
@@ -184,7 +211,17 @@ def main(argv: list[str] | None = None) -> int:
     )
     output_path = output_dir / args.output_name
     glb.export(str(output_path), extension_webp=True)
-    print(json.dumps({"status": "proposal", "output_path": output_path.as_posix()}, indent=2, sort_keys=False))
+    print(
+        json.dumps(
+            {
+                "status": "proposal",
+                "output_path": output_path.as_posix(),
+                "reproducibility": {"seed": args.seed, "deterministic": args.deterministic},
+            },
+            indent=2,
+            sort_keys=False,
+        )
+    )
     return 0
 
 

@@ -43,7 +43,7 @@ Give the agent the image path and the intended use:
 
 > I have a photo at `artifacts/sources/jerrycan.png`. I need a textured SimReady prop for an Isaac Sim manipulation task.
 
-The strategist routes supported images through source ingestion, reconstruction, segmentation, material inference and the requested downstream stages. A SimReady or RL request must name an exact SimReady Profile ID and pinned version. If either is absent, the agent asks for it and stops before start-up rather than selecting one.
+The strategist routes supported images through source ingestion, reconstruction, mandatory mesh verification, segmentation, material inference and the requested downstream stages. A SimReady or RL request must name an exact SimReady Profile ID and pinned version. If either is absent, the agent asks for it and stops before start-up rather than selecting one.
 
 The exact pair comes from the programme's approved SimReady requirements and validator configuration. If that authority has not selected one, follow the [SimReady verification guidance](docs/pipeline/07-simready-verification.md), keep the request blocked or narrow the deliverable to texture or physics work. The factory does not choose a release contract on the user's behalf.
 
@@ -103,19 +103,20 @@ Direct `agent run` repeats schema and route validation but does not conduct the 
 
 Every run follows the same stage order. Intake and source ingestion register immutable evidence before the selected stages run:
 
-1. Reconstruction (optional): mesh from image(s), multi-view sets, video captures and descriptions through governed external backends, conditioning for supported meshes and USD sources and registration of the converted USD or mesh export supplied for native CAD evidence.
-2. Segmentation: segmentation and semantic inference over images and meshes, producing appearance segments, semantic labels and material regions.
-3. Material and physical inference: material classes and bindings from a constrained library, plus review-gated physical property proposals such as mass, density and friction.
-4. Texturing: texture prompts, PBR map generation, texture variants and decals tied to material evidence.
-5. Physics and articulation: rigid bodies, colliders, mass properties, joints, limits, drives and grasp affordances authored as testable plans.
-6. Nonvisual materials (optional): thermal, acoustic and electrical material properties with uncertainty and evidence.
-7. SimReady packaging and USD verification: layer stack assembly, package checks and runtime load gates, with Isaac Sim as one runtime target.
+1. Reconstruction (optional): candidate mesh from image(s), multi-view sets, video captures and descriptions through governed external backends, conditioning for supported meshes and USD sources and registration of the converted USD or mesh export supplied for native CAD evidence.
+2. Mandatory mesh verification: deterministic geometry diagnostics and fixed-camera renders guide a vision reviewer. Only an approval bound to the candidate checksum publishes canonical geometry.
+3. Segmentation: segmentation and semantic inference over approved meshes, producing appearance segments, semantic labels and material regions.
+4. Material and physical inference: material classes and bindings from a constrained library, plus review-gated physical property proposals such as mass, density and friction.
+5. Texturing: texture prompts, PBR map generation, texture variants and decals tied to material evidence.
+6. Physics and articulation: rigid bodies, colliders, mass properties, joints, limits, drives and grasp affordances authored as testable plans.
+7. Nonvisual materials (optional): thermal, acoustic and electrical material properties with uncertainty and evidence.
+8. SimReady packaging and USD verification: layer stack assembly, package checks and runtime load gates, with Isaac Sim as one runtime target.
 
 Downstream extensions build RL environment contracts and controlled layout or mutation permutations around validated assets.
 
 ## Agentic operation
 
-`afb agent run` drives the routed stages. It runs deterministic gates, sends each stage to a vision-language reviewer, applies bounded fixes from the fix library and escalates unresolved findings to an operator. Every reviewed stage carries a `vlm-signoff` gate beside its formal gates.
+`afb agent run` drives the routed stages. It runs deterministic gates, sends each stage to a vision-language reviewer, applies bounded fixes from the fix library and escalates unresolved findings to an operator. Candidate geometry always passes through the stricter `mesh-verification` gate before downstream stages can consume it.
 
 Each iteration rewrites `progress.json` and the Markdown and PNG contact sheets under `reports/`. These record the stage, gate, verdict, fix state, thumbnails and defect tags. `afb capabilities` shows the active implementation for each capability, its fallbacks and any licence or token gate. It can also plan installs. See [Agentic operation](docs/platform/agentic-operation.md).
 
@@ -191,7 +192,7 @@ Provider routing comes from `configs/provider-policy.json`. Each public tool cal
 - [Index](docs/index.md) gives task-based routes through the documentation.
 - [Blueprint](docs/blueprint.md) explains the purpose, promotion model and policy-quality link.
 - [Reference architecture](docs/reference-architecture.md) explains runtime layers and artefact flow.
-- The stage docs under [docs/pipeline](docs/pipeline) cover intake and sources, reconstruction, segmentation, material and physical inference, texturing, physics and articulation, nonvisual materials and SimReady verification in canonical order.
+- The stage docs under [docs/pipeline](docs/pipeline) cover intake and sources, reconstruction, mandatory mesh verification, segmentation, material and physical inference, texturing, physics and articulation, nonvisual materials and SimReady verification in canonical order.
 - The platform docs under [docs/platform](docs/platform) cover the orchestrator, governance, infrastructure, deployment, external model runners and layer ownership.
 - [RL environment design](docs/extensions/rl-environment.md) explains how validated assets become policy-training environments.
 - [Support matrix](docs/support-matrix.md) distinguishes declared, CI-checked, provisional and release-verified targets.

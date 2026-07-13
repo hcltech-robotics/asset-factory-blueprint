@@ -513,6 +513,31 @@
       }
     },
     {
+      "name": "governance_mesh_verify",
+      "domain": "geometry-review",
+      "description": "Run mandatory tool-assisted mesh diagnostics and vision review before canonical geometry promotion.",
+      "owning_service": "governance_mesh_verify",
+      "prompt_file": "vlm_review_mesh_verification.md",
+      "write_layer": "governance",
+      "dry_run_supported": true,
+      "requires_review": false,
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["project"],
+        "properties": {
+          "project": {"type": "string"},
+          "asset_id": {"type": "string"},
+          "project_id": {"type": "string"},
+          "candidate_path": {"type": "string"},
+          "provider": {"type": "string"},
+          "model": {"type": "string"},
+          "dry_run": {"type": "boolean"},
+          "attempt": {"type": "integer"}
+        }
+      }
+    },
+    {
       "name": "governance_vlm_review",
       "domain": "review",
       "description": "Run the stage VLM review rubric against evidence images and record the verdict.",

@@ -33,11 +33,11 @@ afb run-plan --request examples/run-requests/jerrycan_from_photo.json --output a
 The `.png` source routes through reconstruction; the requested outputs pull in texturing and simready verification:
 
 ```text
-stages: orchestrate, intake, source-ingestion, reconstruction, segmentation,
+stages: orchestrate, intake, source-ingestion, reconstruction, mesh-verification, segmentation,
         material-inference, texturing, physics-articulation,
         simready-verification, evaluation, infrastructure, governance
-gates:  governance-review, isaac-load, schema-valid, segmentation-segments,
-        source-lineage, vlm-signoff
+gates:  governance-review, isaac-load, mesh-verification, schema-valid,
+        segmentation-segments, source-lineage, vlm-signoff
 ```
 
 ## Run the agent loop

@@ -44,6 +44,7 @@ The per-stage lead skills, such as texturing-lead and segmentation-lead, own the
 | Stage | Invoke as | Domain tools an agent can also use directly |
 | --- | --- | --- |
 | reconstruction | `afb stage run reconstruction` | `governance_external_model_run`, backend runs via `afb external-models run` |
+| mesh-verification | `afb stage run mesh-verification` | `governance_mesh_verify`, `asset_mesh_condition`, reconstruction resubmission through the fix library |
 | segmentation | `afb stage run segmentation` | `asset_image_segmentation_prior`, `asset_mesh_condition` |
 | material-inference | `afb stage run material-inference` | `material_propose`, `material_physical_properties_propose` |
 | texturing | `afb stage run texturing` | `material_texture_prompt`, `material_texture_variation_workflow`, `material_texture_defaults_validate` |

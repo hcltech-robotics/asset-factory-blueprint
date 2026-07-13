@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hcltech-robotics.github.io/asset-factory-blueprint/schemas/v1/mesh-verification-record.schema.json",
+  "title": "mesh verification record",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "id",
+    "version",
+    "status",
+    "asset_id",
+    "stage_id",
+    "candidate",
+    "diagnostics",
+    "quality_policy_checksum",
+    "render_bundle",
+    "decision",
+    "review_status",
+    "reviewer",
+    "attempts",
+    "evidence",
+    "promotion",
+    "raw_secrets_recorded"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "promotion": {
+            "properties": {"approved": {"const": true}},
+            "required": ["approved"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "promotion": {
+            "properties": {
+              "canonical_geometry_path": {"minLength": 1},
+              "canonical_geometry_checksum": {
+                "pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "version": {"type": "string", "pattern": "^[1-9][0-9]*\\.[0-9]+(?:\\.[0-9]+)?(?:[-+][0-9A-Za-z.-]+)?$"},
+    "status": {
+      "type": "string",
+      "enum": ["proposal", "validated", "review_required", "blocked", "not_validated"]
+    },
+    "asset_id": {"type": "string"},
+    "project_id": {"type": "string"},
+    "stage_id": {"const": "mesh-verification"},
+    "candidate": {
+      "type": "object",
+      "required": ["path", "checksum", "format"],
+      "properties": {
+        "path": {"type": "string"},
+        "checksum": {"type": "string", "pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"},
+        "format": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "diagnostics": {
+      "type": "object",
+      "required": [
+        "status",
+        "tool",
+        "metrics",
+        "quality_policy",
+        "quality_checks",
+        "quality_failures",
+        "hard_failures",
+        "warnings"
+      ],
+      "properties": {
+        "status": {"enum": ["pass", "warning", "blocked"]},
+        "tool": {"type": "string"},
+        "metrics": {"type": "object"},
+        "quality_policy": {"type": "object"},
+        "quality_checks": {"type": "array", "items": {"type": "object"}},
+        "quality_failures": {"type": "array", "items": {"type": "string"}},
+        "hard_failures": {"type": "array", "items": {"type": "string"}},
+        "warnings": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "quality_policy_checksum": {"type": "string", "pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"},
+    "render_bundle": {
+      "type": "object",
+      "required": ["status", "images"],
+      "properties": {
+        "status": {"enum": ["generated", "blocked"]},
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["kind", "uri", "checksum"],
+            "properties": {
+              "kind": {"type": "string"},
+              "uri": {"type": "string"},
+              "checksum": {"type": "string", "pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"}
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "decision": {
+      "type": "string",
+      "enum": ["approve", "revise_local", "regenerate", "blocked", "review_required"]
+    },
+    "decision_reason": {"type": "string"},
+    "review_status": {
+      "type": "string",
+      "enum": ["review_required", "approved", "rejected"]
+    },
+    "findings": {"type": "array", "items": {"type": "object"}},
+    "reviewer": {
+      "type": "object",
+      "required": ["provider", "model", "role"],
+      "properties": {
+        "provider": {"type": "string"},
+        "model": {"type": "string"},
+        "role": {"const": "mesh_verifier"}
+      },
+      "additionalProperties": true
+    },
+    "rubric_checksum": {"type": "string", "pattern": "^(?:|(?:sha256:)?[A-Fa-f0-9]{64})$"},
+    "provider_trace": {"type": "array", "items": {"type": "object"}},
+    "attempts": {
+      "type": "object",
+      "required": ["inference_attempt", "review_attempt", "local_fix_count", "mesh_rejection_count", "inference_resubmission_count"],
+      "properties": {
+        "inference_attempt": {"type": "integer", "minimum": 1},
+        "review_attempt": {"type": "integer", "minimum": 1},
+        "local_fix_count": {"type": "integer", "minimum": 0},
+        "mesh_rejection_count": {"type": "integer", "minimum": 0},
+        "inference_resubmission_count": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": true
+    },
+    "actions": {"type": "array", "items": {"type": "object"}},
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["evidence_id", "kind", "uri", "checksum"],
+        "properties": {
+          "evidence_id": {"type": "string"},
+          "kind": {"type": "string"},
+          "uri": {"type": "string"},
+          "checksum": {"type": "string", "pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "promotion": {
+      "type": "object",
+      "required": ["approved", "candidate_checksum", "canonical_geometry_path", "canonical_geometry_checksum"],
+      "properties": {
+        "approved": {"type": "boolean"},
+        "candidate_checksum": {"type": "string", "pattern": "^(?:sha256:)?[A-Fa-f0-9]{64}$"},
+        "canonical_geometry_path": {"type": "string"},
+        "canonical_geometry_checksum": {
+          "type": "string",
+          "pattern": "^(?:|(?:sha256:)?[A-Fa-f0-9]{64})$"
+        }
+      },
+      "additionalProperties": true
+    },
+    "raw_secrets_recorded": {"const": false},
+    "extensions": {"type": "object", "additionalProperties": true}
+  }
+}

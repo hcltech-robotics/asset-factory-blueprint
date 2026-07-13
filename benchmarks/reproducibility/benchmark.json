@@ -1,0 +1,169 @@
+{
+  "id": "benchmark-1-reproducibility",
+  "version": "1.0",
+  "status": "proposal",
+  "repeat_count": 5,
+  "source_cache_layout": {
+    "images": "sources/images",
+    "usd_archive": "sources/usd/Industrial_NVD_10012.zip",
+    "usd_extract": "sources/usd/industrial",
+    "runs": "runs"
+  },
+  "image_reconstruction": {
+    "backend_id": "trellisv2",
+    "model_ref": "microsoft/TRELLIS.2-4B",
+    "reproducibility": {
+      "seed": 17,
+      "deterministic": true,
+      "pipeline_type": "512",
+      "dtype": "float32",
+      "max_num_tokens": 49152,
+      "decimation_target": 1000000,
+      "texture_size": 4096,
+      "prune_unused_models": true,
+      "cpu_image_cond": true,
+      "skip_preprocess": false
+    }
+  },
+  "mesh_verification": {
+    "mandatory": true,
+    "agent_id": "mesh-verification-agent",
+    "provider": "nvidia_nim",
+    "model": "meta/llama-3.2-90b-vision-instruct",
+    "seed": 17,
+    "temperature": 0.0,
+    "max_review_attempts": 4,
+    "max_inference_resubmissions": 3,
+    "max_total_inference_attempts": 4,
+    "retry_seed_stride": 1,
+    "rejection_policy": "adaptive_conditioning_same_backend",
+    "quality_policy": {
+      "profile": "appearance_mesh",
+      "require_watertight": false,
+      "require_winding_consistent": false,
+      "require_genus_defined": false,
+      "max_component_count": 30000,
+      "max_boundary_edge_count": 500000,
+      "max_non_manifold_edge_count": 16,
+      "max_orientation_conflict_edge_count": 16,
+      "max_degenerate_face_count": 64,
+      "max_duplicate_face_count": 128,
+      "max_interior_face_count": 0
+    },
+    "required_trace_fields": [
+      "review_attempts",
+      "mesh_rejections",
+      "inference_resubmissions",
+      "final_decision"
+    ]
+  },
+  "usd_vlm_review": {
+    "provider": "nvidia_nim",
+    "model": "nvidia/llama-3.1-nemotron-nano-vl-8b-v1",
+    "role": "vlm_reviewer",
+    "seed": 17,
+    "temperature": 0.0,
+    "max_image_edge": 1024,
+    "response_format": "strict JSON object with keys verdict, confidence, findings"
+  },
+  "image_sources": [
+    {
+      "id": "coffee_mug",
+      "path": "sources/images/coffee_mug.jpg",
+      "source_uri": "https://commons.wikimedia.org/wiki/File:Coffee_Mug_(Unsplash).jpg",
+      "download_uri": "https://commons.wikimedia.org/wiki/Special:FilePath/Coffee%20Mug%20%28Unsplash%29.jpg",
+      "licence_expression": "CC0-1.0",
+      "creator": "Ryan Holloway",
+      "verification_aliases": ["coffee mug", "mug", "cup"],
+      "alternate_source": {
+        "source_uri": "https://commons.wikimedia.org/wiki/File:Enamel_mug.jpg",
+        "download_uri": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Enamel_mug.jpg",
+        "licence_expression": "CC-BY-3.0",
+        "creator": "knoe"
+      }
+    },
+    {
+      "id": "bentwood_chair",
+      "path": "sources/images/bentwood_chair.jpg",
+      "source_uri": "https://commons.wikimedia.org/wiki/File:Chair.JPG",
+      "download_uri": "https://commons.wikimedia.org/wiki/Special:FilePath/Chair.JPG",
+      "licence_expression": "CC0-1.0",
+      "creator": "Antobbo_pix",
+      "verification_aliases": ["bentwood chair", "chair", "seat"],
+      "alternate_source": {
+        "source_uri": "https://commons.wikimedia.org/wiki/File:BLW_Bentwood_Chair.jpg",
+        "download_uri": "https://upload.wikimedia.org/wikipedia/commons/9/93/BLW_Bentwood_Chair.jpg",
+        "licence_expression": "CC-BY-SA-2.0-UK",
+        "creator": "Valerie McGlinchey"
+      }
+    },
+    {
+      "id": "hand_powered_drill",
+      "path": "sources/images/hand_powered_drill.png",
+      "source_uri": "https://commons.wikimedia.org/wiki/File:Hand-powered_drill.png",
+      "download_uri": "https://commons.wikimedia.org/wiki/Special:FilePath/Hand-powered%20drill.png",
+      "licence_expression": "CC0-1.0",
+      "creator": "JrawX",
+      "verification_aliases": ["hand-powered drill", "hand drill", "drill", "brace"],
+      "alternate_source": {
+        "source_uri": "https://commons.wikimedia.org/wiki/File:Hand-powered_drill.jpg",
+        "download_uri": "https://upload.wikimedia.org/wikipedia/commons/2/26/Hand-powered_drill.jpg",
+        "licence_expression": "CC-BY-2.0",
+        "creator": "Emmanuel Gilloz"
+      }
+    },
+    {
+      "id": "wooden_table_lamp",
+      "path": "sources/images/wooden_table_lamp.jpg",
+      "source_uri": "https://commons.wikimedia.org/wiki/File:Wooden_Antique_Table_Lamp.jpg",
+      "download_uri": "https://commons.wikimedia.org/wiki/Special:FilePath/Wooden%20Antique%20Table%20Lamp.jpg",
+      "licence_expression": "CC0-1.0",
+      "creator": "Amit Balani",
+      "verification_aliases": ["wooden table lamp", "table lamp", "lamp", "light"],
+      "alternate_source": {
+        "source_uri": "https://commons.wikimedia.org/wiki/File:2022.06.14_Vintage_Table_Lamp.jpg",
+        "download_uri": "https://upload.wikimedia.org/wikipedia/commons/8/87/2022.06.14_Vintage_Table_Lamp.jpg",
+        "licence_expression": "CC-BY-SA-4.0",
+        "creator": "Tess Mattew"
+      }
+    },
+    {
+      "id": "fire_extinguisher",
+      "path": "sources/images/fire_extinguisher.jpg",
+      "source_uri": "https://wordpress.org/photos/photo/491644ef00/",
+      "download_uri": "https://pd.w.org/2023/04/491644ef0094a25a4.30511959-rotated.jpg",
+      "licence_expression": "CC0-1.0",
+      "creator": "Topher",
+      "asset_crop_box": [1050, 1350, 2200, 3400],
+      "verification_aliases": ["fire extinguisher", "extinguisher", "cylinder"],
+      "alternate_source": {
+        "source_uri": "https://commons.wikimedia.org/wiki/File:Fire_Extinguisher.JPG",
+        "download_uri": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Fire_Extinguisher.JPG",
+        "licence_expression": "Public-Domain",
+        "creator": "David (Kcdtsg)"
+      }
+    }
+  ],
+  "usd_sources": [
+    {
+      "id": "cardbox_c2",
+      "path": "Assets/ArchVis/Industrial/Containers/Cardboard/Cardbox_C2.usd"
+    },
+    {
+      "id": "wooden_crate_b2",
+      "path": "Assets/ArchVis/Industrial/Containers/Wooden/WoodenCrate_B2.usd"
+    },
+    {
+      "id": "pallet_c1",
+      "path": "Assets/ArchVis/Industrial/Pallets/Pallet_C1.usd"
+    },
+    {
+      "id": "rack_large_a5",
+      "path": "Assets/ArchVis/Industrial/Racks/RackLarge_A5.usd"
+    },
+    {
+      "id": "metal_fencing_a2",
+      "path": "Assets/ArchVis/Industrial/Railing/MetalFencing_A2.usd"
+    }
+  ]
+}

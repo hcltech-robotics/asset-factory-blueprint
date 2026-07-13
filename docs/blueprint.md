@@ -12,7 +12,7 @@ The output is an asset package that can be rebuilt from source evidence, explain
 
 Start with a CAD file, USD asset, image set, scan, robot description or specification. The factory copies the source into a project workspace and records checksums to detect later changes.
 
-The orchestrator builds a route from the source evidence and requested outputs. A simple USD asset may need only source registration, packaging and readiness checks. An image-only asset may need reconstruction, segmentation, material and physical inference, texturing, physics and articulation authoring and verification before release. The route is recorded before mutation.
+The orchestrator builds a route from the source evidence and requested outputs. Every geometry route includes mandatory mesh verification. An image-only asset may need reconstruction, mesh verification, segmentation, material and physical inference, texturing, physics and articulation authoring and SimReady verification before release. The route is recorded before mutation.
 
 Each stage writes inspectable manifests, reports, evidence, generated artefacts and checksums. Missing evidence blocks the output or marks it review-required; passing gates permits the next stage.
 
@@ -22,15 +22,16 @@ Each stage writes inspectable manifests, reports, evidence, generated artefacts 
   <img src="assets/asset-factory-pipeline.svg" alt="asset factory pipeline" width="920">
 </p>
 
-Intake and source ingestion register source geometry, scans, images, robot descriptions, logs and specifications as immutable evidence. The asset then moves through seven stages:
+Intake and source ingestion register source geometry, scans, images, robot descriptions, logs and specifications as immutable evidence. The asset then moves through eight stages:
 
-1. Reconstruction (optional) produces mesh geometry from images and descriptions through governed external backends. USD and supported mesh sources take conditioning or repair routes. Native CAD remains source evidence and requires an operator-supplied USD or supported mesh export before authoring.
-2. Segmentation and semantic inference produce stable appearance segments, semantic labels and material regions.
-3. Material and physical inference binds visual evidence to constrained material candidates and proposes mass, density, friction and stiffness with uncertainty.
-4. Texturing generates texture prompts, PBR maps, variants, deformation requests and decals bound to material evidence.
-5. Physics and articulation author colliders, rigid bodies, mass, joints, limits, drives, grasp affordances and validation scenarios.
-6. Nonvisual materials (optional) infer thermal, acoustic and electrical values only from evidence strong enough to support them.
-7. SimReady packaging and USD verification assemble the layer stack, check load behaviour and record whether release is allowed, with Isaac Sim as one runtime target.
+1. Reconstruction (optional) produces candidate mesh geometry from images and descriptions through governed external backends. USD and supported mesh sources take conditioning or repair routes. Native CAD remains source evidence and requires an operator-supplied USD or supported mesh export before authoring.
+2. Mandatory mesh verification combines exact topology and integrity checks, fixed-camera full-surface renders and vision review. Euler characteristic, genus, boundary structure, manifoldness, watertightness and component structure are measured before review. A deterministic quality failure forces repair or regeneration, while visible source mismatch can trigger bounded adaptive source conditioning before a new inference run. Only an approval bound to both the candidate and policy checksums promotes canonical geometry.
+3. Segmentation and semantic inference produce stable appearance segments, semantic labels and material regions.
+4. Material and physical inference binds visual evidence to constrained material candidates and proposes mass, density, friction and stiffness with uncertainty.
+5. Texturing generates texture prompts, PBR maps, variants, deformation requests and decals bound to material evidence.
+6. Physics and articulation author colliders, rigid bodies, mass, joints, limits, drives, grasp affordances and validation scenarios.
+7. Nonvisual materials (optional) infer thermal, acoustic and electrical values only from evidence strong enough to support them.
+8. SimReady packaging and USD verification assemble the layer stack, check load behaviour and record whether release is allowed, with Isaac Sim as one runtime target.
 
 RL environment stages then build task contracts, observation spaces, action spaces, rewards and curriculum plans around the validated asset as a downstream extension.
 

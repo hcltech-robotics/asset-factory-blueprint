@@ -1,7 +1,7 @@
 {
   "name": "asset-factory-blueprint-agent-workflow",
   "version": "1.0",
-  "description": "Internal skill workflow for asset creation from source intake through the seven-stage pipeline to validation and governance.",
+  "description": "Internal skill workflow for asset creation with mandatory early mesh verification before downstream geometry consumers.",
   "provider_policy": "configs/provider-policy.json",
   "skill_registry": "configs/skill-registry.json",
   "validation_gates": "configs/validation-gates.json",
@@ -42,7 +42,13 @@
       "id": "reconstruction",
       "name": "Mesh reconstruction from images and descriptions",
       "skill": "reconstruction-lead",
-      "instruction": "Execute mesh reconstruction from images and descriptions with manifests, evidence and validation gates."
+      "instruction": "Produce candidate geometry from images, descriptions or source conditioning with manifests and evidence."
+    },
+    {
+      "id": "mesh-verification",
+      "name": "Mandatory early mesh verification",
+      "skill": "mesh-verification-agent",
+      "instruction": "Inspect candidate geometry with deterministic tools and diagnostic renders, obtain a vision-guided verdict and promote only the approved candidate checksum."
     },
     {
       "id": "segmentation",

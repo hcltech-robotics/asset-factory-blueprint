@@ -59,6 +59,17 @@
       ]
     },
     {
+      "id": "mesh-verification",
+      "type": "geometry-review",
+      "pass_criteria": "the mandatory mesh-verification agent approved the exact candidate checksum after deterministic diagnostics and vision review",
+      "required_evidence": [
+        "mesh-verification-record",
+        "mesh-diagnostics",
+        "mesh-review-render-bundle",
+        "candidate-checksum"
+      ]
+    },
+    {
       "id": "isaac-load",
       "type": "isaac",
       "pass_criteria": "load check passes or blocks with runtime reason",

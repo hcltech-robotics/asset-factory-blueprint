@@ -243,34 +243,35 @@ def draw_architecture(lines: list[str]) -> None:
 
 
 def draw_pipeline(lines: list[str]) -> None:
-    stage_x0, stage_y, stage_w, stage_h, stage_gap = 222, 74, 131, 212, 8
+    stage_x0, stage_y, stage_w, stage_h, stage_gap = 222, 74, 115, 212, 6
     lines.extend(outer_box(30, stage_y, 180, stage_h, "Pre-pipeline", ["intake", "source ingestion"], {"source ingestion"}, hot=False, title_size=17))
     stages = [
         ("1 Reconstruct", ["optional", "mesh from views"], set()),
-        ("2 Segment", ["masks", "semantics"], set()),
-        ("3 Materials", ["classes", "physical props"], set()),
-        ("4 Texture", ["PBR maps", "decals"], set()),
-        ("5 Physics", ["joints", "grasps"], set()),
-        ("6 Nonvisual", ["optional", "thermal, acoustic"], set()),
-        ("7 Verify", ["package", "USD gates"], set()),
+        ("2 Mesh verify", ["tool + vision", "promotion gate"], {"tool + vision"}),
+        ("3 Segment", ["masks", "semantics"], set()),
+        ("4 Materials", ["classes", "physical props"], set()),
+        ("5 Texture", ["PBR maps", "decals"], set()),
+        ("6 Physics", ["joints", "grasps"], set()),
+        ("7 Nonvisual", ["optional", "thermal, acoustic"], set()),
+        ("8 SimReady", ["package", "USD gates"], set()),
     ]
     for i, (title, items, hot_items) in enumerate(stages):
         x = stage_x0 + i * (stage_w + stage_gap)
-        hot = title in {"1 Reconstruct", "6 Nonvisual"}
+        hot = title in {"1 Reconstruct", "2 Mesh verify", "7 Nonvisual"}
         lines.extend(outer_box(x, stage_y, stage_w, stage_h, title, items, hot_items, hot=hot, title_size=16))
         if i < len(stages) - 1:
             lines.append(arrow(x + stage_w, stage_y + stage_h / 2, x + stage_w + stage_gap - 4, stage_y + stage_h / 2))
     lines.append(arrow(210, 180, stage_x0 - 4, 180))
     lines.extend(outer_box(1200, stage_y, 140, stage_h, "Downstream", ["RL contracts", "layout sweeps"], set(), hot=False, title_size=17))
-    last_x = stage_x0 + 6 * (stage_w + stage_gap)
+    last_x = stage_x0 + (len(stages) - 1) * (stage_w + stage_gap)
     lines.append(arrow(last_x + stage_w, 180, 1196, 180))
-    stage4_cx = stage_x0 + 3 * (stage_w + stage_gap) + stage_w / 2
+    pipeline_cx = stage_x0 + (last_x + stage_w - stage_x0) / 2
     loop_w, loop_h = 600, 150
-    loop_x, loop_y = stage4_cx - loop_w / 2, 400
+    loop_x, loop_y = pipeline_cx - loop_w / 2, 400
     lines.extend(
-        outer_box(loop_x, loop_y, loop_w, loop_h, "Every stage", ["formal gates", "VLM sign-off", "fix or escalate"], {"VLM sign-off", "fix or escalate"}, hot=True)
+        outer_box(loop_x, loop_y, loop_w, loop_h, "Every stage", ["formal gates", "vision review", "fix or escalate"], {"vision review", "fix or escalate"}, hot=True)
     )
-    lines.append(elbow([(stage4_cx, stage_y + stage_h), (stage4_cx, loop_y)], accent=True))
+    lines.append(elbow([(pipeline_cx, stage_y + stage_h), (pipeline_cx, loop_y)], accent=True))
 
 
 def draw_storyboard(lines: list[str]) -> None:
@@ -875,7 +876,7 @@ def draw_runtime_layer_contract(lines: list[str]) -> None:
 
 DIAGRAMS = [
     {"name": "architecture", "title": "Asset factory architecture", "desc": "Five blocks from immutable sources through staged proposals, validation and release, with agent control looping under the stages.", "draw": draw_architecture},
-    {"name": "asset-factory-pipeline", "title": "The seven-stage pipeline", "desc": "Pre-pipeline intake feeds seven content stages into downstream extensions; every stage passes formal gates and a VLM sign-off.", "draw": draw_pipeline},
+    {"name": "asset-factory-pipeline", "title": "The eight-stage pipeline", "desc": "Pre-pipeline intake feeds eight content stages into downstream extensions; every stage passes formal gates and its configured review.", "draw": draw_pipeline},
     {"name": "source-ingestion-lineage", "title": "Source ingestion lineage", "desc": "Programme intent and original source metadata become an immutable project copy, source record and explicit downstream route while checksums, rights and unit policy carry forward.", "draw": draw_source_ingestion_lineage},
     {"name": "image-to-usd-storyboard", "title": "Image to USD storyboard", "desc": "Photos and words move through priors, generative backends, the USD layer stack and review into a governed package.", "draw": draw_storyboard},
     {"name": "segmentation-lane", "title": "Segmentation lane", "desc": "Inputs pass through segmentation priors into stable segments, semantic conditioning and the segmentation manifest.", "draw": draw_segmentation_lane},

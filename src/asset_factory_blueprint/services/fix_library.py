@@ -2,17 +2,30 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from asset_factory_blueprint.config import load_json
+from asset_factory_blueprint.execution import atomic_write_json
 from asset_factory_blueprint.skills.base import ToolResult
+from asset_factory_blueprint.utils.checksums import sha256_file, sha256_text
 
 
 LIBRARY_PATH = "configs/fix-library.json"
 MESH_SUFFIXES = {".glb", ".obj", ".ply", ".stl"}
 IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp"}
+
+
+def _read_json(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return payload if isinstance(payload, dict) else {}
 
 
 def load_fix_library(library_path: str = LIBRARY_PATH) -> dict[str, Any]:
@@ -21,10 +34,11 @@ def load_fix_library(library_path: str = LIBRARY_PATH) -> dict[str, Any]:
 
 def resolve_fixes(stage_id: str, defect_tags: list[str], library_path: str = LIBRARY_PATH) -> list[dict[str, Any]]:
     library = load_fix_library(library_path)
+    recipe_stage = "reconstruction" if stage_id == "mesh-verification" else stage_id
     wanted = set(defect_tags)
     matches: list[dict[str, Any]] = []
     for fix in library.get("fixes", []):
-        if fix.get("stage") != stage_id:
+        if fix.get("stage") != recipe_stage:
             continue
         covered = wanted.intersection(fix.get("defect_tags", []))
         if covered:
@@ -213,7 +227,13 @@ def _run_reverify(fix: dict[str, Any], project_dir: Path) -> list[dict[str, str]
     return outcomes
 
 
-def _capability_fallback_plan(fix: dict[str, Any], dry_run: bool) -> dict[str, Any]:
+def _capability_fallback_plan(
+    fix: dict[str, Any],
+    dry_run: bool,
+    project_dir: Path | None,
+    asset_id: str,
+    attempt: int,
+) -> dict[str, Any]:
     from asset_factory_blueprint.services.capability import probe_capabilities
 
     capability_id = fix.get("action", {}).get("capability_id", "")
@@ -224,15 +244,76 @@ def _capability_fallback_plan(fix: dict[str, Any], dry_run: bool) -> dict[str, A
     ready = [item["option_id"] for item in capability["options"] if item["status"] == "ready"]
     if not ready:
         return {"status": "blocked", "error": f"no ready option for {capability_id}", "options": capability["options"]}
-    chosen = ready[0]
-    plan: dict[str, Any] = {"status": "planned" if dry_run else "requested", "capability_id": capability_id, "fallback_option": chosen}
+    current_backend = ""
+    if project_dir is not None:
+        reconstruction = _read_json(project_dir / "manifests" / "reconstruction-manifest.json")
+        external = _read_json(project_dir / "manifests" / "external-model-run-manifest.json")
+        current_backend = str(
+            reconstruction.get("backend", {}).get("backend_id") or external.get("backend", {}).get("backend_id") or ""
+        )
+    chosen = next((option for option in ready if option != current_backend), ready[0])
+    plan: dict[str, Any] = {
+        "status": "planned_dry_run" if dry_run else "requested",
+        "capability_id": capability_id,
+        "fallback_option": chosen,
+        "previous_backend": current_backend,
+        "inference_attempt": attempt + 2,
+    }
+    if project_dir is None or not project_dir.exists():
+        plan["status"] = "blocked"
+        plan["error"] = "capability fallback needs a project workspace"
+        return plan
     if not dry_run:
         try:
-            from asset_factory_blueprint.reconstruction_backends import build_backend_run_manifest
+            from asset_factory_blueprint.reconstruction_backends import build_backend_run_manifest, run_adapter_manifest
 
-            manifest = build_backend_run_manifest(chosen)
+            project = _read_json(project_dir / "project.json")
+            resubmission_dir = project_dir / "artifacts" / "reconstruction-resubmissions" / f"attempt-{attempt + 2:02d}"
+            run_manifest_path = resubmission_dir / "external-model-run-manifest.json"
+            output_manifest_path = resubmission_dir / "reconstruction-manifest.json"
+            manifest = build_backend_run_manifest(
+                chosen,
+                output_path=run_manifest_path,
+                input_manifest=(project_dir / "manifests" / "source-asset-manifest.json").as_posix(),
+                output_manifest=output_manifest_path.as_posix(),
+                asset_id=asset_id,
+                project_id=str(project.get("project_id") or ""),
+            )
+            persisted = _read_json(Path(manifest["manifest_path"]))
+            if chosen == current_backend:
+                previous = _read_json(project_dir / "manifests" / "external-model-run-manifest.json")
+                reproducibility = dict(previous.get("reproducibility", {}))
+                reproducibility["seed"] = int(reproducibility.get("seed", 17)) + attempt + 1
+                persisted["reproducibility"] = reproducibility
+                persisted["manifest_checksum"] = sha256_text(
+                    json.dumps(
+                        {key: value for key, value in persisted.items() if key != "manifest_checksum"}, sort_keys=True
+                    )
+                )
+                atomic_write_json(manifest["manifest_path"], persisted)
+                atomic_write_json(
+                    Path(manifest["manifest_path"]).with_suffix(".sha256.json"),
+                    {
+                        "algorithm": "sha256",
+                        "path": manifest["manifest_path"],
+                        "sha256": sha256_file(manifest["manifest_path"]),
+                    },
+                )
+            result = run_adapter_manifest(manifest["manifest_path"], dry_run=False)
+            completed = (
+                result.get("execution_status") == "completed"
+                and result.get("project_landing", {}).get("status") == "landed"
+            )
+            plan["status"] = "completed" if completed else "blocked"
             plan["run_manifest"] = manifest.get("manifest_path", "")
-            plan["note"] = "backend run manifest created; execute it with afb external-models run"
+            plan["result_manifest"] = result.get("result_manifest", "")
+            plan["generated_asset"] = result.get("generated_asset", "")
+            plan["project_landing"] = result.get("project_landing", {})
+            plan["blocked_reasons"] = result.get("blocked_reasons", [])
+            if not completed:
+                plan["error"] = (
+                    "; ".join(result.get("blocked_reasons", [])) or "reconstruction resubmission did not complete"
+                )
         except Exception as exc:
             plan["status"] = "blocked"
             plan["error"] = str(exc)
@@ -275,7 +356,11 @@ def asset_fix_apply(params: dict[str, Any]) -> ToolResult:
 
     project_raw = params.get("project")
     project_dir = Path(str(project_raw)) if project_raw else None
-    context = _project_context(project_dir) if project_dir and project_dir.exists() else {"asset_id": "", "source_image": "", "meshes": [], "asset_dir": ""}
+    context = (
+        _project_context(project_dir)
+        if project_dir and project_dir.exists()
+        else {"asset_id": "", "source_image": "", "meshes": [], "asset_dir": ""}
+    )
 
     applied: list[dict[str, Any]] = []
     escalations: list[str] = []
@@ -331,14 +416,26 @@ def asset_fix_apply(params: dict[str, Any]) -> ToolResult:
                     if result.success or result.validation_status in {"proposal", "review_required"}:
                         record["status"] = "applied"
                         artefacts_changed = True
+                        if stage_id == "mesh-verification" and result.data.get("mesh_results"):
+                            conditioned = Path(str(result.data["mesh_results"][0].get("output_path") or ""))
+                            if conditioned.is_file():
+                                canonical_candidate = (
+                                    project_dir / "assets" / str(context.get("asset_id") or "asset") / "asset.glb"
+                                )
+                                canonical_candidate.parent.mkdir(parents=True, exist_ok=True)
+                                shutil.copy2(conditioned, canonical_candidate)
+                                record["landed_candidate"] = canonical_candidate.as_posix()
+                                record["landed_candidate_checksum"] = sha256_file(canonical_candidate)
                     else:
                         record["status"] = "attempt_failed"
                     if result.error:
                         record["error"] = result.error
                         warnings.append(f"{fix['fix_id']}: {result.error}")
         elif kind == "capability_fallback":
-            plan = _capability_fallback_plan(fix, dry_run)
+            plan = _capability_fallback_plan(fix, dry_run, project_dir, str(context.get("asset_id") or ""), attempt)
             record.update(plan)
+            if plan["status"] == "completed":
+                artefacts_changed = True
             if plan["status"] == "blocked":
                 escalations.append(fix["fix_id"])
                 warnings.append(f"{fix['fix_id']}: {plan.get('error', 'capability fallback blocked')}")
@@ -358,7 +455,7 @@ def asset_fix_apply(params: dict[str, Any]) -> ToolResult:
                 artefacts_changed = True
         applied.append(record)
 
-    if artefacts_changed and project_dir is not None:
+    if artefacts_changed and project_dir is not None and stage_id != "mesh-verification":
         from asset_factory_blueprint.workflow import rebuild_project_artefacts
 
         rebuild = rebuild_project_artefacts(project_dir, dry_run=dry_run)
@@ -368,13 +465,22 @@ def asset_fix_apply(params: dict[str, Any]) -> ToolResult:
                 record["reverify_outcomes"] = _run_reverify(
                     next(fix for fix in fixes if fix["fix_id"] == record["fix_id"]), project_dir
                 )
-        warnings.extend([] if rebuild["status"] != "blocked" else ["workspace rebuild reports blocked stages; see stage reports"])
+        warnings.extend(
+            [] if rebuild["status"] != "blocked" else ["workspace rebuild reports blocked stages; see stage reports"]
+        )
+    elif artefacts_changed and project_dir is not None and stage_id == "mesh-verification":
+        for record in applied:
+            if record["status"] in {"applied", "completed"}:
+                record["candidate_changed"] = True
+                record["reverify_outcomes"] = [{"gate": "mesh-verification", "status": "pending_re_review"}]
 
     if project_dir is not None and project_dir.exists():
         for record in applied:
             _append_attempt_log(project_dir, record)
 
-    any_applied = any(item["status"] in {"applied", "requested", "planned_dry_run", "planned"} for item in applied)
+    any_applied = any(
+        item["status"] in {"applied", "completed", "requested", "planned_dry_run", "planned"} for item in applied
+    )
     data = {
         "stage_id": stage_id,
         "defect_tags": defect_tags,

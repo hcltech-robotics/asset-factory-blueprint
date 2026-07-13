@@ -33,6 +33,7 @@ nav:
   - Pipeline:
       - Intake and sources: pipeline/00-intake-and-sources.md
       - Reconstruction: pipeline/01-reconstruction.md
+      - Mandatory mesh verification: pipeline/01a-mesh-verification.md
       - Segmentation: pipeline/02-segmentation.md
       - Material and physical inference: pipeline/03-material-inference.md
       - Texturing: pipeline/04-texturing.md
@@ -53,6 +54,7 @@ nav:
   - Governance:
       - Agent system: agent-system.md
       - Governance: platform/governance.md
+      - Mandatory early mesh verification decision: design-decisions/mandatory-mesh-verification.md
       - Manifest contracts: manifest-contracts.md
       - Layer ownership and variants: platform/layer-ownership-and-variants.md
       - Layout and mutation plans: platform/layout-and-mutation-plans.md

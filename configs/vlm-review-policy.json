@@ -18,9 +18,10 @@
     ]
   },
   "stages": {
-    "reconstruction": {
-      "rubric": "vlm_review_reconstruction.md",
+    "mesh-verification": {
+      "rubric": "vlm_review_mesh_verification.md",
       "evidence_globs": [
+        "reports/mesh-verification/*.png",
         "assets/*/renders/**/*.png",
         "renders/**/*.png",
         "source-assets/**/*.png",
@@ -34,7 +35,14 @@
         "wrong_proportions",
         "missing_parts",
         "extra_geometry",
-        "wrong_scale"
+        "wrong_scale",
+        "self_intersection",
+        "non_manifold_geometry",
+        "degenerate_faces",
+        "duplicate_faces",
+        "interior_faces",
+        "invalid_normals",
+        "source_mismatch"
       ]
     },
     "segmentation": {
