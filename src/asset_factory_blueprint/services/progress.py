@@ -15,6 +15,7 @@ STAGE_ORDER = [
     "intake",
     "source-ingestion",
     "reconstruction",
+    "mesh-verification",
     "segmentation",
     "material-inference",
     "texturing",
@@ -30,6 +31,7 @@ STAGE_ORDER = [
 STAGE_IMAGE_GLOBS = {
     "source-ingestion": ["source-assets/**/*.png", "source-assets/**/*.jpg", "source-assets/**/*.jpeg"],
     "reconstruction": ["assets/*/renders/**/*.png", "renders/**/*.png"],
+    "mesh-verification": ["reports/mesh-verification/*.png"],
     "segmentation": ["assets/*/textures/segments/*.png"],
     "texturing": ["assets/*/textures/*.png", "assets/*/textures/variants/**/*.png"],
     "simready-verification": ["assets/*/renders/**/*.png", "renders/**/*.png"],
@@ -79,6 +81,26 @@ def build_progress(project_dir: str | Path) -> dict[str, Any]:
     for stage_id in ordered:
         report = _load_json_if_exists(root / "reports" / f"{stage_id}-report.json")
         review = _load_json_if_exists(root / "reports" / f"{stage_id}-vlm-review.json")
+        mesh_verification = (
+            _load_json_if_exists(root / "manifests" / "mesh-verification-record.json")
+            if stage_id == "mesh-verification"
+            else {}
+        )
+        if mesh_verification:
+            mesh_decision = str(mesh_verification.get("decision") or "")
+            review = {
+                "verdict": "approve"
+                if mesh_decision == "approve"
+                else "blocked"
+                if mesh_decision == "blocked"
+                else "revise"
+                if mesh_decision in {"revise_local", "regenerate"}
+                else "skipped",
+                "verdict_reason": mesh_verification.get("decision_reason", ""),
+                "confidence": mesh_verification.get("confidence", 0.0),
+                "findings": mesh_verification.get("findings", []),
+                "attempt": mesh_verification.get("attempts", {}).get("review_attempt", 0),
+            }
         stage_fixes = [item for item in fix_log if item.get("stage_id") == stage_id]
         entry: dict[str, Any] = {
             "stage_id": stage_id,
@@ -98,6 +120,17 @@ def build_progress(project_dir: str | Path) -> dict[str, Any]:
                 "confidence": review.get("confidence", 0.0),
                 "defect_tags": sorted({item.get("defect_tag", "") for item in review.get("findings", []) if item.get("defect_tag")}),
                 "attempt": review.get("attempt", 0),
+            }
+        if mesh_verification:
+            entry["mesh_verification"] = {
+                "decision": mesh_verification.get("decision", ""),
+                "candidate_checksum": mesh_verification.get("candidate", {}).get("checksum", ""),
+                "review_attempts": mesh_verification.get("attempts", {}).get("review_attempt", 0),
+                "mesh_rejections": mesh_verification.get("attempts", {}).get("mesh_rejection_count", 0),
+                "inference_resubmissions": mesh_verification.get("attempts", {}).get(
+                    "inference_resubmission_count", 0
+                ),
+                "promotion_approved": mesh_verification.get("promotion", {}).get("approved", False),
             }
         stages.append(entry)
 
@@ -174,6 +207,14 @@ def _contact_sheet_markdown(progress: dict[str, Any]) -> str:
             lines.append(f"VLM review: **{_badge(review.get('verdict', ''))}** (confidence {review.get('confidence', 0.0)}), defects: {tags}")
             if review.get("verdict_reason"):
                 lines.append(f"Reviewer note: {review['verdict_reason']}")
+        mesh_verification = stage.get("mesh_verification", {})
+        if mesh_verification:
+            lines.append(
+                "Mesh verifier: "
+                f"{mesh_verification.get('review_attempts', 0)} review(s), "
+                f"{mesh_verification.get('mesh_rejections', 0)} rejection(s), "
+                f"{mesh_verification.get('inference_resubmissions', 0)} inference resubmission(s)"
+            )
         for reason in stage.get("blocked_reasons", [])[:4]:
             lines.append(f"- blocked: {reason}")
         if stage.get("images"):

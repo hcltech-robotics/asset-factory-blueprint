@@ -47,6 +47,7 @@ STAGE_SCHEMA = {
     "intake": "asset-programme-intake-manifest",
     "source-ingestion": "source-asset-manifest",
     "reconstruction": "reconstruction-manifest",
+    "mesh-verification": "mesh-verification-record",
     "segmentation": "segmentation-manifest",
     "material-inference": "material-inference-manifest",
     "texturing": "texturing-manifest",
@@ -137,7 +138,11 @@ def _source_rights_records(request: RunRequest, sources: list[dict[str, Any]]) -
         if index < len(records) and isinstance(records[index], dict):
             candidate = records[index]
         elif keyed:
-            value = keyed.get(source.get("source_path")) or keyed.get(source.get("project_copy_path")) or keyed.get(source_id)
+            value = (
+                keyed.get(source.get("source_path"))
+                or keyed.get(source.get("project_copy_path"))
+                or keyed.get(source_id)
+            )
             if isinstance(value, dict):
                 candidate = value
         result.append(
@@ -186,7 +191,9 @@ def _localize_governance_evidence(request: RunRequest, project_dir: Path) -> tup
             if not source.is_file():
                 blockers.append(f"governance evidence path does not exist: {source}")
                 continue
-            destination = project_dir / "evidence" / "governance" / f"{index}_{slugify(source.stem)}{source.suffix.lower()}"
+            destination = (
+                project_dir / "evidence" / "governance" / f"{index}_{slugify(source.stem)}{source.suffix.lower()}"
+            )
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(source, destination)
             evidence.append(
@@ -250,9 +257,7 @@ def localize_sources(request: RunRequest, project_dir: Path) -> dict[str, Any]:
             for child in candidates:
                 size = child.stat().st_size
                 if copied_file_count + 1 > max_files or copied_bytes + size > max_bytes:
-                    blocked.append(
-                        f"source ingestion limit exceeded: maximum {max_files} files and {max_bytes} bytes"
-                    )
+                    blocked.append(f"source ingestion limit exceeded: maximum {max_files} files and {max_bytes} bytes")
                     break
                 relative = child.relative_to(resolved_source)
                 destination = source_root / f"{index}_{slugify(source.name)}" / relative
@@ -337,13 +342,33 @@ class _WorkflowStageRuntime:
                 conditioning = self.asset_package.get("mesh_conditioning", {})
                 if conditioning.get("status") == "blocked" or not self.asset_package.get("usd_root_path"):
                     record["blocked_reasons"] = [
-                        str(conditioning.get("blocked_reason") or "canonical geometry was not produced")
+                        str(conditioning.get("blocked_reason") or "candidate geometry was not produced")
                     ]
                 record["artefacts"] = [
                     str(self.asset_package.get("normalised_source_path") or ""),
                     str(self.asset_package.get("usd_root_path") or ""),
                 ]
                 record["mesh_conditioning"] = conditioning
+        elif stage.id == "mesh-verification":
+            if self.asset_package is None:
+                record["blocked_reasons"] = ["reconstruction has not produced candidate geometry"]
+            else:
+                from asset_factory_blueprint.services.mesh_verification import prepare_mesh_verification
+
+                external_run = self.asset_package.get("external_reconstruction_run", {})
+                candidate_path = external_run.get("mesh_path") or self.asset_package.get("normalised_source_path", "")
+                verification = prepare_mesh_verification(
+                    self.project_dir,
+                    self.request.id,
+                    "",
+                    candidate_path,
+                )
+                record["verification"] = verification
+                record["artefacts"] = [
+                    verification.get("diagnostics_path", ""),
+                    *[item.get("uri", "") for item in verification.get("render_bundle", {}).get("images", [])],
+                ]
+                record["blocked_reasons"] = list(verification.get("blocked_reasons", []))
         elif stage.id == "segmentation":
             segments = list((self.asset_package or {}).get("appearance_segments", []))
             record["segment_count"] = len(segments)
@@ -741,9 +766,14 @@ def _enrich_manifest(
     payload["evidence"] = [_evidence_record(run_plan_path, project_dir, "run_plan", "run_plan")]
     payload["provider_trace"] = _provider_trace(stage, plan)
     payload["provenance"] = plan.provenance
-    payload["review_status"] = "review_required" if stage.id in {"physics-articulation", "governance"} else "not_reviewed"
+    payload["review_status"] = (
+        "review_required" if stage.id in {"physics-articulation", "governance"} else "not_reviewed"
+    )
     payload["validation_status"] = _stage_status(stage)
-    payload["validation_gates"] = [{"gate_id": gate, "status": "blocked" if stage.blocked_reasons else "pending"} for gate in stage.validation_gates]
+    payload["validation_gates"] = [
+        {"gate_id": gate, "status": "blocked" if stage.blocked_reasons else "pending"}
+        for gate in stage.validation_gates
+    ]
     payload["blocked_reasons"] = list(stage.blocked_reasons)
     if stage.id == "source-ingestion" and source_ingestion:
         payload["version"] = "2.0"
@@ -781,12 +811,19 @@ def _enrich_manifest(
             }
         ]
         external_run = asset_package.get("external_reconstruction_run", {})
+        candidate_path = external_run.get("mesh_path") or asset_package.get("normalised_source_path", "")
+        candidate_checksum = ""
+        if candidate_path and Path(candidate_path).exists():
+            candidate_checksum = sha256_file(Path(candidate_path))
+        payload["candidate_geometry_path"] = candidate_path
+        payload["candidate_geometry_checksum"] = candidate_checksum
+        payload["review_status"] = "review_required"
         if reconstruction_required and external_run:
             payload["status"] = "review_required"
             payload["validation_status"] = "review_required"
             payload["external_run_id"] = external_run.get("run_id", "")
             payload["review_notes"] = [
-                "external reconstruction run recorded; operator acceptance required before release"
+                "external reconstruction run recorded; mandatory mesh verification required before canonical promotion"
             ]
             payload["evidence"].append(
                 {
@@ -803,9 +840,17 @@ def _enrich_manifest(
         payload["evidence"].append(
             {
                 "evidence_id": "reconstruction_output",
-                "kind": "usd_geometry",
-                "uri": asset_package.get("normalised_source_path", ""),
-                "checksum": next((item["sha256"] for item in asset_package.get("files", []) if item["path"] == asset_package.get("normalised_source_path", "")), ""),
+                "kind": "candidate_geometry",
+                "uri": candidate_path,
+                "checksum": candidate_checksum
+                or next(
+                    (
+                        item["sha256"]
+                        for item in asset_package.get("files", [])
+                        if item["path"] == asset_package.get("normalised_source_path", "")
+                    ),
+                    "",
+                ),
             }
         )
     if stage.id == "segmentation" and asset_package:
@@ -858,7 +903,9 @@ def _enrich_manifest(
                 "candidate_materials": [segment.get("material_name", "painted_metal"), "hard_plastic"],
                 "selected_material": segment.get("material_name", "painted_metal"),
                 "selection_status": "proposal",
-                "pbr_binding_target": segment.get("material_prim_path", asset_package.get("asset_dir", "") + "/mtl.usda"),
+                "pbr_binding_target": segment.get(
+                    "material_prim_path", asset_package.get("asset_dir", "") + "/mtl.usda"
+                ),
                 "visual_evidence_ids": [f"appearance_segment_{segment.get('segment_id', 'root')}"],
                 "metadata_evidence_ids": segment.get("source_evidence_ids", ["source_copy_0"]),
                 "confidence": segment.get("confidence", 0.35),
@@ -939,7 +986,8 @@ def _enrich_manifest(
             (
                 record
                 for record in source_assets
-                if Path(str(record.get("project_copy_path", ""))).suffix.lower() in {".png", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".webp"}
+                if Path(str(record.get("project_copy_path", ""))).suffix.lower()
+                in {".png", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".webp"}
             ),
             None,
         )
@@ -947,11 +995,15 @@ def _enrich_manifest(
         texture_generation_status = str(asset_package.get("texture_generation_status", "not_requested"))
         texture_blocked_reasons = list(asset_package.get("texture_blocked_reasons", []))
         real_texture_status = texture_generation_status in {"generated", "validated"}
-        texture_generation_blocked = texture_generation_status == "blocked" or (texture_variants and not real_texture_status)
+        texture_generation_blocked = texture_generation_status == "blocked" or (
+            texture_variants and not real_texture_status
+        )
         if texture_generation_blocked:
             payload["status"] = "blocked"
             payload["validation_status"] = "blocked"
-            payload["blocked_reasons"].extend(texture_blocked_reasons or ["texture synthesis did not produce generated PBR texture maps"])
+            payload["blocked_reasons"].extend(
+                texture_blocked_reasons or ["texture synthesis did not produce generated PBR texture maps"]
+            )
         payload["material_manifest_id"] = f"{request.id}_material-inference"
         payload["segmentation_manifest_id"] = f"{request.id}_segmentation"
         payload["uv_readiness_status"] = "asset_level_binding_ready"
@@ -967,7 +1019,9 @@ def _enrich_manifest(
                 "prim_paths": [segment.get("prim_path", f"/{asset_package.get('asset_id', request.id)}")],
                 "segment_id": segment.get("segment_id", ""),
                 "mask_path": asset_dir + "/" + segment.get("mask_path", ""),
-                "texture_intent": (item.get("texture_intent", "material variant proposal") + " for " + segment.get("label", "asset")).strip(),
+                "texture_intent": (
+                    item.get("texture_intent", "material variant proposal") + " for " + segment.get("label", "asset")
+                ).strip(),
                 "prompt": item.get("prompt", ""),
                 "negative_prompt": item.get("negative_prompt", ""),
                 "provider_role": item.get("provider_role", "texture_generator"),
@@ -983,7 +1037,18 @@ def _enrich_manifest(
                 "reference_role": item.get("reference_role", ""),
             }
             for item in texture_variants
-            for segment in (segments or [{"prim_path": f"/{asset_package.get('asset_id', request.id)}", "label": "asset", "segment_id": "", "mask_path": "", "material_name": item.get("material_name", "painted_metal")}])
+            for segment in (
+                segments
+                or [
+                    {
+                        "prim_path": f"/{asset_package.get('asset_id', request.id)}",
+                        "label": "asset",
+                        "segment_id": "",
+                        "mask_path": "",
+                        "material_name": item.get("material_name", "painted_metal"),
+                    }
+                ]
+            )
         ] or [
             {
                 "material_name": "painted_metal",
@@ -1079,10 +1144,26 @@ def _enrich_manifest(
         payload["variant_usd_path"] = asset_package.get("asset_dir", "") + "/variants.usda"
         payload["deformation_usd_path"] = asset_package.get("deformation_usd_path", "")
         payload["render_evidence"] = [
-            {"kind": "source_image_review", "uri": payload["source_image_review"]["source_image_path"], "status": payload["source_image_review"]["status"]},
-            {"kind": "texture_files", "uri": texture_dir, "status": texture_generation_status if texture_variants else "not_requested"},
-            {"kind": "appearance_segment_masks", "uri": asset_package.get("asset_dir", "") + "/textures/segments", "status": "generated" if segments else "not_available"},
-            {"kind": "mesh_deformation_files", "uri": asset_package.get("asset_dir", "") + "/deformations", "status": "generated" if payload["mesh_deformation_requests"] else "not_requested"},
+            {
+                "kind": "source_image_review",
+                "uri": payload["source_image_review"]["source_image_path"],
+                "status": payload["source_image_review"]["status"],
+            },
+            {
+                "kind": "texture_files",
+                "uri": texture_dir,
+                "status": texture_generation_status if texture_variants else "not_requested",
+            },
+            {
+                "kind": "appearance_segment_masks",
+                "uri": asset_package.get("asset_dir", "") + "/textures/segments",
+                "status": "generated" if segments else "not_available",
+            },
+            {
+                "kind": "mesh_deformation_files",
+                "uri": asset_package.get("asset_dir", "") + "/deformations",
+                "status": "generated" if payload["mesh_deformation_requests"] else "not_requested",
+            },
         ]
         if real_texture_status:
             payload["validation_status"] = "proposal"
@@ -1128,11 +1209,7 @@ def _enrich_manifest(
         axes_evidence = accepted_properties.get("principal_axes")
         core_physics_accepted = mass_evidence is not None or density_evidence is not None
         accepted_evidence_ids = sorted(
-            {
-                str(evidence_id)
-                for item in accepted_properties.values()
-                for evidence_id in item.get("evidence_ids", [])
-            }
+            {str(evidence_id) for item in accepted_properties.values() for evidence_id in item.get("evidence_ids", [])}
         )
         if not core_physics_accepted:
             physical_evidence_errors.append("accepted mass or density evidence is required")
@@ -1147,7 +1224,11 @@ def _enrich_manifest(
             {
                 "target_layer": payload["usd_output_path"],
                 "operation": "author rigid body, collider and mass-property proposal on project copy",
-                "preconditions": ["units_policy_declared", "scale_policy_declared", "physical_properties_review_required"],
+                "preconditions": [
+                    "units_policy_declared",
+                    "scale_policy_declared",
+                    "physical_properties_review_required",
+                ],
             }
         ]
         payload["rigid_bodies"] = [
@@ -1201,7 +1282,11 @@ def _enrich_manifest(
             }
         ]
         payload["validation_gates"] = [
-            {"gate_id": "units-and-scale-known", "status": "pass", "evidence_path": asset_package.get("usd_root_path", "")},
+            {
+                "gate_id": "units-and-scale-known",
+                "status": "pass",
+                "evidence_path": asset_package.get("usd_root_path", ""),
+            },
             {"gate_id": "physics-layer-authored", "status": "pass", "evidence_path": payload["usd_output_path"]},
             {
                 "gate_id": "numeric-physics-review",
@@ -1225,10 +1310,9 @@ def _enrich_manifest(
             }
         )
         body_paths = list(articulation.get("body_paths", []))
-        payload["part_graph"] = [
-            {"prim_path": path, "status": "rigid_body"}
-            for path in body_paths
-        ] or [{"prim_path": f"/{asset_package.get('asset_id', request.id)}", "status": "static_root"}]
+        payload["part_graph"] = [{"prim_path": path, "status": "rigid_body"} for path in body_paths] or [
+            {"prim_path": f"/{asset_package.get('asset_id', request.id)}", "status": "static_root"}
+        ]
         payload["joints"] = [
             {
                 "joint_name": joint["name"],
@@ -1267,7 +1351,12 @@ def _enrich_manifest(
         payload["articulation_roots"] = (
             [{"prim_path": articulation["articulation_root_path"], "status": "authored"}]
             if articulation_authored
-            else [{"prim_path": f"/{asset_package.get('asset_id', request.id)}", "status": "not_authored_no_joint_evidence"}]
+            else [
+                {
+                    "prim_path": f"/{asset_package.get('asset_id', request.id)}",
+                    "status": "not_authored_no_joint_evidence",
+                }
+            ]
         )
         payload["collision_filters"] = []
         payload["affordances"] = {
@@ -1396,13 +1485,21 @@ def _enrich_manifest(
     if stage.id == "governance" and asset_validation:
         decision, decision_schema_errors = _operator_release_decision(project_dir)
         requested_outputs = {str(item).strip().lower() for item in request.requested_outputs}
-        default_scope = "articulated_training" if "rl" in requested_outputs else "rigid_body_manipulation" if "simready" in requested_outputs else "visualisation"
+        default_scope = (
+            "articulated_training"
+            if "rl" in requested_outputs
+            else "rigid_body_manipulation"
+            if "simready" in requested_outputs
+            else "visualisation"
+        )
         requested_scope = str(request.constraints.get("release_scope") or decision.get("scope") or default_scope)
         supported_scopes = {"visualisation", "rigid_body_manipulation", "articulated_training", "redistribution"}
         scope = requested_scope if requested_scope in supported_scopes else default_scope
         decision_path = project_dir / "operator-release-decision.json"
         if decision_path.exists():
-            payload["evidence"].append(_evidence_record(decision_path, project_dir, "operator_release_decision", "operator_release_decision"))
+            payload["evidence"].append(
+                _evidence_record(decision_path, project_dir, "operator_release_decision", "operator_release_decision")
+            )
         asset_fingerprint = asset_package_fingerprint(asset_package or {}, asset_validation)
         profile = asset_validation.get("simready_profile", {})
         decision_binding_errors: list[str] = list(decision_schema_errors)
@@ -1635,6 +1732,30 @@ def _write_stage_manifest(
         )
         if stage.id == "evaluation" and producer_result:
             payload["task_fitness"] = producer_result.get("task_fitness", {})
+        if stage.id == "mesh-verification" and producer_result:
+            verification = producer_result.get("verification", {})
+            for key in (
+                "candidate",
+                "diagnostics",
+                "render_bundle",
+                "decision",
+                "decision_reason",
+                "review_status",
+                "findings",
+                "reviewer",
+                "rubric_checksum",
+                "provider_trace",
+                "attempts",
+                "actions",
+                "evidence",
+                "promotion",
+                "raw_secrets_recorded",
+            ):
+                if key in verification:
+                    payload[key] = verification[key]
+            payload["status"] = "validated" if verification.get("gate_status") == "pass" else "blocked"
+            payload["validation_status"] = payload["status"]
+            payload["blocked_reasons"] = list(verification.get("blocked_reasons", []))
         if producer_result:
             payload.setdefault("extensions", {})["producer_result"] = producer_result
         manifest_path = write_json(manifests_dir / f"{schema_name}.json", payload)
@@ -1723,10 +1844,7 @@ def run_workflow(
         write_json(paths.root / "missing-evidence.json", {"items": plan.missing_evidence})
         write_json(paths.root / "wandb-run-plan.json", plan.wandb_plan)
         runtime = _WorkflowStageRuntime(request, plan, paths.root, dry_run=dry_run)
-        planned_attempt_ids = [
-            stage_attempt_id(plan.run_id, stage.id, 1, plan.request_digest)
-            for stage in plan.stages
-        ]
+        planned_attempt_ids = [stage_attempt_id(plan.run_id, stage.id, 1, plan.request_digest) for stage in plan.stages]
         provenance = build_provenance(
             [f"{stage.id}-manifest" for stage in plan.stages],
             provider_model_ids=_provider_model_handles(plan),
@@ -1857,7 +1975,9 @@ def rebuild_project_artefacts(project_dir: str | Path, dry_run: bool = True) -> 
     project_id = json.loads((root / "project.json").read_text(encoding="utf-8"))["project_id"]
     run_plan_path = root / "run-plan.json"
     source_manifest_path = root / "manifests" / "source-asset-manifest.json"
-    source_payload = json.loads(source_manifest_path.read_text(encoding="utf-8")) if source_manifest_path.exists() else {}
+    source_payload = (
+        json.loads(source_manifest_path.read_text(encoding="utf-8")) if source_manifest_path.exists() else {}
+    )
     source_ingestion = {
         "source_assets": source_payload.get("source_assets", []),
         "local_copies": source_payload.get("local_copies", []),
@@ -1867,7 +1987,8 @@ def rebuild_project_artefacts(project_dir: str | Path, dry_run: bool = True) -> 
             item
             for item in source_payload.get("evidence", [])
             if str(item.get("kind") or "").startswith("governance")
-            or item.get("evidence_id") in {
+            or item.get("evidence_id")
+            in {
                 evidence_id
                 for rights in source_payload.get("source_rights", [])
                 for evidence_id in rights.get("evidence_ids", [])
@@ -1886,8 +2007,7 @@ def rebuild_project_artefacts(project_dir: str | Path, dry_run: bool = True) -> 
         run_dir = root / "runs" / plan.run_id
         if not run_dir.exists():
             initial_attempt_ids = [
-                stage_attempt_id(plan.run_id, stage.id, 1, plan.request_digest)
-                for stage in plan.stages
+                stage_attempt_id(plan.run_id, stage.id, 1, plan.request_digest) for stage in plan.stages
             ]
             initial_provenance = build_provenance(
                 [f"{stage.id}-manifest" for stage in plan.stages],
@@ -1947,7 +2067,9 @@ def rebuild_project_artefacts(project_dir: str | Path, dry_run: bool = True) -> 
         result_provenance_path = root / "runs" / plan.run_id / f"result-provenance-{provenance['provenance_id']}.json"
         if not result_provenance_path.exists():
             immutable_write_json(result_provenance_path, provenance)
-        result_prov_jsonld_path = root / "runs" / plan.run_id / f"result-provenance-{provenance['provenance_id']}.prov.jsonld"
+        result_prov_jsonld_path = (
+            root / "runs" / plan.run_id / f"result-provenance-{provenance['provenance_id']}.prov.jsonld"
+        )
         if not result_prov_jsonld_path.exists():
             write_prov_jsonld(result_prov_jsonld_path, provenance, immutable=True)
         _write_checksums(root)
@@ -1981,7 +2103,9 @@ def load_project_stage_reports(reports_dir: str | Path) -> list[dict[str, Any]]:
     return reports
 
 
-def summarize_run(run_plan_path: str | Path, reports_dir: str | Path, output_path: str | Path | None = None) -> dict[str, Any]:
+def summarize_run(
+    run_plan_path: str | Path, reports_dir: str | Path, output_path: str | Path | None = None
+) -> dict[str, Any]:
     plan_path = Path(run_plan_path)
     reports_path = Path(reports_dir)
     plan = json.loads(plan_path.read_text(encoding="utf-8"))

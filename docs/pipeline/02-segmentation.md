@@ -1,6 +1,6 @@
 # Segmentation and semantic inference
 
-Segmentation splits an asset into stable, semantically labelled regions. It runs on source images before reconstruction and on geometry afterwards, so every later material, texture and physics decision can point at a named part.
+Segmentation splits an asset into stable, semantically labelled regions. Image priors may condition reconstruction, but the segmentation stage consumes only canonical geometry approved by mandatory mesh verification. Every later material, texture and physics decision can therefore point at a reviewed named part.
 
 <p align="center">
   <img src="../assets/segmentation-lane.svg" alt="segmentation lane" width="920">

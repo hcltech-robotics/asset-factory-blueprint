@@ -15,6 +15,7 @@ This blueprint turns source evidence into governed OpenUSD asset candidates and 
 
 - [Intake and source ingestion](pipeline/00-intake-and-sources.md)
 - [Reconstruction](pipeline/01-reconstruction.md)
+- [Mandatory mesh verification](pipeline/01a-mesh-verification.md)
 - [Segmentation and semantic inference](pipeline/02-segmentation.md)
 - [Material and physical inference](pipeline/03-material-inference.md)
 - [Texturing](pipeline/04-texturing.md)
@@ -52,7 +53,7 @@ This blueprint turns source evidence into governed OpenUSD asset candidates and 
 Core architecture:
 
 - [Architecture diagram](assets/architecture.svg)
-- [Seven-stage pipeline diagram](assets/asset-factory-pipeline.svg)
+- [Eight-stage pipeline diagram](assets/asset-factory-pipeline.svg)
 - [Image to USD storyboard](assets/image-to-usd-storyboard.svg)
 - [Runtime layer contract](assets/runtime-layer-contract.svg)
 - [Agent workflow diagram](assets/agent-workflow.svg)

@@ -6,7 +6,12 @@
       "fix_id": "heal_mesh_holes",
       "stage": "reconstruction",
       "defect_tags": [
-        "mesh_holes"
+        "mesh_holes",
+        "non_manifold_geometry",
+        "degenerate_faces",
+        "duplicate_faces",
+        "interior_faces",
+        "invalid_normals"
       ],
       "symptom": "renders show gaps or the mesh is reported non-watertight",
       "cause": "generative backends often emit open shells and unwelded seams",
@@ -26,6 +31,7 @@
       "max_attempts": 2,
       "reverify": [
         "schema-valid",
+        "mesh-verification",
         "vlm-signoff"
       ],
       "escalation": "review_required"
@@ -52,6 +58,7 @@
       },
       "max_attempts": 2,
       "reverify": [
+        "mesh-verification",
         "vlm-signoff"
       ],
       "escalation": "review_required"
@@ -80,6 +87,7 @@
       },
       "max_attempts": 1,
       "reverify": [
+        "mesh-verification",
         "vlm-signoff"
       ],
       "escalation": "review_required"
@@ -90,7 +98,9 @@
       "defect_tags": [
         "missing_parts",
         "wrong_proportions",
-        "wrong_scale"
+        "wrong_scale",
+        "self_intersection",
+        "source_mismatch"
       ],
       "symptom": "structural defects that mesh conditioning cannot repair",
       "cause": "the selected backend could not recover the object structure from the conditioning views",
@@ -102,6 +112,7 @@
       "max_attempts": 1,
       "reverify": [
         "schema-valid",
+        "mesh-verification",
         "vlm-signoff"
       ],
       "escalation": "review_required"

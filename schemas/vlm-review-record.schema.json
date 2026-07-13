@@ -56,6 +56,15 @@
     "verdict_reason": {
       "type": "string"
     },
+    "action": {
+      "type": "string",
+      "enum": [
+        "approve",
+        "revise_local",
+        "regenerate",
+        "blocked"
+      ]
+    },
     "confidence": {
       "type": "number",
       "minimum": 0,
@@ -152,7 +161,8 @@
       "additionalProperties": true
     },
     "rubric_checksum": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^(?:|(?:sha256:)?[A-Fa-f0-9]{64})$"
     },
     "rubric_path": {
       "type": "string"

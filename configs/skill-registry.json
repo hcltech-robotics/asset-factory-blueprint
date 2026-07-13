@@ -197,6 +197,28 @@
       "enabled": true
     },
     {
+      "name": "mesh-verification-agent",
+      "category": "geometry-validation",
+      "package": "skills/mesh-verification-agent",
+      "provider_roles": [
+        "vision_reasoner",
+        "vlm_reviewer",
+        "validator_judge"
+      ],
+      "inputs": [
+        "skill-context",
+        "run-request",
+        "source-assets",
+        "reconstruction-manifest",
+        "candidate-geometry"
+      ],
+      "outputs": [
+        "mesh-verification-record",
+        "canonical-geometry"
+      ],
+      "enabled": true
+    },
+    {
       "name": "rl-environment-design-lead",
       "category": "rl",
       "package": "skills/rl-environment-design-lead",

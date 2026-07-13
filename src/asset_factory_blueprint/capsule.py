@@ -197,6 +197,7 @@ _STAGE_SCHEMAS = {
     "nonvisual-materials": "nonvisual-material-manifest.schema.json",
     "physics-articulation": "physics-articulation-manifest.schema.json",
     "reconstruction": "reconstruction-manifest.schema.json",
+    "mesh-verification": "mesh-verification-record.schema.json",
     "rl-environment": "rl-environment-manifest.schema.json",
     "segmentation": "segmentation-manifest.schema.json",
     "simready-verification": "simready-asset-manifest.schema.json",

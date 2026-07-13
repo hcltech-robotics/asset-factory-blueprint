@@ -16,10 +16,11 @@ from typing import Any
 
 from asset_factory_blueprint.config import load_json
 from asset_factory_blueprint.services.fix_library import asset_fix_apply
+from asset_factory_blueprint.services.mesh_verification import governance_mesh_verify
 from asset_factory_blueprint.services.progress import write_progress_artefacts
 from asset_factory_blueprint.services.vlm_review import governance_vlm_review
 from asset_factory_blueprint.schemas.common import RunRequest
-from asset_factory_blueprint.workflow import refresh_project_checksums, run_workflow
+from asset_factory_blueprint.workflow import rebuild_project_artefacts, refresh_project_checksums, run_workflow
 
 
 POLICY_PATH = "configs/vlm-review-policy.json"
@@ -63,36 +64,67 @@ def _review_stage(
     }
     attempt = 0
     while True:
-        review = governance_vlm_review(
-            {
-                "project": project_dir.as_posix(),
-                "stage_id": stage_id,
-                "asset_id": asset_id,
-                "project_id": project_id,
-                "dry_run": dry_run,
-                "attempt": attempt,
-            }
+        review_params = {
+            "project": project_dir.as_posix(),
+            "stage_id": stage_id,
+            "asset_id": asset_id,
+            "project_id": project_id,
+            "dry_run": dry_run,
+            "attempt": attempt,
+        }
+        review = (
+            governance_mesh_verify(review_params)
+            if stage_id == "mesh-verification"
+            else governance_vlm_review(review_params)
         )
         record = review.data
+        decision = str(record.get("decision") or "")
+        verdict = (
+            "approve"
+            if decision == "approve"
+            else "blocked"
+            if decision == "blocked"
+            else "revise"
+            if decision in {"revise_local", "regenerate"}
+            else str(record.get("verdict") or "skipped")
+        )
         iteration["reviews"].append(
             {
                 "attempt": attempt,
-                "verdict": record.get("verdict", "skipped"),
+                "verdict": verdict,
+                "decision": decision or record.get("action", ""),
                 "confidence": record.get("confidence", 0.0),
                 "defect_tags": _blocking_defect_tags(record),
-                "verdict_reason": record.get("verdict_reason", ""),
+                "verdict_reason": record.get("decision_reason") or record.get("verdict_reason", ""),
+                "attempt_counts": record.get("attempts", {}),
             }
         )
-        verdict = record.get("verdict", "skipped")
         if review.success and record.get("review_status") == "approved":
             iteration["final_state"] = "approved"
+            if stage_id == "mesh-verification" and not dry_run:
+                try:
+                    rebuild = rebuild_project_artefacts(project_dir, dry_run=False)
+                except Exception as exc:
+                    iteration["final_state"] = "blocked"
+                    iteration["post_approval_rebuild"] = {
+                        "status": "blocked",
+                        "blocked_stages": [stage_id],
+                        "error": str(exc),
+                    }
+                else:
+                    iteration["post_approval_rebuild"] = {
+                        "status": rebuild.get("status", ""),
+                        "blocked_stages": rebuild.get("blocked_stages", []),
+                    }
             break
         if verdict == "approve":
             iteration["final_state"] = "review_required"
-            iteration["reviews"][-1]["note"] = "approve verdict carried blocker or major findings; the record stays review required"
+            iteration["reviews"][-1]["note"] = (
+                "approve verdict carried blocker or major findings; the record stays review required"
+            )
             break
         if verdict == "skipped":
-            iteration["final_state"] = "review_required"
+            iteration["final_state"] = "blocked" if stage_id == "mesh-verification" else "review_required"
             break
         if verdict == "blocked":
             iteration["final_state"] = "blocked"
@@ -133,10 +165,17 @@ def _review_stage(
             break
         if not fix.data.get("artefacts_refreshed", False):
             iteration["final_state"] = "escalated_to_review"
-            iteration["fixes"][-1]["note"] = "no fix changed the workspace artefacts, so re-reviewing would judge identical evidence"
+            iteration["fixes"][-1]["note"] = (
+                "no fix changed the workspace artefacts, so re-reviewing would judge identical evidence"
+            )
             break
         attempt += 1
     iteration["finished_at"] = _now()
+    if stage_id == "mesh-verification" and iteration["reviews"]:
+        counts = iteration["reviews"][-1].get("attempt_counts", {})
+        iteration["mesh_rejections"] = int(counts.get("mesh_rejection_count", 0) or 0)
+        iteration["inference_resubmissions"] = int(counts.get("inference_resubmission_count", 0) or 0)
+        iteration["review_attempts"] = int(counts.get("review_attempt", len(iteration["reviews"])) or 0)
     return iteration
 
 
@@ -171,8 +210,12 @@ def run_stage_review(
             "status": "blocked",
             "error": f"stage {stage_id} is not routed for this project; routed stages: {', '.join(routed)}",
         }
-    attempts_budget = int(max_fix_attempts if max_fix_attempts is not None else policy.get("default_max_fix_attempts", 2))
-    iteration = _review_stage(root, stage_id, plan.get("asset_id", ""), plan.get("request_id", ""), dry_run, attempts_budget)
+    attempts_budget = int(
+        max_fix_attempts if max_fix_attempts is not None else policy.get("default_max_fix_attempts", 2)
+    )
+    iteration = _review_stage(
+        root, stage_id, plan.get("asset_id", ""), plan.get("request_id", ""), dry_run, attempts_budget
+    )
     (root / "reports").mkdir(parents=True, exist_ok=True)
     (root / "reports" / f"stage-run-{stage_id}.json").write_text(
         json.dumps(iteration, indent=2, sort_keys=False) + "\n", encoding="utf-8"
@@ -208,7 +251,9 @@ def run_agent_loop(
     plan = json.loads((project_dir / "run-plan.json").read_text(encoding="utf-8"))
     policy = load_json(policy_path)
     reviewed = set(policy.get("stages", {}))
-    attempts_budget = int(max_fix_attempts if max_fix_attempts is not None else policy.get("default_max_fix_attempts", 2))
+    attempts_budget = int(
+        max_fix_attempts if max_fix_attempts is not None else policy.get("default_max_fix_attempts", 2)
+    )
     asset_id = plan.get("asset_id", "")
     project_id = workflow_result.get("project_id", "")
 

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1360" height="620" viewBox="0 0 1360 620" role="img" aria-labelledby="title desc">
-  <title id="title">The seven-stage pipeline</title>
-  <desc id="desc">Pre-pipeline intake feeds seven content stages into downstream extensions; every stage passes formal gates and a VLM sign-off.</desc>
+  <title id="title">The eight-stage pipeline</title>
+  <desc id="desc">Pre-pipeline intake feeds eight content stages into downstream extensions; every stage passes formal gates and its configured review.</desc>
   <defs>
     <style>
       .bg { fill: transparent; }
@@ -32,54 +32,61 @@
   <text class="small" x="120.0" y="185.5" text-anchor="middle" style="font-size:13px">intake</text>
   <rect class="innerAccent" x="52" y="210" width="136" height="34" rx="4"/>
   <text class="small" x="120.0" y="231.0" text-anchor="middle" style="font-size:12px">source ingestion</text>
-  <rect class="boxAccent" x="222" y="74" width="131" height="212" rx="8"/>
-  <text class="label" x="287.5" y="116" text-anchor="middle" style="font-size:16px">1 Reconstruct</text>
-  <rect class="inner" x="232" y="164" width="111" height="34" rx="4"/>
-  <text class="small" x="287.5" y="185.5" text-anchor="middle" style="font-size:13px">optional</text>
-  <rect class="inner" x="232" y="210" width="111" height="34" rx="4"/>
-  <text class="small" x="287.5" y="231.0" text-anchor="middle" style="font-size:12px">mesh from views</text>
-  <path class="line" d="M353 180 L357 180"/>
-  <rect class="box" x="361" y="74" width="131" height="212" rx="8"/>
-  <text class="label" x="426.5" y="116" text-anchor="middle" style="font-size:16px">2 Segment</text>
-  <rect class="inner" x="371" y="164" width="111" height="34" rx="4"/>
-  <text class="small" x="426.5" y="185.5" text-anchor="middle" style="font-size:13px">masks</text>
-  <rect class="inner" x="371" y="210" width="111" height="34" rx="4"/>
-  <text class="small" x="426.5" y="231.5" text-anchor="middle" style="font-size:13px">semantics</text>
-  <path class="line" d="M492 180 L496 180"/>
-  <rect class="box" x="500" y="74" width="131" height="212" rx="8"/>
-  <text class="label" x="565.5" y="116" text-anchor="middle" style="font-size:16px">3 Materials</text>
-  <rect class="inner" x="510" y="164" width="111" height="34" rx="4"/>
-  <text class="small" x="565.5" y="185.5" text-anchor="middle" style="font-size:13px">classes</text>
-  <rect class="inner" x="510" y="210" width="111" height="34" rx="4"/>
-  <text class="small" x="565.5" y="231.5" text-anchor="middle" style="font-size:13px">physical props</text>
-  <path class="line" d="M631 180 L635 180"/>
-  <rect class="box" x="639" y="74" width="131" height="212" rx="8"/>
-  <text class="label" x="704.5" y="116" text-anchor="middle" style="font-size:16px">4 Texture</text>
-  <rect class="inner" x="649" y="164" width="111" height="34" rx="4"/>
-  <text class="small" x="704.5" y="185.5" text-anchor="middle" style="font-size:13px">PBR maps</text>
-  <rect class="inner" x="649" y="210" width="111" height="34" rx="4"/>
-  <text class="small" x="704.5" y="231.5" text-anchor="middle" style="font-size:13px">decals</text>
-  <path class="line" d="M770 180 L774 180"/>
-  <rect class="box" x="778" y="74" width="131" height="212" rx="8"/>
-  <text class="label" x="843.5" y="116" text-anchor="middle" style="font-size:16px">5 Physics</text>
-  <rect class="inner" x="788" y="164" width="111" height="34" rx="4"/>
-  <text class="small" x="843.5" y="185.5" text-anchor="middle" style="font-size:13px">joints</text>
-  <rect class="inner" x="788" y="210" width="111" height="34" rx="4"/>
-  <text class="small" x="843.5" y="231.5" text-anchor="middle" style="font-size:13px">grasps</text>
-  <path class="line" d="M909 180 L913 180"/>
-  <rect class="boxAccent" x="917" y="74" width="131" height="212" rx="8"/>
-  <text class="label" x="982.5" y="116" text-anchor="middle" style="font-size:16px">6 Nonvisual</text>
-  <rect class="inner" x="927" y="164" width="111" height="34" rx="4"/>
-  <text class="small" x="982.5" y="185.5" text-anchor="middle" style="font-size:13px">optional</text>
-  <rect class="inner" x="927" y="210" width="111" height="34" rx="4"/>
-  <text class="small" x="982.5" y="231.0" text-anchor="middle" style="font-size:12px">thermal, acoustic</text>
-  <path class="line" d="M1048 180 L1052 180"/>
-  <rect class="box" x="1056" y="74" width="131" height="212" rx="8"/>
-  <text class="label" x="1121.5" y="116" text-anchor="middle" style="font-size:16px">7 Verify</text>
-  <rect class="inner" x="1066" y="164" width="111" height="34" rx="4"/>
-  <text class="small" x="1121.5" y="185.5" text-anchor="middle" style="font-size:13px">package</text>
-  <rect class="inner" x="1066" y="210" width="111" height="34" rx="4"/>
-  <text class="small" x="1121.5" y="231.5" text-anchor="middle" style="font-size:13px">USD gates</text>
+  <rect class="boxAccent" x="222" y="74" width="115" height="212" rx="8"/>
+  <text class="label" x="279.5" y="116" text-anchor="middle" style="font-size:16px">1 Reconstruct</text>
+  <rect class="inner" x="232" y="164" width="95" height="34" rx="4"/>
+  <text class="small" x="279.5" y="185.5" text-anchor="middle" style="font-size:13px">optional</text>
+  <rect class="inner" x="232" y="210" width="95" height="34" rx="4"/>
+  <text class="small" x="279.5" y="231.0" text-anchor="middle" style="font-size:12px">mesh from views</text>
+  <path class="line" d="M337 180 L339 180"/>
+  <rect class="boxAccent" x="343" y="74" width="115" height="212" rx="8"/>
+  <text class="label" x="400.5" y="116" text-anchor="middle" style="font-size:16px">2 Mesh verify</text>
+  <rect class="innerAccent" x="353" y="164" width="95" height="34" rx="4"/>
+  <text class="small" x="400.5" y="185.5" text-anchor="middle" style="font-size:13px">tool + vision</text>
+  <rect class="inner" x="353" y="210" width="95" height="34" rx="4"/>
+  <text class="small" x="400.5" y="231.5" text-anchor="middle" style="font-size:13px">promotion gate</text>
+  <path class="line" d="M458 180 L460 180"/>
+  <rect class="box" x="464" y="74" width="115" height="212" rx="8"/>
+  <text class="label" x="521.5" y="116" text-anchor="middle" style="font-size:16px">3 Segment</text>
+  <rect class="inner" x="474" y="164" width="95" height="34" rx="4"/>
+  <text class="small" x="521.5" y="185.5" text-anchor="middle" style="font-size:13px">masks</text>
+  <rect class="inner" x="474" y="210" width="95" height="34" rx="4"/>
+  <text class="small" x="521.5" y="231.5" text-anchor="middle" style="font-size:13px">semantics</text>
+  <path class="line" d="M579 180 L581 180"/>
+  <rect class="box" x="585" y="74" width="115" height="212" rx="8"/>
+  <text class="label" x="642.5" y="116" text-anchor="middle" style="font-size:16px">4 Materials</text>
+  <rect class="inner" x="595" y="164" width="95" height="34" rx="4"/>
+  <text class="small" x="642.5" y="185.5" text-anchor="middle" style="font-size:13px">classes</text>
+  <rect class="inner" x="595" y="210" width="95" height="34" rx="4"/>
+  <text class="small" x="642.5" y="231.5" text-anchor="middle" style="font-size:13px">physical props</text>
+  <path class="line" d="M700 180 L702 180"/>
+  <rect class="box" x="706" y="74" width="115" height="212" rx="8"/>
+  <text class="label" x="763.5" y="116" text-anchor="middle" style="font-size:16px">5 Texture</text>
+  <rect class="inner" x="716" y="164" width="95" height="34" rx="4"/>
+  <text class="small" x="763.5" y="185.5" text-anchor="middle" style="font-size:13px">PBR maps</text>
+  <rect class="inner" x="716" y="210" width="95" height="34" rx="4"/>
+  <text class="small" x="763.5" y="231.5" text-anchor="middle" style="font-size:13px">decals</text>
+  <path class="line" d="M821 180 L823 180"/>
+  <rect class="box" x="827" y="74" width="115" height="212" rx="8"/>
+  <text class="label" x="884.5" y="116" text-anchor="middle" style="font-size:16px">6 Physics</text>
+  <rect class="inner" x="837" y="164" width="95" height="34" rx="4"/>
+  <text class="small" x="884.5" y="185.5" text-anchor="middle" style="font-size:13px">joints</text>
+  <rect class="inner" x="837" y="210" width="95" height="34" rx="4"/>
+  <text class="small" x="884.5" y="231.5" text-anchor="middle" style="font-size:13px">grasps</text>
+  <path class="line" d="M942 180 L944 180"/>
+  <rect class="boxAccent" x="948" y="74" width="115" height="212" rx="8"/>
+  <text class="label" x="1005.5" y="116" text-anchor="middle" style="font-size:16px">7 Nonvisual</text>
+  <rect class="inner" x="958" y="164" width="95" height="34" rx="4"/>
+  <text class="small" x="1005.5" y="185.5" text-anchor="middle" style="font-size:13px">optional</text>
+  <rect class="inner" x="958" y="210" width="95" height="34" rx="4"/>
+  <text class="small" x="1005.5" y="231.0" text-anchor="middle" style="font-size:12px">thermal, acoustic</text>
+  <path class="line" d="M1063 180 L1065 180"/>
+  <rect class="box" x="1069" y="74" width="115" height="212" rx="8"/>
+  <text class="label" x="1126.5" y="116" text-anchor="middle" style="font-size:16px">8 SimReady</text>
+  <rect class="inner" x="1079" y="164" width="95" height="34" rx="4"/>
+  <text class="small" x="1126.5" y="185.5" text-anchor="middle" style="font-size:13px">package</text>
+  <rect class="inner" x="1079" y="210" width="95" height="34" rx="4"/>
+  <text class="small" x="1126.5" y="231.5" text-anchor="middle" style="font-size:13px">USD gates</text>
   <path class="line" d="M210 180 L218 180"/>
   <rect class="box" x="1200" y="74" width="140" height="212" rx="8"/>
   <text class="label" x="1270.0" y="116" text-anchor="middle" style="font-size:17px">Downstream</text>
@@ -87,14 +94,14 @@
   <text class="small" x="1270.0" y="185.5" text-anchor="middle" style="font-size:13px">RL contracts</text>
   <rect class="inner" x="1210" y="210" width="120" height="34" rx="4"/>
   <text class="small" x="1270.0" y="231.5" text-anchor="middle" style="font-size:13px">layout sweeps</text>
-  <path class="line" d="M1187 180 L1196 180"/>
-  <rect class="boxAccent" x="404" y="400" width="600" height="150" rx="8"/>
-  <text class="label" x="704.5" y="442" text-anchor="middle">Every stage</text>
-  <rect class="inner" x="426" y="464" width="556" height="18" rx="4"/>
-  <text class="small" x="704.5" y="477.0" text-anchor="middle" style="font-size:12px">formal gates</text>
-  <rect class="innerAccent" x="426" y="490" width="556" height="18" rx="4"/>
-  <text class="small" x="704.5" y="503.0" text-anchor="middle" style="font-size:12px">VLM sign-off</text>
-  <rect class="innerAccent" x="426" y="516" width="556" height="18" rx="4"/>
-  <text class="small" x="704.5" y="529.0" text-anchor="middle" style="font-size:12px">fix or escalate</text>
-  <path class="accentLine" d="M704 286 L704 400"/>
+  <path class="line" d="M1184 180 L1196 180"/>
+  <rect class="boxAccent" x="403" y="400" width="600" height="150" rx="8"/>
+  <text class="label" x="703.0" y="442" text-anchor="middle">Every stage</text>
+  <rect class="inner" x="425" y="464" width="556" height="18" rx="4"/>
+  <text class="small" x="703.0" y="477.0" text-anchor="middle" style="font-size:12px">formal gates</text>
+  <rect class="innerAccent" x="425" y="490" width="556" height="18" rx="4"/>
+  <text class="small" x="703.0" y="503.0" text-anchor="middle" style="font-size:12px">vision review</text>
+  <rect class="innerAccent" x="425" y="516" width="556" height="18" rx="4"/>
+  <text class="small" x="703.0" y="529.0" text-anchor="middle" style="font-size:12px">fix or escalate</text>
+  <path class="accentLine" d="M703 286 L703 400"/>
 </svg>

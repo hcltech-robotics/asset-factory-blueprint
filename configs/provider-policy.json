@@ -11,7 +11,7 @@
       "allow_loopback_http": false,
       "model_env": "AFB_NVIDIA_MODEL",
       "default_model_id": "nvidia/llama-3.1-nemotron-nano-8b-v1",
-      "timeout_seconds": 180,
+      "timeout_seconds": 300,
       "capabilities": [
         "chat",
         "text",

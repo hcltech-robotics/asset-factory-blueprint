@@ -28,7 +28,7 @@ With generated evidence present, every content stage received live sign-off and 
 ```json
 {
   "approved_stages": [
-    "reconstruction", "segmentation", "material-inference",
+    "mesh-verification", "segmentation", "material-inference",
     "texturing", "simready-verification"
   ],
   "pending_stages": [],

@@ -18,6 +18,7 @@ This matrix separates declared interfaces from combinations that have release ev
 | Python 3.13 on Ubuntu and Windows | CI-checked | Locked install, lint, compile, typed workflow and record-graph validation |
 | Linux x86-64 container | CI-checked | Frozen image build, CLI import and allowlisted stdio health contract; HTTP qualification remains release-specific |
 | Linux aarch64 or GB10 | Provisional | Unified-memory and backend-specific qualification required |
+| Mandatory mesh verification | CI-checked | Stage routing, checksum-bound promotion, deterministic topology checks and bounded attempt accounting; live renderer and VLM qualification remain release-specific |
 
 ## Asset runtimes
 

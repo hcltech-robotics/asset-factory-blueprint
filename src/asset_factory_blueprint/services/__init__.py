@@ -5,6 +5,7 @@ from .governance import governance_mutation_validate, governance_record
 from .layout import scene_layout_validate
 from .library import asset_library_fetch, asset_library_index, asset_library_search
 from .material_inference import material_physical_properties_propose, material_propose
+from .mesh_verification import governance_mesh_verify
 from .nonvisual_materials import physics_nonvisual_materials_propose
 from .physics_articulation import articulation_plan, physics_plan
 from .programme import asset_factory_start, asset_programme_intake
@@ -30,6 +31,7 @@ __all__ = [
     "asset_stage_run",
     "environment_capability_probe",
     "governance_external_model_run",
+    "governance_mesh_verify",
     "governance_mutation_validate",
     "governance_progress_report",
     "governance_project_create",

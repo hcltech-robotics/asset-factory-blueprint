@@ -1,0 +1,4 @@
+name: mesh-verification-agent
+model_role: vlm_reviewer
+temperature: 0.0
+max_tokens: 2048

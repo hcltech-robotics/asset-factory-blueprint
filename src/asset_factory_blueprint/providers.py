@@ -648,7 +648,10 @@ def complete_vision(
     model: str | None = None,
     max_tokens: int = 768,
     temperature: float = 0.0,
+    seed: int | None = None,
 ) -> ProviderCompletion:
+    if seed is not None and (isinstance(seed, bool) or not isinstance(seed, int)):
+        raise ValueError("vision completion seed must be an integer")
     provider, base_url, api_key, selected_model, timeout = _resolve_provider(policy_path, provider_name, model)
     image_payloads = [_image_content_data_url(path) for path in image_paths]
     image_urls = [item[0] for item in image_payloads]
@@ -707,6 +710,8 @@ def complete_vision(
         "max_tokens": max_tokens,
         "temperature": temperature,
     }
+    if seed is not None:
+        payload["seed"] = seed
     response = _request_json(_chat_url(base_url), api_key, timeout, payload)
     choices = response.get("choices", []) if isinstance(response, dict) else []
     content_text = ""
@@ -726,6 +731,7 @@ def complete_vision(
             "image_bytes_total": image_bytes_total,
             "max_tokens": max_tokens,
             "temperature": temperature,
+            "seed": seed,
         },
         response_usage=response.get("usage", {}) if isinstance(response, dict) else {},
         proposal_status="proposal",

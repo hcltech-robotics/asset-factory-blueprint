@@ -24,8 +24,13 @@ BACKEND_INSTALLERS = {
         "install_kind": "linux_setup_sh",
         "install_command": [
             "bash",
-            "-lc",
-            ". ./setup.sh --new-env --basic --flash-attn --nvdiffrast --nvdiffrec --cumesh --o-voxel --flexgemm",
+            "setup.sh",
+            "--flash-attn",
+            "--nvdiffrast",
+            "--nvdiffrec",
+            "--cumesh",
+            "--o-voxel",
+            "--flexgemm",
         ],
     },
     "hunyuan3d": {
@@ -96,9 +101,22 @@ def default_install_root(backend: str) -> Path:
     return base / BACKEND_INSTALLERS[backend_id]["checkout_name"]
 
 
-def run_step(command: list[str], cwd: Path | None = None, timeout: int = 1800) -> dict[str, Any]:
+def run_step(
+    command: list[str],
+    cwd: Path | None = None,
+    timeout: int = 1800,
+    env: dict[str, str] | None = None,
+) -> dict[str, Any]:
     try:
-        result = subprocess.run(command, cwd=cwd, text=True, capture_output=True, timeout=timeout, check=False)
+        result = subprocess.run(
+            command,
+            cwd=cwd,
+            text=True,
+            capture_output=True,
+            timeout=timeout,
+            check=False,
+            env=env,
+        )
         return {
             "command": command,
             "cwd": cwd.as_posix() if cwd else "",
@@ -234,7 +252,14 @@ def install_backend(backend: str, install_root: Path, force: bool = False) -> di
         clone_command.extend([spec["repo_url"], install_root.as_posix()])
         steps.append(run_step(clone_command, cwd=install_root.parent, timeout=3600))
     else:
-        steps.append({"command": ["reuse-existing-root", install_root.as_posix()], "returncode": 0, "stdout_tail": "", "stderr_tail": ""})
+        steps.append(
+            {
+                "command": ["reuse-existing-root", install_root.as_posix()],
+                "returncode": 0,
+                "stdout_tail": "",
+                "stderr_tail": "",
+            }
+        )
 
     pinned_commit = os.environ.get(f"AFB_{backend_id.upper()}_COMMIT", spec.get("pinned_commit", ""))
     resolved_commit = ""
@@ -245,7 +270,12 @@ def install_backend(backend: str, install_root: Path, force: bool = False) -> di
         resolved_commit = head["stdout_tail"].strip() if head["returncode"] == 0 else ""
 
     if steps[-1]["returncode"] == 0:
-        steps.append(run_step(spec["install_command"], cwd=install_root, timeout=7200))
+        install_env = dict(os.environ)
+        interpreter_dir = str(Path(sys.executable).resolve().parent)
+        install_env["PATH"] = interpreter_dir + os.pathsep + install_env.get("PATH", "")
+        install_env["PIP_BREAK_SYSTEM_PACKAGES"] = "1"
+        install_env["PIP_NO_BUILD_ISOLATION"] = "1"
+        steps.append(run_step(spec["install_command"], cwd=install_root, timeout=7200, env=install_env))
 
     blocked_reasons = []
     if any(step.get("returncode", 1) != 0 for step in steps):
@@ -256,7 +286,10 @@ def install_backend(backend: str, install_root: Path, force: bool = False) -> di
         # it without an environment handle
         (install_root / ".afb-interpreter").write_text(sys.executable + "\n", encoding="utf-8")
 
-    provision = provision_backend(backend_id, output_path=ROOT / "artifacts" / "reconstruction-backends" / backend_id / "post-install-provision.json")
+    provision = provision_backend(
+        backend_id,
+        output_path=ROOT / "artifacts" / "reconstruction-backends" / backend_id / "post-install-provision.json",
+    )
     if provision["status"] != "ready":
         status = "blocked"
         blocked_reasons.extend(provision.get("blocked_reasons", []))

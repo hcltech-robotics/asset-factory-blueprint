@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Added a mandatory mesh-verification stage between reconstruction and every downstream geometry consumer. The stage combines deterministic topology and integrity gates, full-surface vision review, blind identity checking, checksum-bound canonical promotion and bounded adaptive reconstruction attempts.
+- Added the reproducibility benchmark for five image assets and five USD assets, including per-attempt rejection accounting, exact mesh-invariant comparisons and preserved visual evidence.
+
 ## 1.0.0
 
 Initial public shape of the asset factory blueprint.

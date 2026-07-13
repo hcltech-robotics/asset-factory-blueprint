@@ -318,6 +318,65 @@ def _format_native_command(
     return command
 
 
+def trellis_reproducibility_arguments(payload: dict[str, Any], spec: dict[str, Any]) -> list[str]:
+    """Return the explicitly allowed TRELLIS controls recorded in a run manifest."""
+    if spec.get("id") != "trellisv2":
+        return []
+    settings = payload.get("reproducibility", {})
+    if not settings:
+        return []
+    if not isinstance(settings, dict):
+        raise ValueError("reproducibility settings must be an object")
+
+    command: list[str] = []
+    seed = settings.get("seed")
+    if seed is not None:
+        if isinstance(seed, bool) or not isinstance(seed, int):
+            raise ValueError("TRELLIS reproducibility seed must be an integer")
+        command.extend(["--seed", str(seed)])
+
+    choices = {
+        "pipeline_type": {"512", "1024", "1024_cascade", "1536_cascade"},
+        "dtype": {"float32", "float16", "bfloat16"},
+    }
+    for key, allowed in choices.items():
+        value = settings.get(key)
+        if value is None:
+            continue
+        if value not in allowed:
+            raise ValueError(f"unsupported TRELLIS reproducibility {key}: {value}")
+        command.extend([f"--{key.replace('_', '-')}", value])
+
+    positive_integer_flags = {
+        "max_num_tokens": "--max-num-tokens",
+        "decimation_target": "--decimation-target",
+        "texture_size": "--texture-size",
+    }
+    for key, flag in positive_integer_flags.items():
+        value = settings.get(key)
+        if value is None:
+            continue
+        if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+            raise ValueError(f"TRELLIS reproducibility {key} must be a positive integer")
+        command.extend([flag, str(value)])
+
+    boolean_flags = {
+        "deterministic": "--deterministic",
+        "prune_unused_models": "--prune-unused-models",
+        "cpu_image_cond": "--cpu-image-cond",
+        "skip_preprocess": "--skip-preprocess",
+    }
+    for key, flag in boolean_flags.items():
+        value = settings.get(key)
+        if value is None:
+            continue
+        if not isinstance(value, bool):
+            raise ValueError(f"TRELLIS reproducibility {key} must be boolean")
+        if value:
+            command.append(flag)
+    return command
+
+
 def _run_native_backend(command: list[str], timeout_seconds: int, log_path: Path) -> dict[str, Any]:
     try:
         result = subprocess.run(
@@ -441,17 +500,25 @@ def run_adapter_manifest(manifest_path: str | Path, dry_run: bool = True) -> dic
     backend_id = _backend_from_manifest(payload)
     spec = resolve_backend(backend_id, registry_path)
     log_path = _resolve_path(payload.get("logs_path", path.with_suffix(".log")))
-    output_manifest_path = _resolve_path(payload.get("output_manifest", log_path.with_name("reconstruction-manifest.json")))
+    output_manifest_path = _resolve_path(
+        payload.get("output_manifest", log_path.with_name("reconstruction-manifest.json"))
+    )
     provision_path = log_path.with_suffix(".provision.json")
     output_dir = output_manifest_path.with_suffix("").parent / "outputs"
     confine_path(log_path, output_roots)
     confine_path(output_manifest_path, output_roots)
     confine_path(provision_path, output_roots)
     confine_path(output_dir, output_roots)
-    input_asset = payload.get("input_asset") or payload.get("runtime_env", {}).get("AFB_RECONSTRUCTION_INPUT_ASSET", "") or os.environ.get("AFB_RECONSTRUCTION_INPUT_ASSET", "")
+    input_asset = (
+        payload.get("input_asset")
+        or payload.get("runtime_env", {}).get("AFB_RECONSTRUCTION_INPUT_ASSET", "")
+        or os.environ.get("AFB_RECONSTRUCTION_INPUT_ASSET", "")
+    )
     input_assets = [str(item) for item in payload.get("input_assets") or []]
     if not input_assets:
-        raw_multi = payload.get("runtime_env", {}).get("AFB_RECONSTRUCTION_INPUT_ASSETS", "") or os.environ.get("AFB_RECONSTRUCTION_INPUT_ASSETS", "")
+        raw_multi = payload.get("runtime_env", {}).get("AFB_RECONSTRUCTION_INPUT_ASSETS", "") or os.environ.get(
+            "AFB_RECONSTRUCTION_INPUT_ASSETS", ""
+        )
         input_assets = [item for item in raw_multi.split(os.pathsep) if item]
     if not input_asset and not input_assets:
         input_assets = _inputs_from_source_manifest(payload.get("input_manifest", ""), spec, trusted_roots)
@@ -460,8 +527,7 @@ def run_adapter_manifest(manifest_path: str | Path, dry_run: bool = True) -> dic
     if input_asset:
         input_asset = _path_string(confine_path(_resolve_path(input_asset), trusted_roots, must_exist=True))
     input_assets = [
-        _path_string(confine_path(_resolve_path(item), trusted_roots, must_exist=True))
-        for item in input_assets
+        _path_string(confine_path(_resolve_path(item), trusted_roots, must_exist=True)) for item in input_assets
     ]
 
     provision = provision_backend(spec["id"], registry_path=registry_path, output_path=provision_path)
@@ -480,7 +546,10 @@ def run_adapter_manifest(manifest_path: str | Path, dry_run: bool = True) -> dic
         blocked_reasons.append("input asset path is required for backend execution")
     else:
         output_dir.mkdir(parents=True, exist_ok=True)
-        command = _format_native_command(spec, provision["runtime"]["selected_root"], input_asset, output_dir, input_assets or None)
+        command = _format_native_command(
+            spec, provision["runtime"]["selected_root"], input_asset, output_dir, input_assets or None
+        )
+        command.extend(trellis_reproducibility_arguments(payload, spec))
         native_log = _run_native_backend(command, int(spec.get("timeout_seconds", 0)), log_path)
         if native_log["returncode"] == 0 and generated_asset.exists():
             status = "proposal"
@@ -580,6 +649,7 @@ def run_adapter_manifest(manifest_path: str | Path, dry_run: bool = True) -> dic
         "generated_asset": _path_string(generated_asset) if generated_asset.exists() else "",
         "validation_status": status,
         "blocked_reasons": blocked_reasons,
+        "reproducibility": payload.get("reproducibility", {}),
     }
     reconstruction.update(part_outputs)
     _write_json_with_checksum(output_manifest_path, reconstruction)

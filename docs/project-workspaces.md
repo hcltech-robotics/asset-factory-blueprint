@@ -29,7 +29,7 @@ Then inspect `manifests/` and `reports/`. Each generated file should trace back 
 - `validation-plan.json`
 - `missing-evidence.json`
 - `wandb-run-plan.json`
-- `manifests/` with per-stage records written as `manifests/<schema-name>.json`, such as `source-asset-manifest.json`, `reconstruction-manifest.json`, `segmentation-manifest.json`, `material-inference-manifest.json`, `texturing-manifest.json`, `physics-articulation-manifest.json`, `nonvisual-material-manifest.json` and `simready-asset-manifest.json`, with optional stages present only when routed
+- `manifests/` with per-stage records written as `manifests/<schema-name>.json`, including `reconstruction-manifest.json` for candidate geometry and `mesh-verification-record.json` for canonical promotion before downstream stage manifests
 - `evidence/checksums.json`, the exact SHA-256 inventory of every regular project file except the inventory itself and the ephemeral workspace lease; both exclusions and their fixed reasons are recorded in the file
 - `reports/`
 - `source-assets/`

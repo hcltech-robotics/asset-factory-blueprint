@@ -24,7 +24,9 @@ from asset_factory_blueprint.utils.ids import slugify
 
 
 USD_REFERENCE = re.compile(r"@([^@]+)@")
-USD_XFORM_OPINION = re.compile(r"\b(?:double3|float3|matrix4d)\s+xformOp:(?:translate|rotateXYZ|rotateX|rotateY|rotateZ|scale|transform)\s*=")
+USD_XFORM_OPINION = re.compile(
+    r"\b(?:double3|float3|matrix4d)\s+xformOp:(?:translate|rotateXYZ|rotateX|rotateY|rotateZ|scale|transform)\s*="
+)
 USD_SUFFIXES = {".usd", ".usda", ".usdc"}
 IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".webp"}
 SCAN_SUFFIXES = {".ply", ".obj", ".stl", ".glb", ".gltf", ".las", ".laz", ".e57"}
@@ -222,7 +224,9 @@ def _layer_header(default_prim: str | None = None, meters_per_unit: float = 1.0,
 
 
 def _png_chunk(chunk_type: bytes, data: bytes) -> bytes:
-    return struct.pack(">I", len(data)) + chunk_type + data + struct.pack(">I", zlib.crc32(chunk_type + data) & 0xFFFFFFFF)
+    return (
+        struct.pack(">I", len(data)) + chunk_type + data + struct.pack(">I", zlib.crc32(chunk_type + data) & 0xFFFFFFFF)
+    )
 
 
 def _write_png(path: Path, rgb: tuple[int, int, int]) -> Path:
@@ -370,7 +374,11 @@ def _normalise_requested_texture_profiles(raw: Any, objective: str = "") -> list
             raw_id = str(item.get("variant_id") or item.get("id") or item.get("style") or f"variant_{index + 1}")
             variant_id = slugify(raw_id)
             style_prompt = str(item.get("prompt") or item.get("texture_intent") or item.get("style") or raw_id)
-            prompt = f"{objective}, {style_prompt}".strip(", ") if objective and objective.lower() not in style_prompt.lower() else style_prompt
+            prompt = (
+                f"{objective}, {style_prompt}".strip(", ")
+                if objective and objective.lower() not in style_prompt.lower()
+                else style_prompt
+            )
             profile = _style_profile_from_prompt(variant_id, prompt, index)
             profile.update(
                 {
@@ -416,6 +424,38 @@ def _recorded_external_reconstruction(project_dir: Path, asset_id: str) -> dict[
     }
 
 
+def _approved_canonical_geometry(project_dir: Path) -> Path | None:
+    """Return the checksum-bound geometry promoted by mandatory mesh verification."""
+    record_path = project_dir / "manifests" / "mesh-verification-record.json"
+    if not record_path.exists():
+        return None
+    try:
+        record = json.loads(record_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    promotion = record.get("promotion", {})
+    if record.get("decision") != "approve" or promotion.get("approved") is not True:
+        return None
+    raw_path = str(promotion.get("canonical_geometry_path") or "")
+    candidate_checksum = str(record.get("candidate", {}).get("checksum") or "")
+    promoted_checksum = str(promotion.get("canonical_geometry_checksum") or "")
+    if not raw_path or not candidate_checksum or candidate_checksum != promoted_checksum:
+        return None
+    candidate = Path(raw_path)
+    if not candidate.is_absolute():
+        candidate = project_dir / candidate
+    try:
+        candidate = candidate.resolve(strict=True)
+        root = project_dir.resolve(strict=True)
+    except OSError:
+        return None
+    if candidate != root and root not in candidate.parents:
+        return None
+    if not candidate.is_file() or sha256_file(candidate) != candidate_checksum:
+        return None
+    return candidate
+
+
 def _segmentation_prior_segments(project_dir: Path) -> list[dict[str, Any]]:
     """Segments from a real segmentation prior run, when one exists in the workspace."""
     manifest_path = project_dir / "segmentation-prior" / "segmentation-prior-manifest.json"
@@ -432,7 +472,9 @@ def _segmentation_prior_segments(project_dir: Path) -> list[dict[str, Any]]:
     return segments
 
 
-def _write_appearance_segments(asset_dir: Path, asset_id: str, primary_source: dict[str, Any]) -> tuple[list[dict[str, Any]], list[Path]]:
+def _write_appearance_segments(
+    asset_dir: Path, asset_id: str, primary_source: dict[str, Any]
+) -> tuple[list[dict[str, Any]], list[Path]]:
     records: list[dict[str, Any]] = []
     files: list[Path] = []
     segments_dir = asset_dir / "textures" / "segments"
@@ -553,7 +595,9 @@ def _inspect_usd_source(path: Path, allow_project_copy_baking: bool) -> dict[str
         result["blocked_reasons"].append("OpenUSD runtime unavailable for source-root inspection")
         if has_transform_opinion and not allow_project_copy_baking:
             result["root_transform_identity"] = False
-            result["blocked_reasons"].append("non-identity root transform requires explicit project-copy baking approval")
+            result["blocked_reasons"].append(
+                "non-identity root transform requires explicit project-copy baking approval"
+            )
         return result
 
     stage = Usd.Stage.Open(str(path))
@@ -676,7 +720,9 @@ def _default_texture_variant_record(asset_dir: Path) -> dict[str, Any]:
     }
 
 
-def _write_texture_variant_sets(asset_dir: Path, raw_variants: Any = None, objective: str = "") -> tuple[list[dict[str, Any]], list[Path]]:
+def _write_texture_variant_sets(
+    asset_dir: Path, raw_variants: Any = None, objective: str = ""
+) -> tuple[list[dict[str, Any]], list[Path]]:
     records = [_default_texture_variant_record(asset_dir)]
     files: list[Path] = []
     profiles = _normalise_requested_texture_profiles(raw_variants, objective)
@@ -919,7 +965,9 @@ def _normalised_source_layer(
         "source_up_axis": source_up_axis,
         "axis_policy": "z_up",
         "collision_prim_paths": collision_paths,
-        "blocked_reason": "" if source_up_axis and source_meters is not None else "source units or up axis were not inspected",
+        "blocked_reason": ""
+        if source_up_axis and source_meters is not None
+        else "source units or up axis were not inspected",
     }
 
 
@@ -951,7 +999,9 @@ def _material_block(
         if has_textures
         else ""
     )
-    diffuse_value = f"color3f inputs:diffuseColor = ({diffuse_colour[0]:.3f}, {diffuse_colour[1]:.3f}, {diffuse_colour[2]:.3f})"
+    diffuse_value = (
+        f"color3f inputs:diffuseColor = ({diffuse_colour[0]:.3f}, {diffuse_colour[1]:.3f}, {diffuse_colour[2]:.3f})"
+    )
     roughness_value = f"float inputs:roughness = {roughness:.3f}"
     metallic_value = f"float inputs:metallic = {metallic:.3f}"
     normal_value = ""
@@ -961,7 +1011,7 @@ def _material_block(
             '            def Shader "BaseColorTexture"\n'
             "            {\n"
             '                uniform token info:id = "UsdUVTexture"\n'
-            f'                asset inputs:file = @./{_usda_escape(texture_paths["base_color"])}@\n'
+            f"                asset inputs:file = @./{_usda_escape(texture_paths['base_color'])}@\n"
             f"                float2 inputs:st.connect = </{asset_id}/Materials/{material_name}/PrimvarReader_st.outputs:result>\n"
             '                token inputs:sourceColorSpace = "sRGB"\n'
             "                float4 inputs:fallback = (0.18, 0.18, 0.18, 1)\n"
@@ -969,12 +1019,14 @@ def _material_block(
             "            }\n"
         )
     if texture_paths.get("roughness"):
-        roughness_value = f"float inputs:roughness.connect = </{asset_id}/Materials/{material_name}/RoughnessTexture.outputs:r>"
+        roughness_value = (
+            f"float inputs:roughness.connect = </{asset_id}/Materials/{material_name}/RoughnessTexture.outputs:r>"
+        )
         shaders += (
             '            def Shader "RoughnessTexture"\n'
             "            {\n"
             '                uniform token info:id = "UsdUVTexture"\n'
-            f'                asset inputs:file = @./{_usda_escape(texture_paths["roughness"])}@\n'
+            f"                asset inputs:file = @./{_usda_escape(texture_paths['roughness'])}@\n"
             f"                float2 inputs:st.connect = </{asset_id}/Materials/{material_name}/PrimvarReader_st.outputs:result>\n"
             '                token inputs:sourceColorSpace = "raw"\n'
             "                float4 inputs:fallback = (0.5, 0.5, 0.5, 1)\n"
@@ -982,12 +1034,14 @@ def _material_block(
             "            }\n"
         )
     if texture_paths.get("metallic"):
-        metallic_value = f"float inputs:metallic.connect = </{asset_id}/Materials/{material_name}/MetallicTexture.outputs:r>"
+        metallic_value = (
+            f"float inputs:metallic.connect = </{asset_id}/Materials/{material_name}/MetallicTexture.outputs:r>"
+        )
         shaders += (
             '            def Shader "MetallicTexture"\n'
             "            {\n"
             '                uniform token info:id = "UsdUVTexture"\n'
-            f'                asset inputs:file = @./{_usda_escape(texture_paths["metallic"])}@\n'
+            f"                asset inputs:file = @./{_usda_escape(texture_paths['metallic'])}@\n"
             f"                float2 inputs:st.connect = </{asset_id}/Materials/{material_name}/PrimvarReader_st.outputs:result>\n"
             '                token inputs:sourceColorSpace = "raw"\n'
             "                float4 inputs:fallback = (0, 0, 0, 1)\n"
@@ -1000,7 +1054,7 @@ def _material_block(
             '            def Shader "NormalTexture"\n'
             "            {\n"
             '                uniform token info:id = "UsdUVTexture"\n'
-            f'                asset inputs:file = @./{_usda_escape(texture_paths["normal"])}@\n'
+            f"                asset inputs:file = @./{_usda_escape(texture_paths['normal'])}@\n"
             f"                float2 inputs:st.connect = </{asset_id}/Materials/{material_name}/PrimvarReader_st.outputs:result>\n"
             '                token inputs:sourceColorSpace = "raw"\n'
             "                float4 inputs:fallback = (0.5, 0.5, 1, 1)\n"
@@ -1049,7 +1103,9 @@ def _material_layer(
         material_name = _usd_identifier(variant_id, "Material")
         roughness = {"clean_satin": 0.5, "worn_edges": 0.68, "rough_speckled": 0.84}.get(variant_id, 0.62)
         metallic = {"clean_satin": 0.1, "worn_edges": 0.18, "rough_speckled": 0.08}.get(variant_id, 0.14)
-        material_blocks.append(_material_block(asset_id, material_name, _texture_map_paths(item), (0.45, 0.48, 0.45), roughness, metallic))
+        material_blocks.append(
+            _material_block(asset_id, material_name, _texture_map_paths(item), (0.45, 0.48, 0.45), roughness, metallic)
+        )
     for segment in appearance_segments:
         material_name = _usd_identifier(str(segment["segment_id"]), "SegmentMaterial")
         colour = tuple(float(value) / 255.0 for value in segment.get("preview_colour", [128, 128, 128]))
@@ -1111,12 +1167,8 @@ def _materialx_document(
                 "name": _usd_identifier(variant_id, "Material"),
                 "maps": _texture_map_paths(item),
                 "colour": (0.45, 0.48, 0.45),
-                "roughness": {"clean_satin": 0.5, "worn_edges": 0.68, "rough_speckled": 0.84}.get(
-                    variant_id, 0.62
-                ),
-                "metallic": {"clean_satin": 0.1, "worn_edges": 0.18, "rough_speckled": 0.08}.get(
-                    variant_id, 0.14
-                ),
+                "roughness": {"clean_satin": 0.5, "worn_edges": 0.68, "rough_speckled": 0.84}.get(variant_id, 0.62),
+                "metallic": {"clean_satin": 0.1, "worn_edges": 0.18, "rough_speckled": 0.08}.get(variant_id, 0.14),
             }
         )
     for segment in appearance_segments:
@@ -1323,7 +1375,11 @@ def _collision_override_tree(collision_prim_paths: list[str]) -> str:
                     + f"{padding}}}\n"
                 )
             else:
-                body += f'{padding}over "{_usda_escape(name)}"\n{padding}{{\n' + render(child, indent + 4) + f"{padding}}}\n"
+                body += (
+                    f'{padding}over "{_usda_escape(name)}"\n{padding}{{\n'
+                    + render(child, indent + 4)
+                    + f"{padding}}}\n"
+                )
         return body
 
     return render(tree, 4)
@@ -1380,7 +1436,9 @@ def _normalise_physics_evidence(
         "manufacturer_specification",
         "computed_from_measured_density",
     }:
-        errors.append("mass-property method must be measured, manufacturer_specification or computed_from_measured_density")
+        errors.append(
+            "mass-property method must be measured, manufacturer_specification or computed_from_measured_density"
+        )
     unit_policy = specification.get("unit_policy")
     valid_unit_policy = unit_policy == "si_m_kg_s" or unit_policy == {
         "mass": "kg",
@@ -1535,9 +1593,7 @@ def _physics_layer_fallback(
         )
         physics_status = "validated_evidence_authored"
         evidence_status = "accepted"
-        evidence_root_body = (
-            f'    custom string assetFactory:physicsEvidenceFingerprint = "{accepted_evidence["evidence_fingerprint"]}"\n'
-        )
+        evidence_root_body = f'    custom string assetFactory:physicsEvidenceFingerprint = "{accepted_evidence["evidence_fingerprint"]}"\n'
         source_ids = ", ".join(f'"{_usda_escape(item)}"' for item in accepted_evidence["source_evidence_ids"])
         evidence_body = (
             f'        custom string assetFactory:evidenceFingerprint = "{accepted_evidence["evidence_fingerprint"]}"\n'
@@ -1840,11 +1896,11 @@ def _articulation_layer(
             if drive_type not in {"force", "acceleration"}:
                 errors.append(f"joint {name} drive type must be force or acceleration")
             drive_record["type"] = drive_type
-            missing_drive_fields = [field for field in ("stiffness", "damping", "max_force") if field not in drive_record]
+            missing_drive_fields = [
+                field for field in ("stiffness", "damping", "max_force") if field not in drive_record
+            ]
             if missing_drive_fields:
-                errors.append(
-                    f"joint {name} drive requires bounded {', '.join(missing_drive_fields)}"
-                )
+                errors.append(f"joint {name} drive requires bounded {', '.join(missing_drive_fields)}")
             for field in ("stiffness", "damping", "max_force"):
                 value = drive_record.get(field)
                 if value is None:
@@ -1993,7 +2049,9 @@ def _articulation_layer(
     }
 
 
-def _semantic_layer(asset_dir: Path, asset_id: str, primary_source: dict[str, Any], appearance_segments: list[dict[str, Any]]) -> Path:
+def _semantic_layer(
+    asset_dir: Path, asset_id: str, primary_source: dict[str, Any], appearance_segments: list[dict[str, Any]]
+) -> Path:
     segment_body = ""
     for segment in appearance_segments:
         segment_body += (
@@ -2003,11 +2061,11 @@ def _semantic_layer(asset_dir: Path, asset_id: str, primary_source: dict[str, An
             + "        {\n"
             + f'            token[] semantics:labels:class = ["{_usda_escape(str(segment["semantic_class"]))}"]\n'
             + f'            token[] semantics:labels:label = ["{_usda_escape(str(segment["semantic_label"]))}"]\n'
-            + f'            rel material:binding = <{_usda_escape(str(segment["material_prim_path"]))}>\n'
+            + f"            rel material:binding = <{_usda_escape(str(segment['material_prim_path']))}>\n"
             + f'            custom string appearance_segment_id = "{_usda_escape(str(segment["segment_id"]))}"\n'
             + f'            custom string appearance_mask_path = "{_usda_escape(str(segment["mask_path"]))}"\n'
             + f'            custom string material_name = "{_usda_escape(str(segment["material_name"]))}"\n'
-            + f'            custom double segmentation_confidence = {float(segment["confidence"])}\n'
+            + f"            custom double segmentation_confidence = {float(segment['confidence'])}\n"
             + "        }\n"
         )
     return _write_text(
@@ -2089,8 +2147,8 @@ def _variants_layer(
             + "            {\n"
             + '                custom string deformation_status = "proposal"\n'
             + f'                custom string deformation_kind = "{_usda_escape(str(item.get("deformation_kind", "")))}"\n'
-            + f'                custom double amplitude_m = {float(item.get("amplitude_m", 0.0))}\n'
-            + f'                custom double radius_m = {float(item.get("radius_m", 0.0))}\n'
+            + f"                custom double amplitude_m = {float(item.get('amplitude_m', 0.0))}\n"
+            + f"                custom double radius_m = {float(item.get('radius_m', 0.0))}\n"
             + f'                custom string height_or_displacement_path = "{_usda_escape(str(item.get("height_or_displacement_path", "")))}"\n'
             + "            }\n"
             + "        }\n"
@@ -2151,9 +2209,9 @@ def _deformation_layer(asset_dir: Path, asset_id: str, deformations: list[dict[s
             + "        {\n"
             + f'            custom string deformation_kind = "{_usda_escape(str(item.get("deformation_kind", "")))}"\n'
             + f'            custom string deformation_description = "{_usda_escape(str(item.get("description", "")))}"\n'
-            + f'            custom double deformation_amplitude_m = {float(item.get("amplitude_m", 0.0))}\n'
-            + f'            custom double deformation_radius_m = {float(item.get("radius_m", 0.0))}\n'
-            + f'            custom int deformation_count = {int(item.get("count", 0))}\n'
+            + f"            custom double deformation_amplitude_m = {float(item.get('amplitude_m', 0.0))}\n"
+            + f"            custom double deformation_radius_m = {float(item.get('radius_m', 0.0))}\n"
+            + f"            custom int deformation_count = {int(item.get('count', 0))}\n"
             + f'            custom string height_or_displacement_path = "{_usda_escape(str(item.get("height_or_displacement_path", "")))}"\n'
             + '            custom string deformation_validation_status = "review_required"\n'
             + "        }\n"
@@ -2180,7 +2238,7 @@ def _contents_layer(asset_dir: Path, asset_id: str) -> Path:
         + '    def Scope "Contents"\n'
         + "    {\n"
         + f"        rel sourceGeometry = </{asset_id}/Geometry>\n"
-        + '        custom asset sourceGeometryLayer = @./source/normalised.usda@\n'
+        + "        custom asset sourceGeometryLayer = @./source/normalised.usda@\n"
         + '        custom string assembly_policy = "canonical geometry is composed once through geo.usda"\n'
         + "    }\n"
         + "}\n",
@@ -2237,9 +2295,15 @@ def compose_project_asset(
     constraints: dict[str, Any] | None = None,
     live_texture_generation: bool = False,
 ) -> dict[str, Any]:
-    copied_sources = [record for record in source_ingestion.get("source_assets", []) if record.get("status") == "copied"]
+    copied_sources = [
+        record for record in source_ingestion.get("source_assets", []) if record.get("status") == "copied"
+    ]
     if not copied_sources:
-        return {"status": "blocked", "blocked_reasons": ["no copied source assets available for asset composition"], "files": []}
+        return {
+            "status": "blocked",
+            "blocked_reasons": ["no copied source assets available for asset composition"],
+            "files": [],
+        }
 
     constraints = constraints or {}
     safe_asset_id = slugify(asset_id)
@@ -2265,7 +2329,14 @@ def compose_project_asset(
             shutil.copy2(recorded_mesh, geometry_source)
         else:
             source_inspection["blocked_reasons"].append("external reconstruction validation required before release")
-    normalised_source, mesh_conditioning = _normalised_source_layer(asset_dir, source_copy, source_inspection, geometry_source)
+    approved_geometry = _approved_canonical_geometry(project_dir)
+    if approved_geometry is not None:
+        geometry_source = approved_geometry
+        source_inspection["mesh_verification_status"] = "approved"
+        source_inspection["canonical_geometry_path"] = approved_geometry.relative_to(project_dir).as_posix()
+    normalised_source, mesh_conditioning = _normalised_source_layer(
+        asset_dir, source_copy, source_inspection, geometry_source
+    )
     source_inspection["mesh_conditioning"] = mesh_conditioning
     if mesh_conditioning.get("status") == "blocked":
         reason = str(mesh_conditioning.get("blocked_reason") or "conditioned geometry is unavailable")
@@ -2290,7 +2361,9 @@ def compose_project_asset(
         "profile_id": profile_id,
         "profile_version": profile_version or "unresolved",
         "profile_version_status": "pinned" if profile_version else "unresolved",
-        "target_runtime": "runtime-neutral" if profile_id.endswith("Neutral") else profile_id.rsplit("-", 1)[-1].lower(),
+        "target_runtime": "runtime-neutral"
+        if profile_id.endswith("Neutral")
+        else profile_id.rsplit("-", 1)[-1].lower(),
         "specification_uri": "https://docs.omniverse.nvidia.com/simready/latest/simready-faq.html",
     }
     if not profile_version:
@@ -2317,19 +2390,25 @@ def compose_project_asset(
     texture_files = _write_texture_set(texture_file_targets) if texture_requested else []
     texture_generation_status = "blocked" if texture_requested else "not_requested"
     texture_blocked_reasons = (
-        ["texture synthesis provider did not run; local preview scaffolds are not production PBR textures"] if texture_requested else []
+        ["texture synthesis provider did not run; local preview scaffolds are not production PBR textures"]
+        if texture_requested
+        else []
     )
     texture_generation_backend = "local_preview_scaffold" if texture_requested else "not_requested"
     texture_provider_trace: list[dict[str, Any]] = []
     texture_map_policy_trace: list[dict[str, Any]] = []
     texture_prompt_plan: list[dict[str, Any]] = []
     texture_variant_records, texture_variant_files = (
-        _write_texture_variant_sets(asset_dir, constraints.get("texture_variants"), str(constraints.get("object_prompt", safe_asset_id)))
+        _write_texture_variant_sets(
+            asset_dir, constraints.get("texture_variants"), str(constraints.get("object_prompt", safe_asset_id))
+        )
         if texture_requested
         else ([], [])
     )
     if texture_requested:
-        texture_prompt_plan = build_live_texture_request_plan(asset_dir, texture_variant_records, constraints)["texture_prompt_plan"]
+        texture_prompt_plan = build_live_texture_request_plan(asset_dir, texture_variant_records, constraints)[
+            "texture_prompt_plan"
+        ]
     if texture_requested and live_texture_generation:
         try:
             live_texture_result = generate_live_texture_sets(asset_dir, texture_variant_records, constraints)
@@ -2372,7 +2451,9 @@ def compose_project_asset(
     )
     sem = _semantic_layer(asset_dir, safe_asset_id, primary_source, appearance_segments)
     deform = _deformation_layer(asset_dir, safe_asset_id, deformation_records) if deformation_requested else None
-    variants = _variants_layer(asset_dir, safe_asset_id, texture_variant_records, deformation_records, appearance_segments)
+    variants = _variants_layer(
+        asset_dir, safe_asset_id, texture_variant_records, deformation_records, appearance_segments
+    )
     contents = _contents_layer(asset_dir, safe_asset_id)
     optional_references = f"        @./deform.usda@</{safe_asset_id}>,\n" if deform else ""
     root_layer = _write_text(
@@ -2497,7 +2578,7 @@ def compose_project_asset(
         shutil.copy2(path, packaged_evidence)
         packaged_files.append(packaged_evidence)
 
-    layer_paths = [root_layer, geo, mtl, phy, art, sem, *( [deform] if deform else [] ), variants, contents]
+    layer_paths = [root_layer, geo, mtl, phy, art, sem, *([deform] if deform else []), variants, contents]
     layer_stack = [_rel(path, project_dir) for path in layer_paths]
     package_files = [
         *source_package_files,
@@ -2513,7 +2594,7 @@ def compose_project_asset(
         phy,
         art,
         sem,
-        *( [deform] if deform else [] ),
+        *([deform] if deform else []),
         variants,
         contents,
         root_layer,

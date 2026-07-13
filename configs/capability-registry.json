@@ -3,7 +3,7 @@
   "capabilities": [
     {
       "capability_id": "reconstruction.image_to_3d",
-      "description": "Single-image mesh generation for stage 1.",
+      "description": "Single-image candidate mesh generation before mandatory verification.",
       "options": [
         {
           "option_id": "trellisv2",
@@ -78,7 +78,7 @@
     },
     {
       "capability_id": "segmentation.image_prior",
-      "description": "Image segmentation priors for stage 2.",
+      "description": "Image segmentation priors for reconstruction conditioning and approved canonical geometry.",
       "options": [
         {
           "option_id": "official_sam31",
@@ -192,6 +192,56 @@
           "provider": "openai_compatible",
           "gated": false,
           "note": "local OpenAI-compatible endpoint with a vision-capable model"
+        }
+      ]
+    },
+    {
+      "capability_id": "review.mesh_verification",
+      "description": "Mandatory vision-guided and tool-assisted verification of candidate geometry before canonical promotion.",
+      "options": [
+        {
+          "option_id": "nvidia_nim_mesh_reviewer",
+          "role": "primary",
+          "kind": "provider",
+          "provider": "nvidia_nim",
+          "env_any": [
+            "NVIDIA_API_KEY",
+            "AFB_LLM_API_KEY"
+          ],
+          "gated": false
+        },
+        {
+          "option_id": "local_mesh_reviewer",
+          "role": "fallback",
+          "kind": "provider",
+          "provider": "openai_compatible",
+          "gated": false
+        },
+        {
+          "option_id": "openai_mesh_reviewer",
+          "role": "fallback",
+          "kind": "provider",
+          "provider": "openai",
+          "env_all": [
+            "OPENAI_API_KEY"
+          ],
+          "gated": false
+        },
+        {
+          "option_id": "trimesh_diagnostics",
+          "role": "required_tool",
+          "kind": "pip",
+          "python_modules": [
+            "trimesh",
+            "numpy",
+            "matplotlib"
+          ],
+          "pip_packages": [
+            "trimesh",
+            "numpy",
+            "matplotlib"
+          ],
+          "gated": false
         }
       ]
     },

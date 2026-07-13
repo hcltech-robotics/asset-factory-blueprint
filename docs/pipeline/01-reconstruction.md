@@ -10,7 +10,7 @@ The optional reconstruction stage creates mesh geometry from image(s), with or w
 
 Geometry carries the visual and physical structure used by every later stage. Bad scale, incomplete geometry or unsupported evidence propagate into material, physics and policy work. The reconstruction record identifies the proposal method and selected route.
 
-Reconstruction accelerates geometry authoring while preserving provenance. Original sources stay immutable. Generated geometry enters the project as a proposal until validation and review admit it to later stages.
+Reconstruction accelerates geometry authoring while preserving provenance. Original sources stay immutable. Generated geometry enters the project as `candidate-geometry`. Only the mandatory mesh-verification stage can promote its checksum to `canonical-geometry` for later stages.
 
 ## Choose a reconstruction route
 
@@ -54,7 +54,7 @@ Image-led reconstruction writes enough evidence for a reviewer to compare the so
 4. Run the backend or dry-run adapter.
 5. Store logs, generated artefacts and checksums.
 6. Write a reconstruction manifest with proposal status.
-7. Block, promote or send the result to review based on validation.
+7. Hand the candidate and its checksum to mandatory mesh verification.
 
 ## Outputs
 
@@ -65,6 +65,8 @@ Image-led reconstruction writes enough evidence for a reviewer to compare the so
 - checksums and logs
 - review state
 
+The reconstruction stage never publishes canonical geometry.
+
 ## Gates
 
 - Source evidence must exist.
@@ -72,3 +74,4 @@ Image-led reconstruction writes enough evidence for a reviewer to compare the so
 - Generated files must match the expected manifest output.
 - Geometry scale and axis policy must be known before physics stages.
 - Task-critical missing surfaces require review or block release.
+- A checksum-matched `mesh-verification-record` must approve the candidate before any downstream geometry stage begins.

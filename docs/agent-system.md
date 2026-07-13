@@ -29,7 +29,7 @@ Stage-specific logic sits behind one mutation boundary. Skills propose work thro
 
 ## Stage skills
 
-The registry holds 18 packages: asset-factory-orchestrator, asset-programme-strategist, source-ingestion-lead, reconstruction-lead, segmentation-lead, material-inference-lead, texturing-lead, physics-articulation-lead, nonvisual-materials-lead, simready-verification-lead, rl-environment-design-lead, evaluation-validation-lead, governance-provenance-lead, infrastructure-orchestration-lead, external-model-runner-lead, capability-steward, library-curator and stage-invoker. The stage-invoker package serves [direct partial invocation](platform/direct-partial-invocation.md): running one stage on its own with full review guarantees.
+The registry holds 19 packages, including the dedicated `mesh-verification-agent` between reconstruction-lead and every downstream geometry consumer. The verifier owns deterministic mesh diagnostics, diagnostic renders, vision review, retry accounting and checksum-bound canonical promotion. The stage-invoker package serves [direct partial invocation](platform/direct-partial-invocation.md): running one stage on its own with full review guarantees.
 
 ## Files
 
