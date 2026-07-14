@@ -1,25 +1,88 @@
 site_name: Asset Factory Blueprint
 site_description: Documentation for the asset factory blueprint for governed OpenUSD asset pipelines.
 site_url: https://hcltech-robotics.github.io/asset-factory-blueprint/
+site_author: HCLTech Robotics
+repo_url: https://github.com/hcltech-robotics/asset-factory-blueprint
+repo_name: hcltech-robotics/asset-factory-blueprint
 docs_dir: docs
 site_dir: site
 strict: true
 use_directory_urls: false
 
 theme:
-  name: mkdocs
-  nav_style: dark
-  highlightjs: false
+  name: material
+  custom_dir: docs/overrides
+  language: en
+  features:
+    - content.code.annotate
+    - content.code.copy
+    - navigation.footer
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.sections
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - toc.follow
+  font:
+    text: Manrope
+    code: IBM Plex Mono
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: hcltech-light
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Use dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: hcltech-dark
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Use light mode
+  logo: assets/images/hcltech-logo-white.svg
+  favicon: assets/images/hcltech-robotics-mark.svg
 
-extra_css:
-  - assets/stylesheets/site.css
+extra:
+  brand_title: Asset Factory Blueprint
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/hcltech-robotics/asset-factory-blueprint
+      name: Asset Factory Blueprint on GitHub
 
 markdown_extensions:
   - fenced_code
   - sane_lists
   - tables
   - toc:
-      permalink: true
+      permalink: Link to this section
+      permalink_title: Link to this section
+      title: On this page
+  - admonition
+  - attr_list
+  - footnotes
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
 
 nav:
   - Index: index.md
