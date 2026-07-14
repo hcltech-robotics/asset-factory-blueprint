@@ -22,10 +22,16 @@ from asset_factory_blueprint.orchestrator import build_run_plan, load_run_reques
 from asset_factory_blueprint.provenance import build_provenance, write_prov_jsonld
 from asset_factory_blueprint.schemas.common import RunPlan, RunRequest, StagePlan
 from asset_factory_blueprint.services.asset_authoring import compose_project_asset
-from asset_factory_blueprint.services.fitness import asset_package_fingerprint, evaluate_task_fitness
+from asset_factory_blueprint.services.fitness import (
+    asset_package_fingerprint,
+    default_release_scope,
+    evaluate_task_fitness,
+    release_scope_for_request,
+)
 from asset_factory_blueprint.services.governance import evaluate_release_policy
 from asset_factory_blueprint.services.material_inference import material_propose
 from asset_factory_blueprint.services.physics_articulation import physics_plan
+from asset_factory_blueprint.services.rl_environment import design_environment, merge_design_into_manifest
 from asset_factory_blueprint.services.simready import validate_asset_package
 from asset_factory_blueprint.security import (
     confine_path,
@@ -311,6 +317,7 @@ class _WorkflowStageRuntime:
         self.asset_package: dict[str, Any] | None = None
         self.asset_validation: dict[str, Any] | None = None
         self.task_fitness: dict[str, Any] | None = None
+        self.rl_environment: dict[str, Any] | None = None
 
     def execute(self, stage: StagePlan) -> dict[str, Any]:
         record: dict[str, Any] = {
@@ -434,6 +441,23 @@ class _WorkflowStageRuntime:
                 record["status"] = self.asset_validation.get("status", "blocked")
                 record["artefacts"] = [str(self.asset_validation.get("report_path") or "")]
                 record["blocked_reasons"] = list(self.asset_validation.get("blocked_reasons", []))
+        elif stage.id == "rl-environment":
+            if self.asset_validation is None or self.asset_package is None:
+                record["blocked_reasons"] = [
+                    "validated asset package and simready validation report are required before RL environment design"
+                ]
+            else:
+                self.rl_environment = design_environment(
+                    self.project_dir,
+                    self.request,
+                    self.plan,
+                    self.asset_package,
+                    self.asset_validation,
+                )
+                record["rl_environment"] = self.rl_environment
+                record["artefacts"] = [str(self.rl_environment.get("report_path") or "")]
+                if self.rl_environment.get("status") == "blocked":
+                    record["blocked_reasons"] = list(self.rl_environment.get("blocked_reasons", []))
         elif stage.id == "evaluation":
             if self.asset_validation is None or self.asset_package is None:
                 record["blocked_reasons"] = ["machine-readable conformance or asset package results are unavailable"]
@@ -1399,6 +1423,11 @@ def _enrich_manifest(
                 "reason": str(runtime_validation.get("reason") or "runtime behavioural validation is incomplete"),
                 "usd_root_path": asset_package.get("usd_root_path", ""),
                 "report_path": str(runtime_validation.get("report_path") or "reports/isaac-load-check.json"),
+                "report_sha256": str(runtime_validation.get("report_sha256") or ""),
+                "validated_usd_sha256": str(runtime_validation.get("validated_usd_sha256") or ""),
+                "validated_package_dependency_fingerprint": str(
+                    runtime_validation.get("validated_package_dependency_fingerprint") or ""
+                ),
                 "loaded": runtime_validation.get("status") == "pass",
                 "behavioural_tests": runtime_validation.get("behavioural_tests", []),
                 "required_test_ids": runtime_validation.get("required_test_ids", []),
@@ -1453,6 +1482,21 @@ def _enrich_manifest(
             }
             for index, item in enumerate(asset_package.get("files", []))
         )
+        for evidence_id, manifest_name in (
+            ("source_asset_manifest", "source-asset-manifest.json"),
+            ("material_inference_manifest", "material-inference-manifest.json"),
+            ("physics_articulation_manifest", "physics-articulation-manifest.json"),
+        ):
+            manifest_path = project_dir / "manifests" / manifest_name
+            if manifest_path.is_file():
+                payload["evidence"].append(
+                    {
+                        "evidence_id": evidence_id,
+                        "kind": "upstream_manifest",
+                        "uri": manifest_path.relative_to(project_dir).as_posix(),
+                        "checksum": sha256_file(manifest_path),
+                    }
+                )
         if asset_validation:
             payload["evidence"].append(
                 {
@@ -1467,11 +1511,7 @@ def _enrich_manifest(
     if stage.id == "rl-environment" and asset_package:
         payload["status"] = "blocked"
         payload["validation_status"] = "blocked"
-        payload["blocked_reasons"] = [
-            "Isaac Lab RL environment contract is blocked until asset load and physics gates pass",
-            "isaac-load gate has not passed",
-            "numeric physics review has not passed",
-        ]
+        payload["blocked_reasons"] = ["rl environment design service produced no result"]
         payload["environment_layer"] = asset_package.get("environment_path", "")
         payload["asset_package_path"] = asset_package.get("package_path", "")
         payload["requires_gates"] = ["isaac-load", "physics-layer-authored", "numeric-physics-review"]
@@ -1484,15 +1524,8 @@ def _enrich_manifest(
         payload["validation_status"] = asset_validation.get("status", "not_validated")
     if stage.id == "governance" and asset_validation:
         decision, decision_schema_errors = _operator_release_decision(project_dir)
-        requested_outputs = {str(item).strip().lower() for item in request.requested_outputs}
-        default_scope = (
-            "articulated_training"
-            if "rl" in requested_outputs
-            else "rigid_body_manipulation"
-            if "simready" in requested_outputs
-            else "visualisation"
-        )
-        requested_scope = str(request.constraints.get("release_scope") or decision.get("scope") or default_scope)
+        default_scope = default_release_scope(request)
+        requested_scope = release_scope_for_request(request)
         supported_scopes = {"visualisation", "rigid_body_manipulation", "articulated_training", "redistribution"}
         scope = requested_scope if requested_scope in supported_scopes else default_scope
         decision_path = project_dir / "operator-release-decision.json"
@@ -1756,6 +1789,13 @@ def _write_stage_manifest(
             payload["status"] = "validated" if verification.get("gate_status") == "pass" else "blocked"
             payload["validation_status"] = payload["status"]
             payload["blocked_reasons"] = list(verification.get("blocked_reasons", []))
+        if stage.id == "rl-environment" and producer_result and producer_result.get("rl_environment"):
+            design = producer_result["rl_environment"]
+            merge_design_into_manifest(payload, design)
+            producer_result = {
+                **producer_result,
+                "rl_environment": {key: value for key, value in design.items() if key != "extensions_rl"},
+            }
         if producer_result:
             payload.setdefault("extensions", {})["producer_result"] = producer_result
         manifest_path = write_json(manifests_dir / f"{schema_name}.json", payload)

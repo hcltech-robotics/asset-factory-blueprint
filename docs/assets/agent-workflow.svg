@@ -4,26 +4,25 @@
   <defs>
     <style>
       .bg { fill: transparent; }
-      .box { fill: #0a100c; stroke: #3d4a42; stroke-width: 2; }
-      .boxHot { fill: #0b1608; stroke: #76b900; stroke-width: 2.3; }
-      .boxAccent { fill: #160929; stroke: #5f1ebe; stroke-width: 2.3; }
-      .inner { fill: #0d130f; stroke: #7d8780; stroke-width: 1.9; }
-      .innerHot { fill: #0d1809; stroke: #76b900; stroke-width: 1.9; }
-      .innerAccent { fill: #1b0c31; stroke: #5f1ebe; stroke-width: 1.9; }
-      .label { fill: #edf3ef; font-family: Aptos, Helvetica, sans-serif; font-size: 20px; font-weight: 680; }
-      .small { fill: #c6cec8; font-family: Aptos, Helvetica, sans-serif; font-size: 13px; font-weight: 620; }
-      .line { stroke: #e6ece8; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
-      .greenLine { stroke: #76b900; stroke-width: 2.4; fill: none; marker-end: url(#arrowGreen); }
-      .accentLine { stroke: #5f1ebe; stroke-width: 2.4; fill: none; marker-end: url(#arrowAccent); }
+      .box { fill: #222229; stroke: #3b3e49; stroke-width: 2; }
+      .boxHot { fill: #292931; stroke: #3c91ff; stroke-width: 2.3; }
+      .inner { fill: #2f3039; stroke: #526476; stroke-width: 1.9; }
+      .innerHot { fill: #292931; stroke: #3c91ff; stroke-width: 1.9; }
+      .innerAccent { fill: #2f3039; stroke: #8c69f0; stroke-width: 1.9; }
+      .label { fill: #f0f2f8; font-family: Aptos, Helvetica, sans-serif; font-size: 20px; font-weight: 680; }
+      .small { fill: #c8d2dd; font-family: Aptos, Helvetica, sans-serif; font-size: 13px; font-weight: 620; }
+      .line { stroke: #4bc3af; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+      .primaryLine { stroke: #3c91ff; stroke-width: 2.4; fill: none; marker-end: url(#arrowPrimary); }
+      .accentLine { stroke: #8c69f0; stroke-width: 2.4; fill: none; marker-end: url(#arrowAccent); }
     </style>
     <marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-      <path d="M 0 1 L 8 4 L 0 7 z" fill="#e6ece8"/>
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#4bc3af"/>
     </marker>
-    <marker id="arrowGreen" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-      <path d="M 0 1 L 8 4 L 0 7 z" fill="#76b900"/>
+    <marker id="arrowPrimary" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#3c91ff"/>
     </marker>
     <marker id="arrowAccent" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-      <path d="M 0 1 L 8 4 L 0 7 z" fill="#5f1ebe"/>
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#8c69f0"/>
     </marker>
   </defs>
   <rect class="box" x="70" y="90" width="260" height="180" rx="8"/>
@@ -44,7 +43,7 @@
   <rect class="inner" x="412" y="228" width="216" height="25" rx="4"/>
   <text class="small" x="520.0" y="245.0" text-anchor="middle" style="font-size:13px">gates</text>
   <path class="accentLine" d="M650 180 L706 180"/>
-  <rect class="boxAccent" x="710" y="90" width="260" height="180" rx="8"/>
+  <rect class="boxHot" x="710" y="90" width="260" height="180" rx="8"/>
   <text class="label" x="840.0" y="132" text-anchor="middle">Skill router</text>
   <rect class="inner" x="732" y="154" width="216" height="25" rx="4"/>
   <text class="small" x="840.0" y="171.0" text-anchor="middle" style="font-size:13px">SKILL.md</text>
@@ -67,7 +66,7 @@
   <rect class="box" x="156" y="380" width="124" height="74" rx="8"/>
   <text class="label" x="218.0" y="414" text-anchor="middle" style="font-size:16px">Sources</text>
   <path class="line" d="M280 417 L284 417"/>
-  <rect class="boxAccent" x="288" y="380" width="124" height="74" rx="8"/>
+  <rect class="boxHot" x="288" y="380" width="124" height="74" rx="8"/>
   <text class="label" x="350.0" y="414" text-anchor="middle" style="font-size:16px">Reconstruct</text>
   <path class="line" d="M412 417 L416 417"/>
   <rect class="box" x="420" y="380" width="124" height="74" rx="8"/>
@@ -85,7 +84,7 @@
   <rect class="box" x="948" y="380" width="124" height="74" rx="8"/>
   <text class="label" x="1010.0" y="414" text-anchor="middle" style="font-size:16px">Nonvisual</text>
   <path class="line" d="M1072 417 L1076 417"/>
-  <rect class="boxAccent" x="1080" y="380" width="124" height="74" rx="8"/>
+  <rect class="boxHot" x="1080" y="380" width="124" height="74" rx="8"/>
   <text class="label" x="1142.0" y="414" text-anchor="middle" style="font-size:16px">Verify</text>
   <path class="line" d="M1204 417 L1208 417"/>
   <rect class="box" x="1212" y="380" width="124" height="74" rx="8"/>

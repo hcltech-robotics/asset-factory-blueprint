@@ -32,6 +32,7 @@ Backends are cloned and installed by the operator through the install surfaces; 
 | Poly Haven textures and models | fetched on demand into `library/downloads/` | CC0 |
 | ambientCG PBR sets | fetched on demand into `library/downloads/` | CC0 |
 | Google Scanned Objects, Smithsonian open access, Objaverse-XL | linked in `library/asset-packs.json`, never bundled | CC-BY 4.0, CC0 and mixed licences respectively; rights checks required per item |
+| Cite Them Right 12th edition (author-date/Harvard) CSL style, from the [Citation Style Language project](https://github.com/citation-style-language/styles/blob/master/harvard-cite-them-right.csl), used to render `references.bib` in the documentation | `docs/assets/citation-style/harvard-cite-them-right.csl` | CC BY-SA 3.0 |
 
 ## Python dependencies
 

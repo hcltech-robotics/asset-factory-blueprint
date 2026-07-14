@@ -80,6 +80,11 @@ Environment handles carry machine-specific paths, credentials, trust anchors and
 | --- | --- | --- | --- |
 | `AFB_ISAAC_SIM_ROOT` | `cli.py`, capability registry | runtime config value | running the Isaac Sim load gate |
 | `AFB_ISAAC_LAB_ROOT` | `cli.py` | runtime config value | RL environment work against Isaac Lab |
+| `AFB_RL_PROBE_PRODUCER_SHA256` | `afb rl evidence apply --kind probe` | unset | importing RL probe evidence; the administrator-approved bundle digest for the probe producer and its RL support modules |
+| `AFB_RL_FIDELITY_PRODUCER_SHA256` | `afb rl evidence apply --kind fidelity` | unset | importing collision-fidelity evidence; the administrator-approved bundle digest for the fidelity producer and its RL support modules |
+| `AFB_RL_PROBE_ATTESTATION_SECRET` | RL probe producer and probe-report verifiers | unset | signing or verifying RL probe evidence; expose this managed secret only to the probe role and its verifiers, and provide at least 32 UTF-8 bytes |
+| `AFB_RL_FIDELITY_ATTESTATION_SECRET` | collision-fidelity producer and fidelity-report verifiers | unset | signing or verifying collision-fidelity evidence; expose this managed secret only to the fidelity role and its verifiers, and provide at least 32 UTF-8 bytes |
+| `AFB_RL_IMPORT_ATTESTATION_SECRET` | RL evidence importer and import-receipt verifiers | unset | signing or verifying RL import receipts; expose this independent managed secret only to the import role and its verifiers, and provide at least 32 UTF-8 bytes |
 | `AFB_ISAAC_ATTESTATION_SECRET` | Isaac runtime producer, importer, SimReady consumer and positive-capsule validator | unset | producing or consuming Isaac runtime evidence; use the same independent managed secret of at least 32 UTF-8 bytes on both machines |
 | `AFB_ISAAC_PRODUCER_SHA256` | Isaac runtime producer, importer, canonical SimReady consumer and positive-capsule validator | unset | producing or consuming Isaac runtime evidence; set to the administrator-approved lowercase 64-hex SHA-256 of `scripts/simready/isaac_load_check.py` |
 | `AFB_ASSET_VALIDATOR_EXECUTABLE` | `services/official_validator.py` | unset | running official NVIDIA Profile validation; set to the trusted native validator executable |

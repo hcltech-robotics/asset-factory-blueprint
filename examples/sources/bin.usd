@@ -1,3 +1,246 @@
 #usda 1.0
-(defaultPrim = "World")
-def Xform "World" {}
+(
+    defaultPrim = "WarehouseBin"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "WarehouseBin" (
+    kind = "component"
+)
+{
+    def Scope "Geometry"
+    {
+        def Mesh "Visual"
+        {
+            uniform bool doubleSided = 0
+            float3[] extent = [(-0.06, -0.04, 0), (0.06, 0.04, 0.08)]
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [
+                0, 3, 2, 1,
+                0, 1, 5, 4,
+                1, 2, 6, 5,
+                2, 3, 7, 6,
+                3, 0, 4, 7,
+                4, 5, 13, 12,
+                5, 6, 14, 13,
+                6, 7, 15, 14,
+                7, 4, 12, 15,
+                8, 12, 13, 9,
+                9, 13, 14, 10,
+                10, 14, 15, 11,
+                11, 15, 12, 8,
+                8, 9, 10, 11
+            ]
+            normal3f[] normals = [
+                (0, 0, -1),
+                (0, -1, 0),
+                (1, 0, 0),
+                (0, 1, 0),
+                (-1, 0, 0),
+                (0, 0, 1),
+                (0, 0, 1),
+                (0, 0, 1),
+                (0, 0, 1),
+                (0, 1, 0),
+                (-1, 0, 0),
+                (0, -1, 0),
+                (1, 0, 0),
+                (0, 0, 1)
+            ] (
+                interpolation = "uniform"
+            )
+            point3f[] points = [
+                (-0.06, -0.04, 0),
+                (0.06, -0.04, 0),
+                (0.06, 0.04, 0),
+                (-0.06, 0.04, 0),
+                (-0.06, -0.04, 0.08),
+                (0.06, -0.04, 0.08),
+                (0.06, 0.04, 0.08),
+                (-0.06, 0.04, 0.08),
+                (-0.058, -0.038, 0.004),
+                (0.058, -0.038, 0.004),
+                (0.058, 0.038, 0.004),
+                (-0.058, 0.038, 0.004),
+                (-0.058, -0.038, 0.08),
+                (0.058, -0.038, 0.08),
+                (0.058, 0.038, 0.08),
+                (-0.058, 0.038, 0.08)
+            ]
+            color3f[] primvars:displayColor = [(0.14, 0.26, 0.42)] (
+                interpolation = "constant"
+            )
+            uniform token purpose = "render"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Scope "Collision"
+        {
+            def Mesh "Base" (
+                prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI"]
+            )
+            {
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+                int[] faceVertexIndices = [
+                    0, 3, 2, 1,
+                    4, 5, 6, 7,
+                    0, 1, 5, 4,
+                    1, 2, 6, 5,
+                    2, 3, 7, 6,
+                    3, 0, 4, 7
+                ]
+                bool physics:collisionEnabled = 1
+                token physics:approximation = "convexHull"
+                point3f[] points = [
+                    (-0.5, -0.5, -0.5),
+                    (0.5, -0.5, -0.5),
+                    (0.5, 0.5, -0.5),
+                    (-0.5, 0.5, -0.5),
+                    (-0.5, -0.5, 0.5),
+                    (0.5, -0.5, 0.5),
+                    (0.5, 0.5, 0.5),
+                    (-0.5, 0.5, 0.5)
+                ]
+                uniform token purpose = "proxy"
+                uniform token subdivisionScheme = "none"
+                float3 xformOp:scale = (0.12, 0.08, 0.004)
+                double3 xformOp:translate = (0, 0, 0.002)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Mesh "LeftWall" (
+                prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI"]
+            )
+            {
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+                int[] faceVertexIndices = [
+                    0, 3, 2, 1,
+                    4, 5, 6, 7,
+                    0, 1, 5, 4,
+                    1, 2, 6, 5,
+                    2, 3, 7, 6,
+                    3, 0, 4, 7
+                ]
+                bool physics:collisionEnabled = 1
+                token physics:approximation = "convexHull"
+                point3f[] points = [
+                    (-0.5, -0.5, -0.5),
+                    (0.5, -0.5, -0.5),
+                    (0.5, 0.5, -0.5),
+                    (-0.5, 0.5, -0.5),
+                    (-0.5, -0.5, 0.5),
+                    (0.5, -0.5, 0.5),
+                    (0.5, 0.5, 0.5),
+                    (-0.5, 0.5, 0.5)
+                ]
+                uniform token purpose = "proxy"
+                uniform token subdivisionScheme = "none"
+                float3 xformOp:scale = (0.002, 0.08, 0.076)
+                double3 xformOp:translate = (-0.059, 0, 0.042)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Mesh "RightWall" (
+                prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI"]
+            )
+            {
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+                int[] faceVertexIndices = [
+                    0, 3, 2, 1,
+                    4, 5, 6, 7,
+                    0, 1, 5, 4,
+                    1, 2, 6, 5,
+                    2, 3, 7, 6,
+                    3, 0, 4, 7
+                ]
+                bool physics:collisionEnabled = 1
+                token physics:approximation = "convexHull"
+                point3f[] points = [
+                    (-0.5, -0.5, -0.5),
+                    (0.5, -0.5, -0.5),
+                    (0.5, 0.5, -0.5),
+                    (-0.5, 0.5, -0.5),
+                    (-0.5, -0.5, 0.5),
+                    (0.5, -0.5, 0.5),
+                    (0.5, 0.5, 0.5),
+                    (-0.5, 0.5, 0.5)
+                ]
+                uniform token purpose = "proxy"
+                uniform token subdivisionScheme = "none"
+                float3 xformOp:scale = (0.002, 0.08, 0.076)
+                double3 xformOp:translate = (0.059, 0, 0.042)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Mesh "FrontWall" (
+                prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI"]
+            )
+            {
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+                int[] faceVertexIndices = [
+                    0, 3, 2, 1,
+                    4, 5, 6, 7,
+                    0, 1, 5, 4,
+                    1, 2, 6, 5,
+                    2, 3, 7, 6,
+                    3, 0, 4, 7
+                ]
+                bool physics:collisionEnabled = 1
+                token physics:approximation = "convexHull"
+                point3f[] points = [
+                    (-0.5, -0.5, -0.5),
+                    (0.5, -0.5, -0.5),
+                    (0.5, 0.5, -0.5),
+                    (-0.5, 0.5, -0.5),
+                    (-0.5, -0.5, 0.5),
+                    (0.5, -0.5, 0.5),
+                    (0.5, 0.5, 0.5),
+                    (-0.5, 0.5, 0.5)
+                ]
+                uniform token purpose = "proxy"
+                uniform token subdivisionScheme = "none"
+                float3 xformOp:scale = (0.116, 0.002, 0.076)
+                double3 xformOp:translate = (0, -0.039, 0.042)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Mesh "BackWall" (
+                prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI"]
+            )
+            {
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+                int[] faceVertexIndices = [
+                    0, 3, 2, 1,
+                    4, 5, 6, 7,
+                    0, 1, 5, 4,
+                    1, 2, 6, 5,
+                    2, 3, 7, 6,
+                    3, 0, 4, 7
+                ]
+                bool physics:collisionEnabled = 1
+                token physics:approximation = "convexHull"
+                point3f[] points = [
+                    (-0.5, -0.5, -0.5),
+                    (0.5, -0.5, -0.5),
+                    (0.5, 0.5, -0.5),
+                    (-0.5, 0.5, -0.5),
+                    (-0.5, -0.5, 0.5),
+                    (0.5, -0.5, 0.5),
+                    (0.5, 0.5, 0.5),
+                    (-0.5, 0.5, 0.5)
+                ]
+                uniform token purpose = "proxy"
+                uniform token subdivisionScheme = "none"
+                float3 xformOp:scale = (0.116, 0.002, 0.076)
+                double3 xformOp:translate = (0, 0.039, 0.042)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+    }
+}

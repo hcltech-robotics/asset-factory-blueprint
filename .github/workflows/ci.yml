@@ -48,6 +48,13 @@ jobs:
         run: uv run --frozen python -m asset_factory_blueprint.cli workflow run --request examples/run-requests/warehouse_pick_cell.json --project-root .ci-projects
       - name: Validate the generated record graph
         run: uv run --frozen python -m asset_factory_blueprint.cli project validate --project .ci-projects/warehouse_pick_cell
+      - name: Exercise the RL environment lane
+        run: uv run --frozen python -m asset_factory_blueprint.cli workflow run --request examples/run-requests/warehouse_pick_rl.json --project-root .ci-projects
+      - name: Validate the RL project record graph
+        run: uv run --frozen python -m asset_factory_blueprint.cli project validate --project .ci-projects/warehouse_pick_rl
+      - name: Install pandoc for bibliography rendering
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends pandoc
       - name: Build documentation strictly
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
         run: uv run --frozen mkdocs build --strict
@@ -68,8 +75,11 @@ jobs:
             uv.lock \
             configs/tool-surface.json \
             schemas/simready-asset-manifest.schema.json \
+            schemas/rl-probe-evidence.schema.json \
             scripts/ci/stdio_tool_server_smoke.py \
-            examples/run-requests/warehouse_pick_cell.json
+            scripts/rl/isaac_lab_probe.py \
+            examples/run-requests/warehouse_pick_cell.json \
+            examples/run-requests/warehouse_pick_rl.json
           do
             grep -F "/$required" .ci-sdist-files.txt
           done
@@ -82,6 +92,8 @@ jobs:
           uv run --frozen python scripts/ci/stdio_tool_server_smoke.py
           uv run --frozen afb workflow run --request examples/run-requests/warehouse_pick_cell.json --project-root .archive-projects
           uv run --frozen afb project validate --project .archive-projects/warehouse_pick_cell
+          uv run --frozen afb workflow run --request examples/run-requests/warehouse_pick_rl.json --project-root .archive-projects
+          uv run --frozen afb project validate --project .archive-projects/warehouse_pick_rl
       - name: Build and smoke-test the deployment image
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
         shell: bash

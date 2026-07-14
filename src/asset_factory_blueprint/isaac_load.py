@@ -9,7 +9,12 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
-from asset_factory_blueprint.execution import atomic_write_json
+from asset_factory_blueprint.execution import (
+    atomic_write_json,
+    durable_replace,
+    durable_unlink,
+    workspace_lease,
+)
 from asset_factory_blueprint.isaac_evidence import (
     PROTOCOL_ID,
     PROTOCOL_VERSION,
@@ -85,9 +90,9 @@ def _atomic_write_bytes(path: Path, payload: bytes) -> Path:
             stream.write(payload)
             stream.flush()
             os.fsync(stream.fileno())
-        os.replace(temporary, path)
+        durable_replace(temporary, path)
     except BaseException:
-        temporary.unlink(missing_ok=True)
+        durable_unlink(temporary, missing_ok=True)
         raise
     return path
 
@@ -128,9 +133,7 @@ def _validate_report_binding(
     execution_identity = payload.get("execution_identity") or {}
     try:
         started_at = datetime.fromisoformat(str(execution_identity.get("started_at") or "").replace("Z", "+00:00"))
-        completed_at = datetime.fromisoformat(
-            str(execution_identity.get("completed_at") or "").replace("Z", "+00:00")
-        )
+        completed_at = datetime.fromisoformat(str(execution_identity.get("completed_at") or "").replace("Z", "+00:00"))
     except ValueError as exc:
         raise ValueError("runtime report execution timestamps are invalid") from exc
     if (
@@ -149,7 +152,10 @@ def _validate_report_binding(
     profile = simready.get("simready_profile") or simready.get("simready_conformance", {}).get("profile") or {}
     if not profile.get("profile_id") or not profile.get("profile_version"):
         raise ValueError("SimReady manifest does not declare an exact Profile ID and version")
-    if payload.get("profile_id") != profile["profile_id"] or payload.get("profile_version") != profile["profile_version"]:
+    if (
+        payload.get("profile_id") != profile["profile_id"]
+        or payload.get("profile_version") != profile["profile_version"]
+    ):
         raise ValueError("runtime report Profile ID or version does not match the SimReady manifest")
 
     expected_usd_value = str(simready.get("package_path") or simready.get("usd_root_path") or "")
@@ -190,10 +196,7 @@ def _refresh_project_checksums(project_dir: Path) -> Path:
     return checksums_path
 
 
-def apply_isaac_load_report(project: str | Path, report: str | Path) -> dict[str, Any]:
-    project_dir = Path(project).resolve(strict=True)
-    if not project_dir.is_dir():
-        raise ValueError("project must be a directory")
+def _apply_isaac_load_report_locked(project_dir: Path, report: str | Path) -> dict[str, Any]:
     _, report_bytes, report_payload = _read_supplied_report(report)
     canonical_report_path = project_dir / "reports" / "isaac-load-check.json"
     _assert_safe_project_target(project_dir, canonical_report_path, "canonical runtime report target")
@@ -388,3 +391,13 @@ def apply_isaac_load_report(project: str | Path, report: str | Path) -> dict[str
         "report": report_rel,
         "checksums": checksums_path.relative_to(project_dir).as_posix(),
     }
+
+
+def apply_isaac_load_report(project: str | Path, report: str | Path) -> dict[str, Any]:
+    """Import one runtime report while holding the project mutation lease."""
+
+    project_dir = Path(project).resolve(strict=True)
+    if not project_dir.is_dir():
+        raise ValueError("project must be a directory")
+    with workspace_lease(project_dir, "isaac-load-import"):
+        return _apply_isaac_load_report_locked(project_dir, report)

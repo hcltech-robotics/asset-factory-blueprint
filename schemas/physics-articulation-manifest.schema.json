@@ -275,13 +275,26 @@
             "required": [
               "grasp_id",
               "frame",
+              "frame_space",
+              "quaternion_order",
               "approach_vector",
               "gripper_width",
               "confidence",
               "evidence_ids",
               "validation_status"
             ],
-            "additionalProperties": true
+            "additionalProperties": true,
+            "properties": {
+              "grasp_id": {"type": "string", "minLength": 1},
+              "frame": {"type": "array", "minItems": 7, "maxItems": 7, "items": {"type": "number"}},
+              "frame_space": {"const": "asset"},
+              "quaternion_order": {"const": "wxyz"},
+              "approach_vector": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}},
+              "gripper_width": {"type": "number", "exclusiveMinimum": 0},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+              "evidence_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+              "validation_status": {"type": "string", "enum": ["proposal", "review_required", "validated", "released"]}
+            }
           }
         },
         "affordance_labels": {

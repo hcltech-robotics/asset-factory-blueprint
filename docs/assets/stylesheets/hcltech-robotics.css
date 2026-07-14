@@ -83,7 +83,7 @@
 
 [data-md-color-scheme="hcltech-dark"] {
   color-scheme: dark;
-  --md-default-fg-color: #f7f9fc;
+  --md-default-fg-color: var(--hclr-grey-4);
   --md-default-fg-color--light: #c8d2dd;
   --md-default-fg-color--lighter: #a5afbe;
   --md-default-fg-color--lightest: rgba(200, 210, 221, 0.14);
@@ -99,7 +99,7 @@
   --md-accent-fg-color: #a98ef4;
   --md-accent-fg-color--transparent: rgba(169, 142, 244, 0.14);
   --md-accent-bg-color: var(--hclr-charcoal);
-  --md-typeset-color: #eef3f8;
+  --md-typeset-color: var(--hclr-grey-4);
   --md-typeset-a-color: #71adff;
   --md-code-fg-color: #e6edf8;
   --md-code-bg-color: #111116;
@@ -117,7 +117,7 @@
   --hclr-surface-raised: #292931;
   --hclr-surface-soft: #2f3039;
   --hclr-border: #3b3e49;
-  --hclr-copy: #f7f9fc;
+  --hclr-copy: var(--hclr-grey-4);
   --hclr-copy-muted: #b5c0ce;
   --hclr-nav-active: rgba(60, 145, 255, 0.14);
 }
@@ -1204,4 +1204,89 @@ button,
   .hcl-band__step small {
     color: #19191e;
   }
+}
+
+/*
+ * Sidebar callouts
+ *
+ * A custom admonition type for asides that step outside the main line of a
+ * page: history, theory, a result from another field. Written as
+ * `!!! sidebar "Title"` in Markdown. Visually offset from the running text
+ * by an inset margin, a purple rule and a soft gradient, so a reader can
+ * skip it without losing the thread. `!!! sidebar inline end "Title"`
+ * floats the box beside the paragraph on wide screens.
+ */
+
+:root {
+  --hclr-sidebar-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z'/%3E%3C/svg%3E");
+}
+
+.md-typeset .admonition.sidebar,
+.md-typeset details.sidebar {
+  border-color: var(--hclr-purple);
+  background: linear-gradient(135deg, rgba(95, 30, 190, 0.07) 0%, rgba(60, 145, 255, 0.05) 60%, var(--hclr-surface-raised) 100%);
+  margin: 1.6em 1.5rem 1.6em 1.5rem;
+  font-size: 0.72rem;
+}
+
+.md-typeset .admonition.sidebar > .admonition-title,
+.md-typeset details.sidebar > summary {
+  background: rgba(95, 30, 190, 0.1);
+  font-family: var(--md-text-font-family);
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+.md-typeset .admonition.sidebar > .admonition-title::before,
+.md-typeset details.sidebar > summary::before {
+  background-color: var(--hclr-purple);
+  -webkit-mask-image: var(--hclr-sidebar-icon);
+          mask-image: var(--hclr-sidebar-icon);
+}
+
+.md-typeset .admonition.sidebar > p:last-child {
+  margin-bottom: 0.6em;
+}
+
+[data-md-color-scheme="hcltech-dark"] .md-typeset .admonition.sidebar,
+[data-md-color-scheme="hcltech-dark"] .md-typeset details.sidebar {
+  border-color: var(--hclr-purple-mid);
+  background: linear-gradient(135deg, rgba(140, 105, 240, 0.16) 0%, rgba(60, 145, 255, 0.08) 60%, var(--hclr-surface-raised) 100%);
+}
+
+[data-md-color-scheme="hcltech-dark"] .md-typeset .admonition.sidebar > .admonition-title,
+[data-md-color-scheme="hcltech-dark"] .md-typeset details.sidebar > summary {
+  background: rgba(140, 105, 240, 0.18);
+}
+
+[data-md-color-scheme="hcltech-dark"] .md-typeset .admonition.sidebar > .admonition-title::before,
+[data-md-color-scheme="hcltech-dark"] .md-typeset details.sidebar > summary::before {
+  background-color: var(--hclr-purple-mid);
+}
+
+@media screen and (max-width: 60em) {
+  .md-typeset .admonition.sidebar,
+  .md-typeset details.sidebar {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/*
+ * Bibliography
+ *
+ * mkdocs-bibtex renders citations as footnotes. Give the per-page reference
+ * list a hanging indent and a little more air than an ordinary footnote.
+ */
+
+.md-typeset .footnote ol {
+  padding-inline-start: 1.4rem;
+}
+
+.md-typeset .footnote li {
+  margin-bottom: 0.45em;
+}
+
+.md-typeset .footnote li p {
+  margin: 0.15em 0;
 }

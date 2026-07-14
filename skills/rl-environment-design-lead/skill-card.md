@@ -1,9 +1,9 @@
-# Rl-environment-design-lead
+# RL environment design lead
 
-Domain: rl
+Domain: RL
 
-Mission: Design Isaac Lab environment contracts around validated assets.
+Purpose: Design the implemented evidence-bound Isaac Lab 2.3.1 PhysX rigid-object pick contract.
 
-Inputs: project workspace, run request, manifests, evidence and provider assignment.
+Inputs: project workspace, run request, validated SimReady and upstream manifests, Isaac runtime evidence, and a fixed-base URDF embodiment with explicit open and closed positions for every prismatic gripper joint.
 
-Outputs: manifest, evidence, report, proposal records and validation status.
+Outputs: RL environment manifest, environment design report, environment card, generated environment package and `rigid_body_manipulation` task-fitness protocol. Canonical probe and collision-fidelity evidence appears only after role-key verification and signed import receipts.

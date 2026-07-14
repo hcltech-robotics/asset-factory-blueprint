@@ -125,6 +125,7 @@
     "constraints": {
       "type": "object",
       "properties": {
+        "rl": {"$ref": "#/$defs/rlConstraints"},
         "simready_profile": {
           "type": "object",
           "required": [
@@ -294,6 +295,331 @@
       "additionalProperties": true
     }
   },
+  "$defs": {
+    "finiteInterval": {
+      "type": "array",
+      "prefixItems": [{"type": "number"}, {"type": "number"}],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["term", "source", "manifest_path"],
+      "properties": {
+        "term": {
+          "enum": ["joint_pos", "joint_vel", "joint_effort", "object_position", "object_velocity", "last_action", "actions"]
+        },
+        "source": {"type": "string", "minLength": 1},
+        "manifest_path": {"type": "string", "minLength": 1}
+      }
+    },
+    "reward": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["component", "functional_form", "weight", "units", "shaping_class", "depends_on"],
+      "properties": {
+        "component": {"enum": ["reach", "lift", "action_rate"]},
+        "functional_form": {"type": "string"},
+        "weight": {"type": "number", "minimum": 0},
+        "units": {"const": "dimensionless"},
+        "shaping_class": {"enum": ["task", "penalty"]},
+        "depends_on": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"component": {"const": "reach"}}, "required": ["component"]},
+          "then": {
+            "properties": {
+              "functional_form": {"const": "1 - tanh(distance_to_grasp_frame / 0.1)"},
+              "shaping_class": {"const": "task"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"component": {"const": "lift"}}, "required": ["component"]},
+          "then": {
+            "properties": {
+              "functional_form": {"const": "clip(object_height - support_height, 0, 0.1) / 0.1"},
+              "shaping_class": {"const": "task"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"component": {"const": "action_rate"}}, "required": ["component"]},
+          "then": {
+            "properties": {
+              "functional_form": {"const": "-sum(square(action_t - action_t_minus_1))"},
+              "shaping_class": {"const": "penalty"}
+            }
+          }
+        }
+      ]
+    },
+    "rlConstraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "behaviour",
+        "success",
+        "embodiment",
+        "adaptation_mode",
+        "grasp_confidence_threshold",
+        "dominance_bound",
+        "runtime",
+        "scene",
+        "observations",
+        "sensor_contract",
+        "rewards",
+        "randomisation",
+        "resets",
+        "fidelity",
+        "probes",
+        "curriculum",
+        "safety",
+        "evaluation"
+      ],
+      "properties": {
+        "behaviour": {"const": "pick"},
+        "success_definition": {"type": "string", "minLength": 1},
+        "success": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "height_m", "hold_seconds"],
+          "properties": {
+            "type": {"const": "object_height_above_support"},
+            "height_m": {"type": "number", "exclusiveMinimum": 0},
+            "hold_seconds": {"type": "number", "exclusiveMinimum": 0}
+          }
+        },
+        "embodiment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source",
+            "end_effector_body",
+            "fixed_base",
+            "gripper_joints",
+            "maximum_gripper_aperture_m",
+            "gripper_open_positions",
+            "gripper_closed_positions",
+            "action_scale",
+            "actuator"
+          ],
+          "properties": {
+            "source": {"type": "string", "minLength": 1},
+            "end_effector_body": {"type": "string", "minLength": 1},
+            "fixed_base": {"const": true},
+            "gripper_joints": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {"type": "string", "minLength": 1}
+            },
+            "maximum_gripper_aperture_m": {"type": "number", "exclusiveMinimum": 0},
+            "gripper_open_positions": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": {"type": "number"}
+            },
+            "gripper_closed_positions": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": {"type": "number"}
+            },
+            "action_scale": {"type": "number", "exclusiveMinimum": 0},
+            "actuator": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["stiffness", "damping"],
+              "properties": {
+                "stiffness": {"type": "number", "minimum": 0},
+                "damping": {"type": "number", "minimum": 0}
+              }
+            }
+          }
+        },
+        "adaptation_mode": {"enum": ["robust", "adaptive"]},
+        "grasp_confidence_threshold": {"type": "number", "minimum": 0, "maximum": 1},
+        "dominance_bound": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+        "runtime": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["physics_backend", "isaac_lab_version", "decimation", "episode_length_s", "num_envs", "seeds"],
+          "properties": {
+            "physics_backend": {"const": "physx"},
+            "isaac_lab_version": {"const": "2.3.1"},
+            "sim_dt": {"type": "number", "exclusiveMinimum": 0},
+            "decimation": {"type": "integer", "minimum": 1},
+            "episode_length_s": {"type": "number", "exclusiveMinimum": 0},
+            "render_interval": {"type": "integer", "minimum": 1},
+            "num_envs": {"type": "integer", "minimum": 1},
+            "seeds": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {"type": "integer", "minimum": 0}
+            }
+          }
+        },
+        "scene": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["object_initial_position", "support_height_m", "env_spacing"],
+          "properties": {
+            "object_initial_position": {
+              "type": "array",
+              "prefixItems": [{"type": "number"}, {"type": "number"}, {"const": 0}],
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "support_height_m": {"const": 0},
+            "env_spacing": {"type": "number", "exclusiveMinimum": 0}
+          }
+        },
+        "observations": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["policy", "critic"],
+          "properties": {
+            "policy": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/observation"}},
+            "critic": {"type": "array", "items": {"$ref": "#/$defs/observation"}}
+          }
+        },
+        "sensor_contract": {"type": "array", "maxItems": 0},
+        "rewards": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {"$ref": "#/$defs/reward"},
+          "allOf": [
+            {"contains": {"properties": {"component": {"const": "reach"}}, "required": ["component"]}, "minContains": 1, "maxContains": 1},
+            {"contains": {"properties": {"component": {"const": "lift"}}, "required": ["component"]}, "minContains": 1, "maxContains": 1},
+            {"contains": {"properties": {"component": {"const": "action_rate"}}, "required": ["component"]}, "minContains": 1, "maxContains": 1}
+          ]
+        },
+        "randomisation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["axes", "variants"],
+          "properties": {
+            "axes": {"type": "array", "uniqueItems": true, "items": {"enum": ["mass", "friction"]}},
+            "variants": {"type": "array", "maxItems": 0}
+          }
+        },
+        "resets": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["robot_joint_offset_rad", "object_pose"],
+          "properties": {
+            "robot_joint_offset_rad": {"$ref": "#/$defs/finiteInterval"},
+            "object_pose": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["x_m", "y_m", "yaw_rad"],
+              "properties": {
+                "x_m": {"$ref": "#/$defs/finiteInterval"},
+                "y_m": {"$ref": "#/$defs/finiteInterval"},
+                "yaw_rad": {"$ref": "#/$defs/finiteInterval"}
+              }
+            }
+          }
+        },
+        "fidelity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["collision_shell_tolerance_m", "region_radius_m", "samples_per_region", "seed"],
+          "properties": {
+            "collision_shell_tolerance_m": {"type": "number", "exclusiveMinimum": 0},
+            "region_radius_m": {"type": "number", "exclusiveMinimum": 0},
+            "samples_per_region": {"type": "integer", "minimum": 32},
+            "seed": {"type": "integer", "minimum": 0}
+          }
+        },
+        "probes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "smoke_steps",
+            "repeat_steps",
+            "gaming_steps",
+            "reset_seeds",
+            "penetration_tolerance_m",
+            "allowed_gaming_fraction",
+            "grasp_position_tolerance_m",
+            "grasp_orientation_tolerance_rad",
+            "oracle_phase_steps"
+          ],
+          "properties": {
+            "smoke_steps": {"type": "integer", "minimum": 1},
+            "repeat_steps": {"type": "integer", "minimum": 1},
+            "gaming_steps": {"type": "integer", "minimum": 1},
+            "reset_seeds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer", "minimum": 0}},
+            "penetration_tolerance_m": {"type": "number", "exclusiveMinimum": 0},
+            "allowed_gaming_fraction": {"type": "number", "minimum": 0, "exclusiveMaximum": 1},
+            "grasp_position_tolerance_m": {"type": "number", "exclusiveMinimum": 0},
+            "grasp_orientation_tolerance_rad": {"type": "number", "exclusiveMinimum": 0, "maximum": 3.141592653589793},
+            "oracle_phase_steps": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["approach", "descend", "close", "lift"],
+              "properties": {
+                "approach": {"type": "integer", "minimum": 1},
+                "descend": {"type": "integer", "minimum": 1},
+                "close": {"type": "integer", "minimum": 1},
+                "lift": {"type": "integer", "minimum": 1}
+              }
+            }
+          }
+        },
+        "curriculum": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["tier"],
+          "properties": {"tier": {"const": "none"}}
+        },
+        "safety": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["workspace_bounds", "contact_force_ceiling_n"],
+          "properties": {
+            "workspace_bounds": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["x", "y", "z"],
+              "properties": {
+                "x": {"$ref": "#/$defs/finiteInterval"},
+                "y": {"$ref": "#/$defs/finiteInterval"},
+                "z": {"$ref": "#/$defs/finiteInterval"}
+              }
+            },
+            "contact_force_ceiling_n": {"type": "number", "exclusiveMinimum": 0}
+          }
+        },
+        "evaluation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["seeds", "held_out_variants", "proxy_audit_variants"],
+          "properties": {
+            "seeds": {"type": "array", "minItems": 5, "uniqueItems": true, "items": {"type": "integer", "minimum": 0}},
+            "held_out_variants": {"type": "array", "maxItems": 0},
+            "proxy_audit_variants": {"type": "array", "maxItems": 0},
+            "metrics": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+            "aggregation": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"requested_outputs": {"contains": {"const": "rl"}}},
+        "required": ["requested_outputs"]
+      },
+      "then": {"properties": {"constraints": {"required": ["rl"]}}}
+    }
+  ],
   "oneOf": [
     {
       "properties": {

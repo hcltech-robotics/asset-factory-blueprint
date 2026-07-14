@@ -30,7 +30,11 @@ from asset_factory_blueprint.physics_evidence import seal_physics_evidence_file
 from asset_factory_blueprint.providers import check_policy, complete_chat, completion_as_dict, statuses_as_dict
 from asset_factory_blueprint.readiness import write_readiness
 from asset_factory_blueprint.release_evidence import write_release_evidence
-from asset_factory_blueprint.reconstruction_backends import build_backend_run_manifest, list_backend_specs, provision_backend
+from asset_factory_blueprint.reconstruction_backends import (
+    build_backend_run_manifest,
+    list_backend_specs,
+    provision_backend,
+)
 from asset_factory_blueprint.reconstruction_installers import (
     check_backend_install,
     default_install_root,
@@ -44,7 +48,14 @@ from asset_factory_blueprint.state import create_project, list_projects, open_pr
 from asset_factory_blueprint.library_tui import run_shop
 from asset_factory_blueprint.services.capability import install_capability, probe_capabilities
 from asset_factory_blueprint.services.fitness import apply_task_fitness_report, write_task_fitness_template
-from asset_factory_blueprint.services.library import build_local_index, fetch_from_source, list_backings, search_library, search_remote_sources, usd_search_query
+from asset_factory_blueprint.services.library import (
+    build_local_index,
+    fetch_from_source,
+    list_backings,
+    search_library,
+    search_remote_sources,
+    usd_search_query,
+)
 from asset_factory_blueprint.services.official_validator import (
     OmniAssetValidatorConfig,
     run_official_profile_validation,
@@ -344,7 +355,14 @@ def cmd_stage(args: argparse.Namespace) -> int:
             "refresh_artefacts": not args.no_refresh,
         }
     )
-    emit({"ok": result.success, "validation_status": result.validation_status, **(result.data or {}), **({"error": result.error} if result.error else {})})
+    emit(
+        {
+            "ok": result.success,
+            "validation_status": result.validation_status,
+            **(result.data or {}),
+            **({"error": result.error} if result.error else {}),
+        }
+    )
     return 0 if result.success else 1
 
 
@@ -519,7 +537,12 @@ def cmd_tool_server(args: argparse.Namespace) -> int:
 
     if args.host not in {"127.0.0.1", "localhost", "::1"}:
         if os.environ.get("AFB_TRUSTED_TOOL_SERVER_NETWORK", "").lower() not in {"1", "true", "yes"}:
-            emit({"ok": False, "error": "http tool-server binds to loopback unless AFB_TRUSTED_TOOL_SERVER_NETWORK is enabled"})
+            emit(
+                {
+                    "ok": False,
+                    "error": "http tool-server binds to loopback unless AFB_TRUSTED_TOOL_SERVER_NETWORK is enabled",
+                }
+            )
             return 1
         if config.bearer_token is None:
             emit({"ok": False, "error": f"non-loopback tool-server requires a bearer token in {args.token_env}"})
@@ -604,6 +627,69 @@ def cmd_readiness(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_rl(args: argparse.Namespace) -> int:
+    from asset_factory_blueprint.services.rl_environment import rl_route
+
+    if args.rl_command == "evidence":
+        from asset_factory_blueprint.rl_probe_import import apply_rl_evidence_report
+
+        result = apply_rl_evidence_report(args.project, args.report, args.kind)
+        emit(result)
+        return 0 if result.get("report_status") == "pass" else 1
+    if args.rl_command == "render-env-cfg":
+        from asset_factory_blueprint.rl_render import render_to_directory
+
+        project = Path(args.project).resolve()
+        record = render_to_directory(project / args.manifest, project / args.output)
+        emit(record)
+        return 0 if record["ready"] else 1
+    if args.rl_command == "fidelity":
+        import subprocess
+
+        command = [
+            sys.executable,
+            "-m",
+            "asset_factory_blueprint.rl_collision_fidelity",
+            "--project",
+            args.project,
+            "--manifest",
+            args.manifest,
+            "--output",
+            args.output,
+        ]
+        completed = subprocess.run(command, check=False)
+        return completed.returncode
+    if args.rl_command == "probe":
+        import subprocess
+
+        command = [
+            sys.executable,
+            "-m",
+            "asset_factory_blueprint.rl_runtime_probe",
+            *args.probes,
+            "--project",
+            args.project,
+            "--manifest",
+            args.manifest,
+            "--output",
+            args.output,
+        ]
+        completed = subprocess.run(command, check=False)
+        return completed.returncode
+    result = rl_route({"project": args.project})
+    emit(
+        {
+            "success": result.success,
+            "validation_status": result.validation_status,
+            "error": result.error,
+            "warnings": result.warnings,
+            "artefacts": result.artefacts,
+            "data": result.data,
+        }
+    )
+    return 0 if result.success else 1
+
+
 def cmd_isaac_load(args: argparse.Namespace) -> int:
     emit(apply_isaac_load_report(args.project, args.report))
     return 0
@@ -618,7 +704,9 @@ def cmd_simready(args: argparse.Namespace) -> int:
         return 1
     package_root = usd_path.parent
     if any(path.resolve() == package_root or package_root in path.resolve().parents for path in (output, raw_output)):
-        emit({"status": "blocked", "error": "validator reports must be written outside the immutable package directory"})
+        emit(
+            {"status": "blocked", "error": "validator reports must be written outside the immutable package directory"}
+        )
         return 1
     try:
         environment = OmniAssetValidatorConfig.from_environment()
@@ -931,7 +1019,9 @@ def build_parser() -> argparse.ArgumentParser:
     str_.add_argument("--project-name")
     str_.add_argument("--live", action="store_true")
     str_.add_argument("--max-fix-attempts", type=int, default=None)
-    str_.add_argument("--no-refresh", action="store_true", help="review existing artefacts without rebuilding the workspace")
+    str_.add_argument(
+        "--no-refresh", action="store_true", help="review existing artefacts without rebuilding the workspace"
+    )
     p.set_defaults(func=cmd_stage)
 
     p = sub.add_parser("progress", help="Rebuild project progress artefacts")
@@ -1037,6 +1127,33 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--output", required=True)
     p.set_defaults(func=cmd_readiness)
 
+    p = sub.add_parser("rl", help="RL environment lane operations")
+    rl = p.add_subparsers(dest="rl_command", required=True)
+    rld = rl.add_parser(
+        "design", help="Design the environment contract for a project that passed simready verification"
+    )
+    rld.add_argument("--project", required=True)
+    rle = rl.add_parser("evidence", help="Verify and apply an attested RL probe or collision-fidelity report")
+    rle_sub = rle.add_subparsers(dest="rl_evidence_command", required=True)
+    rlea = rle_sub.add_parser("apply", help="Apply a report produced by scripts/rl")
+    rlea.add_argument("--project", required=True)
+    rlea.add_argument("--report", required=True)
+    rlea.add_argument("--kind", choices=["probe", "fidelity"], default="probe")
+    rlf = rl.add_parser("fidelity", help="Run the affordance-weighted collision fidelity script")
+    rlf.add_argument("--project", required=True)
+    rlf.add_argument("--manifest", default="manifests/rl-environment-manifest.json")
+    rlf.add_argument("--output", default="reports/incoming/rl-collision-fidelity.json")
+    rlp = rl.add_parser("probe", help="Run the contract-bound Isaac Lab acceptance probes")
+    rlp.add_argument("probes", nargs="*", choices=("smoke", "oracle", "reset", "repeat", "gaming"))
+    rlp.add_argument("--project", required=True)
+    rlp.add_argument("--manifest", default="manifests/rl-environment-manifest.json")
+    rlp.add_argument("--output", default="reports/incoming/rl-probe-evidence.json")
+    rlr = rl.add_parser("render-env-cfg", help="Render the manifest to an Isaac Lab configuration package")
+    rlr.add_argument("--project", required=True)
+    rlr.add_argument("--manifest", default="manifests/rl-environment-manifest.json")
+    rlr.add_argument("--output", default="envs")
+    p.set_defaults(func=cmd_rl)
+
     p = sub.add_parser("isaac-load", help="Import trusted Isaac runtime evidence")
     il = p.add_subparsers(dest="isaac_load_command", required=True)
     ila = il.add_parser("apply", help="Verify and apply an Isaac runtime report")
@@ -1088,7 +1205,9 @@ def build_parser() -> argparse.ArgumentParser:
     gd.add_argument("--project", required=True)
     gd.add_argument("--reviewer", required=True)
     gd.add_argument("--decision", choices=["approve", "reject"], required=True)
-    gd.add_argument("--scope", choices=["visualisation", "rigid_body_manipulation", "articulated_training", "redistribution"])
+    gd.add_argument(
+        "--scope", choices=["visualisation", "rigid_body_manipulation", "articulated_training", "redistribution"]
+    )
     gd.add_argument("--expires-at", required=True)
     gd.add_argument("--decided-at")
     gd.add_argument("--note", action="append", default=[])

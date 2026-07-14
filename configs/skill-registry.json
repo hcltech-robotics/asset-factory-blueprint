@@ -223,6 +223,7 @@
       "category": "rl",
       "package": "skills/rl-environment-design-lead",
       "provider_roles": [
+        "planner",
         "validator_judge"
       ],
       "inputs": [
@@ -230,7 +231,10 @@
         "run-request"
       ],
       "outputs": [
-        "rl-report"
+        "rl-environment-manifest",
+        "rl-environment-design-report",
+        "environment-card",
+        "rl-task-fitness-protocol"
       ],
       "enabled": true
     },

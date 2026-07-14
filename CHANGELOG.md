@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added the evidence-bound PhysX pick-task lane for Isaac Lab 2.3.1. It renders the fixed-base, rigid-object contract, runs five runtime probes, measures affordance-weighted collision fidelity and rejects unsupported declarations before artefact creation. Runtime reports bind the task, USD, URDF, package inventory, simulator timing, producer files and regenerated source. Canonical evidence requires a signed importer receipt.
+- Added bibliography rendering to the documentation build. `references.bib` is now the single bibliography for the repository and site. `mkdocs-bibtex` renders citations as footnotes using the vendored Cite Them Right Harvard style, a build hook renders the complete References page, and unknown keys fail the strict build. Custom sidebar admonitions support supplementary notes.
 - Added a mandatory mesh-verification stage between reconstruction and every downstream geometry consumer. The stage combines deterministic topology and integrity gates, full-surface vision review, blind identity checking, checksum-bound canonical promotion and bounded adaptive reconstruction attempts.
 - Added the reproducibility benchmark for five image assets and five USD assets, including per-attempt rejection accounting, exact mesh-invariant comparisons and preserved visual evidence.
 

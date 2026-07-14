@@ -10,6 +10,7 @@ from .nonvisual_materials import physics_nonvisual_materials_propose
 from .physics_articulation import articulation_plan, physics_plan
 from .programme import asset_factory_start, asset_programme_intake
 from .progress import governance_progress_report
+from .rl_environment import rl_route
 from .project import governance_project_create
 from .segmentation import asset_image_segmentation_prior, asset_mesh_condition
 from .source import asset_source_inspect
@@ -18,6 +19,7 @@ from .texturing import material_texture_defaults_validate, material_texture_prom
 from .vlm_review import governance_vlm_review
 
 __all__ = [
+    "rl_route",
     "articulation_plan",
     "asset_factory_start",
     "asset_fix_apply",

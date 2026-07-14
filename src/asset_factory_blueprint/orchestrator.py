@@ -29,7 +29,7 @@ ROLE_BY_STAGE = {
     "physics-articulation": ["physics_reasoner"],
     "nonvisual-materials": ["nonvisual_material_reasoner"],
     "simready-verification": ["validator_judge"],
-    "rl-environment": ["planner"],
+    "rl-environment": ["planner", "validator_judge"],
     "evaluation": ["validator_judge"],
     "infrastructure": ["planner"],
     "governance": ["planner"],

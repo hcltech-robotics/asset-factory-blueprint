@@ -84,6 +84,129 @@
       "required_evidence": [
         "governance-record"
       ]
+    },
+    {
+      "id": "rl-lineage",
+      "type": "rl",
+      "pass_criteria": "every consumed manifest is validated or released and checksums match",
+      "required_evidence": [
+        "simready-asset-manifest",
+        "physics-articulation-manifest",
+        "material-inference-manifest"
+      ]
+    },
+    {
+      "id": "rl-reconciliation",
+      "type": "rl",
+      "pass_criteria": "the requested behaviour has every upstream record the evidence matrix requires",
+      "required_evidence": [
+        "physics-articulation-manifest",
+        "material-inference-manifest"
+      ]
+    },
+    {
+      "id": "rl-backend-binding",
+      "type": "rl",
+      "pass_criteria": "runtime evidence exists for the declared physics backend",
+      "required_evidence": [
+        "isaac-report"
+      ]
+    },
+    {
+      "id": "rl-timestep-binding",
+      "type": "rl",
+      "pass_criteria": "sim_dt and decimation equal the checksum-bound runtime evidence",
+      "required_evidence": [
+        "isaac-report"
+      ]
+    },
+    {
+      "id": "rl-embodiment",
+      "type": "rl",
+      "pass_criteria": "the URDF source declares actuated joints with limits and the request names the end effector, gripper joints, action scale and actuator gains",
+      "required_evidence": [
+        "source-asset-manifest"
+      ]
+    },
+    {
+      "id": "rl-affordance-reachability",
+      "type": "rl",
+      "pass_criteria": "the scripted oracle reaches every used grasp frame within joint limits",
+      "required_evidence": [
+        "rl-probe-evidence"
+      ]
+    },
+    {
+      "id": "rl-collision-fidelity",
+      "type": "rl",
+      "pass_criteria": "visual-to-collision shell distance near contact regions is within the protocol tolerance",
+      "required_evidence": [
+        "rl-collision-fidelity"
+      ]
+    },
+    {
+      "id": "rl-reset-feasibility",
+      "type": "rl",
+      "pass_criteria": "sampled resets settle without interpenetration within the recorded settle criteria",
+      "required_evidence": [
+        "rl-probe-evidence"
+      ]
+    },
+    {
+      "id": "rl-smoke",
+      "type": "rl",
+      "pass_criteria": "zero-action and random-action rollouts complete on the declared backend and timestep",
+      "required_evidence": [
+        "rl-probe-evidence"
+      ]
+    },
+    {
+      "id": "rl-reward-probes",
+      "type": "rl",
+      "pass_criteria": "reward component audit and specification-gaming probes pass",
+      "required_evidence": [
+        "rl-probe-evidence"
+      ]
+    },
+    {
+      "id": "rl-evidence-rule",
+      "type": "rl",
+      "pass_criteria": "no reward or observation term depends on an unvalidated record",
+      "required_evidence": [
+        "rl-environment-manifest"
+      ]
+    },
+    {
+      "id": "rl-randomisation-provenance",
+      "type": "rl",
+      "pass_criteria": "only explicitly selected mass and friction axes are emitted, each with validated provenance",
+      "required_evidence": [
+        "rl-environment-manifest"
+      ]
+    },
+    {
+      "id": "rl-identifiability",
+      "type": "rl",
+      "pass_criteria": "adaptive mode randomises only parameters the policy can identify; others are handled robustly",
+      "required_evidence": [
+        "rl-environment-manifest"
+      ]
+    },
+    {
+      "id": "rl-evaluation-protocol",
+      "type": "rl",
+      "pass_criteria": "the evaluation protocol declares at least five unique seeds, aggregation and no unvalidated variants",
+      "required_evidence": [
+        "rl-environment-manifest"
+      ]
+    },
+    {
+      "id": "rl-environment-card",
+      "type": "rl",
+      "pass_criteria": "the environment card is rendered and checksummed",
+      "required_evidence": [
+        "environment-card"
+      ]
     }
   ]
 }

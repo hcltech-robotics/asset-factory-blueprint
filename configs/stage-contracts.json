@@ -1,5 +1,5 @@
 {
-  "version": "3.0",
+  "version": "4.0",
   "source_kinds": {
     "cad": [".step", ".stp", ".iges", ".igs"],
     "usd": [".usd", ".usda", ".usdc", ".usdz"],
@@ -135,10 +135,28 @@
       "execution_mode": "local"
     },
     "rl-environment": {
-      "consumes": ["simready-candidate-package"],
-      "produces": ["rl-environment-manifest"],
+      "consumes": [
+        "source-asset-manifest",
+        "physics-articulation-manifest",
+        "physics-layer",
+        "material-inference-manifest",
+        "material-evidence",
+        "simready-asset-manifest",
+        "simready-candidate-package",
+        "simready-conformance",
+        "runtime-evidence"
+      ],
+      "produces": [
+        "rl-environment-manifest",
+        "rl-task-fitness-protocol",
+        "environment-card"
+      ],
       "depends_on": ["simready-verification"],
-      "preconditions": ["required Profile and behavioural gates pass"],
+      "preconditions": [
+        "the PhysX package and runtime bindings are checksum-valid",
+        "the pick contract names its embodiment, scene, success and reset semantics",
+        "required Profile and behavioural gates pass"
+      ],
       "resources": {"cpu": 4, "gpu": 1},
       "max_attempts": 3,
       "execution_mode": "local"

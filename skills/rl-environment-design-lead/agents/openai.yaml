@@ -1,4 +1,5 @@
 name: rl-environment-design-lead
-model_role: planner
+model_role: contract_designer
+review_role: evidence_validator
 temperature: 0.2
 max_tokens: 4096

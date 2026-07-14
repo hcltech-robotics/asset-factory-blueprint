@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hcltech-robotics.github.io/asset-factory-blueprint/schemas/v1/rl-collision-fidelity.schema.json",
+  "title": "rl collision fidelity report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "report_identity",
+    "execution_identity",
+    "status",
+    "physics_backend",
+    "usd_sha256",
+    "request_digest",
+    "manifest_sha256",
+    "manifest_path",
+    "usd_path",
+    "contract_sha256",
+    "package_dependency_fingerprint",
+    "runtime",
+    "rendered_files",
+    "tolerance_m",
+    "samples_per_region",
+    "seed",
+    "regions",
+    "errors",
+    "attestation"
+  ],
+  "properties": {
+    "report_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": {"const": "asset-factory.rl-collision-fidelity"},
+        "version": {"type": "string", "pattern": "^[1-9][0-9]*\\.[0-9]+(?:\\.[0-9]+)?$"}
+      }
+    },
+    "execution_identity": {"$ref": "#/$defs/executionIdentity"},
+    "status": {"type": "string", "enum": ["pass", "blocked"]},
+    "physics_backend": {"const": "physx"},
+    "usd_sha256": {"$ref": "#/$defs/sha256"},
+    "request_digest": {"$ref": "#/$defs/requestDigest"},
+    "manifest_sha256": {"$ref": "#/$defs/sha256"},
+    "manifest_path": {"type": "string", "minLength": 1},
+    "usd_path": {"type": "string", "minLength": 1},
+    "contract_sha256": {"$ref": "#/$defs/sha256"},
+    "package_dependency_fingerprint": {"$ref": "#/$defs/packageFingerprint"},
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["physics_backend", "sim_dt", "decimation", "source_report_sha256"],
+      "properties": {
+        "physics_backend": {"const": "physx"},
+        "sim_dt": {"type": "number", "exclusiveMinimum": 0},
+        "decimation": {"type": "integer", "minimum": 1},
+        "source_report_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "rendered_files": {"$ref": "#/$defs/renderedFiles"},
+    "tolerance_m": {"type": "number", "exclusiveMinimum": 0},
+    "samples_per_region": {"type": "integer", "minimum": 1},
+    "seed": {"type": "integer", "minimum": 0},
+    "regions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "centre",
+          "radius_m",
+          "visual_samples",
+          "collision_samples",
+          "visual_to_collision_p95_m",
+          "visual_to_collision_max_m",
+          "collision_to_visual_p95_m",
+          "collision_to_visual_max_m",
+          "shell_distance_p95_m",
+          "status",
+          "reason"
+        ],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "kind": {"type": "string", "enum": ["grasp_point", "articulated_contact"]},
+          "centre": {"type": "array", "items": {"type": "number"}, "minItems": 3, "maxItems": 3},
+          "radius_m": {"type": "number", "exclusiveMinimum": 0},
+          "visual_samples": {"type": "integer", "minimum": 0},
+          "collision_samples": {"type": "integer", "minimum": 0},
+          "visual_to_collision_p95_m": {"type": "number", "minimum": 0},
+          "visual_to_collision_max_m": {"type": "number", "minimum": 0},
+          "collision_to_visual_p95_m": {"type": "number", "minimum": 0},
+          "collision_to_visual_max_m": {"type": "number", "minimum": 0},
+          "shell_distance_p95_m": {"type": "number", "minimum": 0},
+          "status": {"type": "string", "enum": ["pass", "blocked"]},
+          "reason": {"type": "string"}
+        }
+      }
+    },
+    "errors": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "attestation": {"$ref": "#/$defs/attestation"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "pass"}}},
+      "then": {
+        "properties": {
+          "errors": {"maxItems": 0},
+          "regions": {
+            "minItems": 1,
+            "items": {
+              "properties": {
+                "status": {"const": "pass"},
+                "visual_samples": {"minimum": 1},
+                "collision_samples": {"minimum": 1}
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "requestDigest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "packageFingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "executionIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["producer_id", "producer_version", "producer_sha256", "producer_files", "started_at", "completed_at"],
+      "properties": {
+        "producer_id": {"type": "string", "minLength": 1},
+        "producer_version": {"type": "string", "minLength": 1},
+        "producer_sha256": {"$ref": "#/$defs/sha256"},
+        "producer_files": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "sha256"],
+            "properties": {
+              "path": {"type": "string", "minLength": 1},
+              "sha256": {"$ref": "#/$defs/sha256"}
+            }
+          }
+        },
+        "started_at": {"type": "string", "format": "date-time"},
+        "completed_at": {"type": "string", "format": "date-time"},
+        "python_version": {"type": "string"},
+        "platform": {"type": "string"},
+        "architecture": {"type": "string"},
+        "wall_seconds": {"type": "number", "minimum": 0}
+      }
+    },
+    "renderedFiles": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["__init__.py", "rl_env_cfg.py", "custom_mdp.py", "rl_env_cfg.render.json"],
+      "properties": {
+        "__init__.py": {"$ref": "#/$defs/sha256"},
+        "rl_env_cfg.py": {"$ref": "#/$defs/sha256"},
+        "custom_mdp.py": {"$ref": "#/$defs/sha256"},
+        "rl_env_cfg.render.json": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "status", "algorithm", "key_id", "payload_digest", "signature"],
+      "properties": {
+        "schema_version": {"type": "string", "minLength": 1},
+        "status": {"type": "string", "enum": ["signed", "unsigned"]},
+        "algorithm": {"type": "string"},
+        "key_id": {"type": "string"},
+        "payload_digest": {"type": "string"},
+        "signature": {"type": "string"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "signed"}}},
+          "then": {
+            "properties": {
+              "algorithm": {"const": "hmac-sha256"},
+              "key_id": {"type": "string", "minLength": 1},
+              "payload_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+              "signature": {"type": "string", "pattern": "^hmac-sha256:[0-9a-f]{64}$"}
+            }
+          }
+        }
+      ]
+    }
+  }
+}

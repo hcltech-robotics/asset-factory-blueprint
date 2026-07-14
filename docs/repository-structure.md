@@ -8,12 +8,12 @@ The repository separates documentation, schemas, runtime code, skills, configs, 
 | --- | --- |
 | `README.md` | Entry point and command map. |
 | `docs/` | Concept docs at the root, stage docs under `pipeline/`, cross-cutting docs under `platform/`, downstream docs under `extensions/` and generated diagrams under `assets/`. |
-| `schemas/` | 28 versioned JSON Schema contracts for durable files. |
+| `schemas/` | 31 versioned JSON Schema contracts for durable files. |
 | `configs/` | Provider, workflow, validation, skill and backend policy. |
 | `src/asset_factory_blueprint/` | Runtime package. |
 | `library/` | Curated grounding indexes (material exemplars, physical property dictionary, asset pack links, agent knowledge corpus); `library/local/` and `library/downloads/` are gitignored work roots for operator indexes and cached downloads. |
 | `skills/` | Skill packages, each with SKILL.md, skill-card.md, references and an agent config. |
-| `scripts/` | Stage scripts under `reconstruction/`, `segmentation/`, `texturing/` and `simready/`, plus `generate_diagrams.py` and the `afb` launchers. |
+| `scripts/` | Stage scripts under `reconstruction/`, `segmentation/`, `texturing/` and `simready/`, thin RL command wrappers under `rl/`, the documentation bibliography hook under `docs/`, plus `generate_diagrams.py` and the `afb` launchers. |
 | `deploy/` | Deployment manifests for compose, cluster and batch lanes. |
 | `examples/` | Sample run requests and manifests. |
 | `projects/` | Durable project workspaces (gitignored work root). |

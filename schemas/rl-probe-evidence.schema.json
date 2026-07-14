@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hcltech-robotics.github.io/asset-factory-blueprint/schemas/v1/rl-probe-evidence.schema.json",
+  "title": "rl probe evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "report_identity",
+    "protocol_identity",
+    "execution_identity",
+    "status",
+    "physics_backend",
+    "usd_sha256",
+    "request_digest",
+    "manifest_sha256",
+    "manifest_path",
+    "usd_path",
+    "contract_sha256",
+    "package_dependency_fingerprint",
+    "runtime",
+    "rendered_files",
+    "probes",
+    "errors",
+    "attestation"
+  ],
+  "properties": {
+    "report_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": {"const": "asset-factory.rl-probe-evidence"},
+        "version": {"type": "string", "pattern": "^[1-9][0-9]*\\.[0-9]+(?:\\.[0-9]+)?$"}
+      }
+    },
+    "protocol_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": {"const": "asset-factory.rl-probe-protocol"},
+        "version": {"type": "string", "pattern": "^[1-9][0-9]*\\.[0-9]+(?:\\.[0-9]+)?$"}
+      }
+    },
+    "execution_identity": {"$ref": "#/$defs/executionIdentity"},
+    "status": {"type": "string", "enum": ["pass", "blocked"]},
+    "physics_backend": {"const": "physx"},
+    "usd_sha256": {"$ref": "#/$defs/sha256"},
+    "request_digest": {"$ref": "#/$defs/requestDigest"},
+    "manifest_sha256": {"$ref": "#/$defs/sha256"},
+    "manifest_path": {"type": "string", "minLength": 1},
+    "usd_path": {"type": "string", "minLength": 1},
+    "contract_sha256": {"$ref": "#/$defs/sha256"},
+    "package_dependency_fingerprint": {"$ref": "#/$defs/packageFingerprint"},
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["isaac_lab_available", "isaac_lab_version", "physics_backend", "sim_dt", "decimation", "source_report_sha256"],
+      "properties": {
+        "isaac_lab_available": {"type": "boolean"},
+        "isaac_lab_version": {"type": "string"},
+        "physics_backend": {"const": "physx"},
+        "sim_dt": {"type": "number", "exclusiveMinimum": 0},
+        "decimation": {"type": "integer", "minimum": 1},
+        "source_report_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "rendered_files": {"$ref": "#/$defs/renderedFiles"},
+    "probes": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["probe", "status", "metrics"],
+        "properties": {
+          "probe": {"type": "string", "enum": ["smoke", "oracle", "reset", "repeat", "gaming"]},
+          "status": {"type": "string", "enum": ["pass", "blocked"]},
+          "reason": {"type": "string"},
+          "metrics": {"type": "object", "minProperties": 1, "additionalProperties": true}
+        }
+      }
+    },
+    "errors": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "attestation": {"$ref": "#/$defs/attestation"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "pass"}}},
+      "then": {
+        "properties": {
+          "runtime": {"properties": {"isaac_lab_available": {"const": true}}},
+          "errors": {"maxItems": 0},
+          "probes": {
+            "minItems": 5,
+            "maxItems": 5,
+            "items": {"properties": {"status": {"const": "pass"}}},
+            "contains": {"properties": {"probe": {"const": "smoke"}}, "required": ["probe"]},
+            "minContains": 1,
+            "maxContains": 1
+          }
+        },
+        "allOf": [
+          {"properties": {"runtime": {"properties": {"isaac_lab_version": {"const": "2.3.1"}}}}},
+          {"properties": {"probes": {"contains": {"properties": {"probe": {"const": "oracle"}}, "required": ["probe"]}, "minContains": 1, "maxContains": 1}}},
+          {"properties": {"probes": {"contains": {"properties": {"probe": {"const": "reset"}}, "required": ["probe"]}, "minContains": 1, "maxContains": 1}}},
+          {"properties": {"probes": {"contains": {"properties": {"probe": {"const": "repeat"}}, "required": ["probe"]}, "minContains": 1, "maxContains": 1}}},
+          {"properties": {"probes": {"contains": {"properties": {"probe": {"const": "gaming"}}, "required": ["probe"]}, "minContains": 1, "maxContains": 1}}}
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "requestDigest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "packageFingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "executionIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["producer_id", "producer_version", "producer_sha256", "producer_files", "started_at", "completed_at"],
+      "properties": {
+        "producer_id": {"type": "string", "minLength": 1},
+        "producer_version": {"type": "string", "minLength": 1},
+        "producer_sha256": {"$ref": "#/$defs/sha256"},
+        "producer_files": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "sha256"],
+            "properties": {
+              "path": {"type": "string", "minLength": 1},
+              "sha256": {"$ref": "#/$defs/sha256"}
+            }
+          }
+        },
+        "started_at": {"type": "string", "format": "date-time"},
+        "completed_at": {"type": "string", "format": "date-time"},
+        "python_version": {"type": "string"},
+        "platform": {"type": "string"},
+        "architecture": {"type": "string"},
+        "wall_seconds": {"type": "number", "minimum": 0}
+      }
+    },
+    "renderedFiles": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["__init__.py", "rl_env_cfg.py", "custom_mdp.py", "rl_env_cfg.render.json"],
+      "properties": {
+        "__init__.py": {"$ref": "#/$defs/sha256"},
+        "rl_env_cfg.py": {"$ref": "#/$defs/sha256"},
+        "custom_mdp.py": {"$ref": "#/$defs/sha256"},
+        "rl_env_cfg.render.json": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "status", "algorithm", "key_id", "payload_digest", "signature"],
+      "properties": {
+        "schema_version": {"type": "string", "minLength": 1},
+        "status": {"type": "string", "enum": ["signed", "unsigned"]},
+        "algorithm": {"type": "string"},
+        "key_id": {"type": "string"},
+        "payload_digest": {"type": "string"},
+        "signature": {"type": "string"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "signed"}}},
+          "then": {
+            "properties": {
+              "algorithm": {"const": "hmac-sha256"},
+              "key_id": {"type": "string", "minLength": 1},
+              "payload_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+              "signature": {"type": "string", "pattern": "^hmac-sha256:[0-9a-f]{64}$"}
+            }
+          }
+        }
+      ]
+    }
+  }
+}

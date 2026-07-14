@@ -46,6 +46,7 @@ dev = [
   "ruff>=0.6,<1"
 ]
 docs = [
+  "mkdocs-bibtex>=4.4,<5",
   "mkdocs-material>=9.7,<10"
 ]
 mesh = [

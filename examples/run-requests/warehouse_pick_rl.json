@@ -1,0 +1,144 @@
+{
+  "id": "warehouse_pick_rl",
+  "version": "1.0",
+  "objective": "Create a SimReady warehouse bin asset package and an Isaac Lab pick environment contract bound to its evidence.",
+  "sources": [
+    "examples/sources/bin.usd",
+    "examples/sources/robots/two_link_arm.urdf"
+  ],
+  "requested_outputs": [
+    "simready",
+    "texture",
+    "rl"
+  ],
+  "constraints": {
+    "review_required": true,
+    "target_simulator": "isaac_sim",
+    "rl": {
+      "behaviour": "pick",
+      "success_definition": "bin lifted 0.10 m above the support surface and held for 1.0 s",
+      "success": {
+        "type": "object_height_above_support",
+        "height_m": 0.1,
+        "hold_seconds": 1.0
+      },
+      "embodiment": {
+        "source": "examples/sources/robots/two_link_arm.urdf",
+        "end_effector_body": "gripper",
+        "fixed_base": true,
+        "gripper_joints": ["left_finger_joint", "right_finger_joint"],
+        "maximum_gripper_aperture_m": 0.14,
+        "gripper_open_positions": {
+          "left_finger_joint": 0.04,
+          "right_finger_joint": 0.04
+        },
+        "gripper_closed_positions": {
+          "left_finger_joint": 0.0,
+          "right_finger_joint": 0.0
+        },
+        "action_scale": 1.0,
+        "actuator": {
+          "stiffness": 400.0,
+          "damping": 40.0
+        }
+      },
+      "adaptation_mode": "robust",
+      "grasp_confidence_threshold": 0.5,
+      "dominance_bound": 0.7,
+      "runtime": {
+        "physics_backend": "physx",
+        "isaac_lab_version": "2.3.1",
+        "decimation": 4,
+        "episode_length_s": 8.0,
+        "num_envs": 1024,
+        "seeds": [0, 1, 2, 3, 4]
+      },
+      "scene": {
+        "object_initial_position": [0.45, 0.0, 0.0],
+        "support_height_m": 0.0,
+        "env_spacing": 2.5
+      },
+      "observations": {
+        "policy": [
+          {
+            "term": "object_position",
+            "source": "simulator",
+            "manifest_path": "simready-asset-manifest:usd_root_path"
+          }
+        ],
+        "critic": []
+      },
+      "sensor_contract": [],
+      "rewards": [
+        {
+          "component": "reach",
+          "functional_form": "1 - tanh(distance_to_grasp_frame / 0.1)",
+          "weight": 1.0,
+          "units": "dimensionless",
+          "shaping_class": "task",
+          "depends_on": ["physics-articulation-manifest:affordances.grasp_points"]
+        },
+        {
+          "component": "lift",
+          "functional_form": "clip(object_height - support_height, 0, 0.1) / 0.1",
+          "weight": 5.0,
+          "units": "dimensionless",
+          "shaping_class": "task",
+          "depends_on": ["physics-articulation-manifest:mass_properties[0]"]
+        },
+        {
+          "component": "action_rate",
+          "functional_form": "-sum(square(action_t - action_t_minus_1))",
+          "weight": 0.01,
+          "units": "dimensionless",
+          "shaping_class": "penalty",
+          "depends_on": []
+        }
+      ],
+      "randomisation": {
+        "axes": ["mass", "friction"],
+        "variants": []
+      },
+      "resets": {
+        "robot_joint_offset_rad": [-0.05, 0.05],
+        "object_pose": {
+          "x_m": [-0.05, 0.05],
+          "y_m": [-0.05, 0.05],
+          "yaw_rad": [-0.52, 0.52]
+        }
+      },
+      "fidelity": {
+        "collision_shell_tolerance_m": 0.002,
+        "region_radius_m": 0.05,
+        "samples_per_region": 256,
+        "seed": 0
+      },
+      "probes": {
+        "smoke_steps": 200,
+        "repeat_steps": 100,
+        "gaming_steps": 180,
+        "reset_seeds": [200, 201, 202, 203, 204, 205, 206, 207],
+        "penetration_tolerance_m": 0.002,
+        "allowed_gaming_fraction": 0.3,
+        "grasp_position_tolerance_m": 0.02,
+        "grasp_orientation_tolerance_rad": 0.17453292519943295,
+        "oracle_phase_steps": {
+          "approach": 60,
+          "descend": 40,
+          "close": 20,
+          "lift": 60
+        }
+      },
+      "curriculum": {"tier": "none"},
+      "safety": {
+        "workspace_bounds": {"x": [-0.6, 0.6], "y": [-0.6, 0.6], "z": [0.0, 0.8]},
+        "contact_force_ceiling_n": 40.0
+      },
+      "evaluation": {
+        "seeds": [100, 101, 102, 103, 104],
+        "held_out_variants": [],
+        "proxy_audit_variants": []
+      }
+    }
+  }
+}

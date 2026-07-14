@@ -16,9 +16,22 @@ from asset_factory_blueprint.utils.ids import content_id
 FITNESS_TESTS_BY_SCOPE = {
     "visualisation": ("visual_render_acceptance",),
     "rigid_body_manipulation": ("manipulation_contact_fidelity",),
-    "articulated_training": ("joint_task_fidelity",),
+    "articulated_training": (
+        "joint_task_fidelity",
+        "affordance_reachability",
+        "collision_fidelity",
+        "reset_feasibility",
+        "rollout_repeatability",
+    ),
     "redistribution": ("consumer_install_reproduction",),
 }
+RL_RIGID_BODY_TESTS = (
+    "joint_task_fidelity",
+    "affordance_reachability",
+    "collision_fidelity",
+    "reset_feasibility",
+    "rollout_repeatability",
+)
 TASK_FITNESS_FORMAT_VERSION = "2.0.0"
 TASK_FITNESS_PROTOCOL_SCHEMA_VERSION = "1.0.0"
 
@@ -107,15 +120,22 @@ def _finite_number(value: Any) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(float(value))
 
 
-def _release_scope(request: RunRequest) -> str:
-    default_scope = (
-        "articulated_training"
-        if any("rl" in item.lower() for item in request.requested_outputs)
-        else "rigid_body_manipulation"
-        if any("simready" in item.lower() for item in request.requested_outputs)
-        else "visualisation"
-    )
-    return str(request.constraints.get("release_scope") or default_scope)
+def default_release_scope(request: RunRequest) -> str:
+    outputs = {str(item).strip().lower() for item in request.requested_outputs}
+    if any("rl" in item or "simready" in item for item in outputs):
+        return "rigid_body_manipulation"
+    return "visualisation"
+
+
+def release_scope_for_request(request: RunRequest) -> str:
+    return str(request.constraints.get("release_scope") or default_release_scope(request))
+
+
+def fitness_tests_for_request(request: RunRequest, scope: str) -> tuple[str, ...]:
+    outputs = {str(item).strip().lower() for item in request.requested_outputs}
+    if scope == "rigid_body_manipulation" and any("rl" in item for item in outputs):
+        return RL_RIGID_BODY_TESTS
+    return FITNESS_TESTS_BY_SCOPE.get(scope, ())
 
 
 def asset_package_fingerprint(asset_package: dict[str, Any], asset_validation: dict[str, Any]) -> str:
@@ -154,8 +174,8 @@ def evaluate_task_fitness(
     asset_validation: dict[str, Any],
 ) -> dict[str, Any]:
     root = Path(project_dir).resolve(strict=True)
-    scope = _release_scope(request)
-    required_test_ids = FITNESS_TESTS_BY_SCOPE.get(scope, ())
+    scope = release_scope_for_request(request)
+    required_test_ids = fitness_tests_for_request(request, scope)
     if not required_test_ids:
         return _blocked(scope, (), [f"unsupported fitness-for-use scope: {scope}"])
     report_path = root / "reports" / "task-fitness-evidence.json"
@@ -313,13 +333,19 @@ def evaluate_task_fitness(
                 continue
             derived_status = "pass" if expected_min - tolerance <= value <= expected_max + tolerance else "blocked"
             if metric.get("status") != derived_status:
-                reasons.append(f"task fitness metric status is inconsistent with the approved protocol: {test_id}/{metric_id}")
+                reasons.append(
+                    f"task fitness metric status is inconsistent with the approved protocol: {test_id}/{metric_id}"
+                )
             if derived_status != "pass":
                 reasons.append(f"task fitness metric did not meet the approved protocol: {test_id}/{metric_id}")
                 metrics_pass = False
-        derived_test_status = "pass" if metrics_pass and evidence_ids and all(
-            evidence_id in materialised_evidence for evidence_id in evidence_ids
-        ) else "blocked"
+        derived_test_status = (
+            "pass"
+            if metrics_pass
+            and evidence_ids
+            and all(evidence_id in materialised_evidence for evidence_id in evidence_ids)
+            else "blocked"
+        )
         if test.get("status") != derived_test_status:
             reasons.append(f"task fitness test status is inconsistent with its evidence: {test_id}")
         if derived_test_status != "pass":
@@ -349,8 +375,8 @@ def build_task_fitness_template(project_dir: str | Path) -> dict[str, Any]:
     asset_validation = json.loads(asset_validation_path.read_text(encoding="utf-8"))
     asset_validation["report_sha256"] = sha256_file(asset_validation_path)
     asset_package = stage_report.get("generated_asset") or {}
-    scope = _release_scope(request)
-    test_ids = FITNESS_TESTS_BY_SCOPE.get(scope)
+    scope = release_scope_for_request(request)
+    test_ids = fitness_tests_for_request(request, scope)
     if not test_ids:
         raise ValueError(f"unsupported fitness-for-use scope: {scope}")
     profile = asset_validation.get("simready_profile") or {}
@@ -415,7 +441,9 @@ def build_task_fitness_template(project_dir: str | Path) -> dict[str, Any]:
     payload = {"report_id": content_id("task_fitness", core, digest_length=32), **core}
     issues = validate_payload("task-fitness-evidence", payload)
     if issues:
-        raise RuntimeError("generated task-fitness template is invalid: " + "; ".join(issue.render() for issue in issues))
+        raise RuntimeError(
+            "generated task-fitness template is invalid: " + "; ".join(issue.render() for issue in issues)
+        )
     return payload
 
 

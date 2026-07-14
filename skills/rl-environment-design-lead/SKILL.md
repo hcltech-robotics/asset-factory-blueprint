@@ -1,7 +1,7 @@
 ---
 name: rl-environment-design-lead
-description: Design Isaac Lab environment contracts around validated assets.
-version: 0.1.0
+description: Configure the supported Isaac Lab pick task from validated assets and enforce its signed execution boundary.
+version: 0.3.0
 license: MIT
 tools:
   - rl_route
@@ -9,155 +9,90 @@ metadata:
   tags:
     - asset-factory
     - rl
+    - isaac-lab
+    - task-design
   domain: rl
   languages:
     - python
 ---
-# Rl-environment-design-lead
+# RL environment design lead
 
 ## Purpose
-Design Isaac Lab environment contracts around validated assets.
-The skill writes explicit proposal, evidence, report and handoff artefacts.
-It uses provider output only as proposal material.
-Promotion requires schema checks, evidence checks and review gates.
 
-## When to use
-Use this skill when the workflow stage matches the declared domain.
-Use it when a project workspace exists or when the orchestrator is creating one.
-Use it when the run request can be represented as structured manifests.
-Use it when all source paths are inside approved project, cache or library roots.
+Apply the repository's implemented Isaac Lab 2.3.1 PhysX pick lane to a validated asset package. The task object is rigid and bottom-origin. Its fixed-base robot has at least six angular arm joints and declared prismatic gripper joints with explicit open and closed positions and a maximum aperture.
 
-## When not to use
-Do not use it for direct mutation of original source assets.
-Do not use it when rights, safety or retention status is unknown.
-Do not use it to promote model output without validation.
-Do not use it when required provider credentials are absent and the action is not dry-run safe.
+The skill writes design records. It does not train a policy or claim sensor deployment.
 
-## Prerequisites
-Project workspace path.
-Run identifier.
-Manifest directory.
-Evidence directory.
-Report directory.
-Provider resolver.
-Validation gate list.
+## Entry conditions
 
-## Required inputs
-Run request or stage manifest.
-Source asset references where the stage consumes source data.
-Prior stage manifests where the stage depends on previous evidence.
-Provider role assignment.
-Review policy.
-W&B policy.
+Start after the SimReady package has a passing runtime record and its physics and material manifests carry accepted mass, friction and asset-local grasp evidence.
 
-## Preflight
-Check that the project directory exists.
-Check that manifests are valid JSON.
-Check that source paths are approved.
-Check that output directories are writable.
-Check that provider role assignment exists.
-Check that raw keys are not present in checked-in files.
-Check that dry-run status is explicit.
-Check that blocked dependencies are reported before mutation.
-Check whether any pending dependency needs user input or approval. When it does, ask the user directly for the required input or return a blocked ToolResult that names the missing input and approval target.
+The run request must provide:
 
-## Operating workflow
-1. Load the project state.
-2. Load the run request.
-3. Load prior manifests.
-4. Build the stage input contract.
-5. Resolve provider roles.
-6. Create candidate proposal requests.
-7. Write proposal artefacts.
-8. Run deterministic schema checks.
-9. Run domain validation checks.
-10. Write evidence records.
-11. Write a stage report.
-12. Return ToolResult with validation_status.
-13. Stop on unapproved destructive action.
-14. Hand off to the next declared skill.
+- behaviour `pick` and a structured lift-and-hold success condition;
+- a project-local URDF named in the request sources;
+- the end-effector body, fixed-base flag, gripper joints, maximum aperture, open and closed joint-position maps, action scale and actuator gains;
+- a zero-height support surface and a bottom-origin object position;
+- exact reward forms, reset ranges, safety limits and probe parameters;
+- PhysX, Isaac Lab 2.3.1, timing, environment count and unique seeds; and
+- at least five unique evaluation seeds.
 
-## Provider requirements
-Provider names come from configs/provider-policy.json.
-Model names come from environment variables or policy defaults.
-Provider traces record provider name, role, model and prompt checksum.
-Provider traces never record bearer tokens.
-A provider without required capability blocks the stage.
-A failed provider call returns retryability and stage impact.
+Reject other behaviours, articulated task objects, floating-base embodiments, fewer than six arm joints, non-prismatic gripper joints, camera observations, sensor contracts, variants, curricula, unsupported reward forms and unsupported randomisation axes.
 
-## Output contract
-ToolResult.success states whether the tool completed its contract.
-ToolResult.data contains structured output only.
-ToolResult.error contains actionable failure text when success is false.
-ToolResult.warnings lists non-blocking issues.
-ToolResult.artefacts lists file paths and checksums.
-ToolResult.proposals lists candidate records that need validation.
-ToolResult.validation_status is proposal, validated, review_required, blocked or not_validated.
+## Evidence checks
 
-## Verification gates
-Schema validity.
-Source lineage.
-Units and scale where applicable.
-Evidence coverage.
-Provider trace coverage.
-Layer ownership.
-Review requirement.
-W&B plan status.
-Checksum presence.
-Promotion decision.
+Verify the run-request digest and upstream checksums before design. Resolve the URDF through the source manifest, then parse its links, joint types, limits, effort ceilings and velocity ceilings. A named body or joint that is absent from the URDF blocks the embodiment.
 
-## Stop conditions
-Missing required manifest.
-Missing source evidence.
-Invalid JSON schema.
-Unknown write layer.
-Unsafe source path.
-Provider role cannot satisfy capability.
-Required runtime unavailable.
-Human review required before mutation.
-Pending user input or approval is required and has not been requested or explained.
-Rights or retention status blocks release.
+Use accepted grasp points only. Each point needs a stable ID, an asset-local seven-value pose, `wxyz` unit quaternion, unit approach vector, positive gripper width, evidence IDs and accepted status. A width above the embodiment's maximum aperture blocks the lane. Each declared gripper joint needs finite open and closed positions within its URDF limits. The two maps name exactly the declared gripper joints and must differ.
 
-## W&B logging expectations
-Record run id.
-Record stage id.
-Record provider role and model id.
-Record artefact checksums.
-Record validation status.
-Record blocked dependency reasons.
-Do not record raw secrets.
-Do not record proprietary source text unless retention policy allows it.
+Bind the environment to the composed USD checksum, package inventory fingerprint, runtime report checksum, robot checksum, backend, `sim_dt`, decimation and Isaac Lab version. Do not infer a missing value.
 
-## Failure modes
-Input manifest is missing required fields.
-Provider endpoint is unavailable.
-Provider returns malformed proposal data.
-Evidence is too weak for promotion.
-Layer ownership is ambiguous.
-Runtime dependency is absent.
-Output path leaves the project boundary.
-Review gate is not satisfied.
+## Environment contract
 
-## Handoff rules
-Write handoff summary into the report directory.
-Include upstream manifest ids.
-Include downstream required manifests.
-Include blocked dependencies.
-Include reviewer actions.
-Include any pending user input or approval request with the exact missing decision.
-Include artefact checksums.
-Include next skill name.
-Do not mutate downstream layers directly.
+The policy and critic groups may use only the supported simulator-state and proprioceptive terms. `object_position` and `object_velocity` make the contract state-based; they do not establish a perception or sim-to-real path.
 
-## Eval coverage
-Benchmark and eval payloads for this skill live in the asset-factory-verification repository under skill-checks/rl-environment-design-lead.
-Run them from that repository against a blueprint checkout.
-Eval cases cover the rl environment design contract path with structured output and explicit validation status.
+The action manager contains an ordered arm joint-position term and one binary gripper term. The gripper term carries the declared open and closed position maps. Arm reset offsets apply only to revolute and continuous joints. Gripper joints reset with zero offset from their declared open initial positions.
+
+The reward manager contains exactly:
+
+```text
+reach       = 1 - tanh(distance_to_grasp_frame / 0.1)
+lift        = clip(object_height - support_height, 0, 0.1) / 0.1
+action_rate = -sum(square(action_t - action_t_minus_1))
+```
+
+Mass and friction are the only supported randomisation axes. Their intervals come from accepted upstream evidence. The only supported curriculum tier is `none`.
+
+## Runtime acceptance
+
+Render to `envs/`. Runtime producers regenerate the expected source from the current manifest and require byte-for-byte equality before execution.
+
+The probe report passes only when all five probes pass:
+
+- smoke: finite zero-action and random-action rollouts;
+- oracle: every accepted grasp is reachable and successful in every environment, with no joint-limit violation;
+- reset: every declared reset settles without early termination, excessive PhysX penetration or excessive speed;
+- repeat: terminal transitions, trajectories and returns repeat within the declared tolerances; and
+- gaming: all four canonical patterns run for the complete scripted-oracle horizon and stay within the per-environment oracle-return allowance.
+
+The oracle also requires finite observed reward components and the recorded component-dominance bound.
+
+Collision fidelity uses separate render-purpose visual meshes and proxy-purpose collision meshes in the composed USD. It measures the exact declared sample count in asset-local metres around every accepted grasp.
+
+## Import boundary
+
+Probe and fidelity producers write only under `reports/incoming/`. Probe reports use only `AFB_RL_PROBE_ATTESTATION_SECRET`; fidelity reports use only `AFB_RL_FIDELITY_ATTESTATION_SECRET`. Import verifies the schema, report-role signature, task protocol, materialised project bindings, regenerated environment source and administrator-pinned producer bundle. The importer signs the receipt with the independent `AFB_RL_IMPORT_ATTESTATION_SECRET`, writes the canonical report and receipt, then refreshes the environment manifest. The upstream Isaac load-evidence key is not accepted for any RL report or receipt.
+
+Canonical reports without valid receipts do not satisfy a gate.
+
+## Outputs
+
+The lane writes `manifests/rl-environment-manifest.json`, `reports/rl-environment-design-report.json`, `reports/rl-task-fitness-protocol.json` with scope `rigid_body_manipulation`, and `reports/environment-card.md`. Rendering adds `envs/`. Imports add the canonical probe and fidelity reports with signed receipts.
+
+The environment remains blocked while deterministic inputs or runtime evidence are missing. Once those gates pass, its status is `review_required`; human review remains distinct from runtime acceptance.
 
 ## References
-See references/operating-playbook.md.
-See references/output-contract.md.
 
-## Final state
-A completed invocation leaves manifest, evidence, report and checksum artefacts in the project workspace.
-Release status remains blocked until governance and validation gates pass.
+- [Environment manifest shape](references/environment-manifest-shape.md)
+- [Output contract](references/output-contract.md)
+- [RL environment documentation](../../docs/extensions/rl-environment.md)

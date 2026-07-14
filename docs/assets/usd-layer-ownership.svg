@@ -4,35 +4,34 @@
   <defs>
     <style>
       .bg { fill: transparent; }
-      .box { fill: #0a100c; stroke: #3d4a42; stroke-width: 2; }
-      .boxHot { fill: #0b1608; stroke: #76b900; stroke-width: 2.3; }
-      .boxAccent { fill: #160929; stroke: #5f1ebe; stroke-width: 2.3; }
-      .inner { fill: #0d130f; stroke: #7d8780; stroke-width: 1.9; }
-      .innerHot { fill: #0d1809; stroke: #76b900; stroke-width: 1.9; }
-      .innerAccent { fill: #1b0c31; stroke: #5f1ebe; stroke-width: 1.9; }
-      .label { fill: #edf3ef; font-family: Aptos, Helvetica, sans-serif; font-size: 20px; font-weight: 680; }
-      .small { fill: #c6cec8; font-family: Aptos, Helvetica, sans-serif; font-size: 13px; font-weight: 620; }
-      .line { stroke: #e6ece8; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
-      .greenLine { stroke: #76b900; stroke-width: 2.4; fill: none; marker-end: url(#arrowGreen); }
-      .accentLine { stroke: #5f1ebe; stroke-width: 2.4; fill: none; marker-end: url(#arrowAccent); }
+      .box { fill: #222229; stroke: #3b3e49; stroke-width: 2; }
+      .boxHot { fill: #292931; stroke: #3c91ff; stroke-width: 2.3; }
+      .inner { fill: #2f3039; stroke: #526476; stroke-width: 1.9; }
+      .innerHot { fill: #292931; stroke: #3c91ff; stroke-width: 1.9; }
+      .innerAccent { fill: #2f3039; stroke: #8c69f0; stroke-width: 1.9; }
+      .label { fill: #f0f2f8; font-family: Aptos, Helvetica, sans-serif; font-size: 20px; font-weight: 680; }
+      .small { fill: #c8d2dd; font-family: Aptos, Helvetica, sans-serif; font-size: 13px; font-weight: 620; }
+      .line { stroke: #4bc3af; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+      .primaryLine { stroke: #3c91ff; stroke-width: 2.4; fill: none; marker-end: url(#arrowPrimary); }
+      .accentLine { stroke: #8c69f0; stroke-width: 2.4; fill: none; marker-end: url(#arrowAccent); }
     </style>
     <marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-      <path d="M 0 1 L 8 4 L 0 7 z" fill="#e6ece8"/>
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#4bc3af"/>
     </marker>
-    <marker id="arrowGreen" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-      <path d="M 0 1 L 8 4 L 0 7 z" fill="#76b900"/>
+    <marker id="arrowPrimary" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#3c91ff"/>
     </marker>
     <marker id="arrowAccent" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-      <path d="M 0 1 L 8 4 L 0 7 z" fill="#5f1ebe"/>
+      <path d="M 0 1 L 8 4 L 0 7 z" fill="#8c69f0"/>
     </marker>
   </defs>
-  <rect class="boxAccent" x="500" y="35" width="360" height="130" rx="8"/>
+  <rect class="boxHot" x="500" y="35" width="360" height="130" rx="8"/>
   <text class="label" x="680.0" y="77" text-anchor="middle">&lt;asset-id&gt;.usda</text>
   <rect class="innerAccent" x="522" y="99" width="316" height="21" rx="4"/>
   <text class="small" x="680.0" y="114.0" text-anchor="middle" style="font-size:13px">composed root</text>
   <rect class="inner" x="522" y="128" width="316" height="21" rx="4"/>
   <text class="small" x="680.0" y="142.5" text-anchor="middle" style="font-size:12px">owned layer refs</text>
-  <path d="M680 165 L680 205 L105 205 L1260 205" style="stroke:#5f1ebe;stroke-width:2.2;fill:none"/>
+  <path d="M680 165 L680 205 L105 205 L1260 205" style="stroke:#8c69f0;stroke-width:2.2;fill:none"/>
   <rect class="box" x="30" y="235" width="150" height="230" rx="8"/>
   <text class="label" x="105.0" y="277" text-anchor="middle" style="font-size:16px">geo.usda</text>
   <rect class="inner" x="52" y="334" width="106" height="34" rx="4"/>
@@ -40,7 +39,7 @@
   <rect class="inner" x="52" y="380" width="106" height="34" rx="4"/>
   <text class="small" x="105.0" y="401.5" text-anchor="middle" style="font-size:13px">reconstruction</text>
   <path class="line" d="M105 205 L105 231"/>
-  <circle cx="105" cy="205" r="4" fill="#e6ece8"/>
+  <circle cx="105" cy="205" r="4" fill="#4bc3af"/>
   <rect class="box" x="195" y="235" width="150" height="230" rx="8"/>
   <text class="label" x="270.0" y="277" text-anchor="middle" style="font-size:16px">mtl.usda</text>
   <rect class="inner" x="217" y="334" width="106" height="34" rx="4"/>
@@ -48,7 +47,7 @@
   <rect class="inner" x="217" y="380" width="106" height="34" rx="4"/>
   <text class="small" x="270.0" y="401.0" text-anchor="middle" style="font-size:12px">material stages</text>
   <path class="line" d="M270 205 L270 231"/>
-  <circle cx="270" cy="205" r="4" fill="#e6ece8"/>
+  <circle cx="270" cy="205" r="4" fill="#4bc3af"/>
   <rect class="box" x="360" y="235" width="150" height="230" rx="8"/>
   <text class="label" x="435.0" y="277" text-anchor="middle" style="font-size:16px">phy.usda</text>
   <rect class="inner" x="382" y="334" width="106" height="34" rx="4"/>
@@ -56,7 +55,7 @@
   <rect class="inner" x="382" y="380" width="106" height="34" rx="4"/>
   <text class="small" x="435.0" y="401.5" text-anchor="middle" style="font-size:13px">physics</text>
   <path class="line" d="M435 205 L435 231"/>
-  <circle cx="435" cy="205" r="4" fill="#e6ece8"/>
+  <circle cx="435" cy="205" r="4" fill="#4bc3af"/>
   <rect class="box" x="525" y="235" width="150" height="230" rx="8"/>
   <text class="label" x="600.0" y="277" text-anchor="middle" style="font-size:16px">art.usda</text>
   <rect class="inner" x="547" y="334" width="106" height="34" rx="4"/>
@@ -64,7 +63,7 @@
   <rect class="inner" x="547" y="380" width="106" height="34" rx="4"/>
   <text class="small" x="600.0" y="401.5" text-anchor="middle" style="font-size:13px">physics</text>
   <path class="line" d="M600 205 L600 231"/>
-  <circle cx="600" cy="205" r="4" fill="#e6ece8"/>
+  <circle cx="600" cy="205" r="4" fill="#4bc3af"/>
   <rect class="box" x="690" y="235" width="150" height="230" rx="8"/>
   <text class="label" x="765.0" y="277" text-anchor="middle" style="font-size:16px">sem.usda</text>
   <rect class="inner" x="712" y="334" width="106" height="34" rx="4"/>
@@ -72,7 +71,7 @@
   <rect class="inner" x="712" y="380" width="106" height="34" rx="4"/>
   <text class="small" x="765.0" y="401.5" text-anchor="middle" style="font-size:13px">segmentation</text>
   <path class="line" d="M765 205 L765 231"/>
-  <circle cx="765" cy="205" r="4" fill="#e6ece8"/>
+  <circle cx="765" cy="205" r="4" fill="#4bc3af"/>
   <rect class="box" x="855" y="235" width="150" height="230" rx="8"/>
   <text class="label" x="930.0" y="277" text-anchor="middle" style="font-size:16px">deform.usda</text>
   <rect class="inner" x="877" y="334" width="106" height="34" rx="4"/>
@@ -80,15 +79,15 @@
   <rect class="inner" x="877" y="380" width="106" height="34" rx="4"/>
   <text class="small" x="930.0" y="401.5" text-anchor="middle" style="font-size:13px">deformation</text>
   <path class="line" d="M930 205 L930 231"/>
-  <circle cx="930" cy="205" r="4" fill="#e6ece8"/>
-  <rect class="boxAccent" x="1020" y="235" width="150" height="230" rx="8"/>
+  <circle cx="930" cy="205" r="4" fill="#4bc3af"/>
+  <rect class="boxHot" x="1020" y="235" width="150" height="230" rx="8"/>
   <text class="label" x="1095.0" y="277" text-anchor="middle" style="font-size:16px">variants.usda</text>
   <rect class="inner" x="1042" y="334" width="106" height="34" rx="4"/>
   <text class="small" x="1095.0" y="355.0" text-anchor="middle" style="font-size:12px">variant opinions</text>
   <rect class="inner" x="1042" y="380" width="106" height="34" rx="4"/>
   <text class="small" x="1095.0" y="401.5" text-anchor="middle" style="font-size:13px">permutation</text>
   <path class="accentLine" d="M1095 205 L1095 231"/>
-  <circle cx="1095" cy="205" r="4" fill="#5f1ebe"/>
+  <circle cx="1095" cy="205" r="4" fill="#8c69f0"/>
   <rect class="box" x="1185" y="235" width="150" height="230" rx="8"/>
   <text class="label" x="1260.0" y="277" text-anchor="middle" style="font-size:16px">contents.usda</text>
   <rect class="inner" x="1207" y="334" width="106" height="34" rx="4"/>
@@ -96,5 +95,5 @@
   <rect class="inner" x="1207" y="380" width="106" height="34" rx="4"/>
   <text class="small" x="1260.0" y="401.5" text-anchor="middle" style="font-size:13px">source policy</text>
   <path class="line" d="M1260 205 L1260 231"/>
-  <circle cx="1260" cy="205" r="4" fill="#e6ece8"/>
+  <circle cx="1260" cy="205" r="4" fill="#4bc3af"/>
 </svg>

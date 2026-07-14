@@ -2,6 +2,293 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://hcltech-robotics.github.io/asset-factory-blueprint/schemas/v1/rl-environment-manifest.schema.json",
   "title": "rl environment manifest",
+  "$defs": {
+    "managedRlEvidence": {
+      "type": "array",
+      "allOf": [
+        {
+          "contains": {
+            "type": "object",
+            "required": ["evidence_id"],
+            "properties": {"evidence_id": {"const": "rl_environment_design_report"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["evidence_id"],
+            "properties": {"evidence_id": {"const": "rl_environment_card"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["evidence_id"],
+            "properties": {"evidence_id": {"const": "rl_task_fitness_protocol"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["evidence_id"],
+            "properties": {"evidence_id": {"const": "isaac_runtime_evidence"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["evidence_id"],
+            "properties": {"evidence_id": {"const": "rl_probe_evidence"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["evidence_id"],
+            "properties": {"evidence_id": {"const": "rl_probe_import_receipt"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["evidence_id"],
+            "properties": {"evidence_id": {"const": "rl_collision_fidelity"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["evidence_id"],
+            "properties": {"evidence_id": {"const": "rl_fidelity_import_receipt"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      ]
+    },
+    "managedRlGateCoverage": {
+      "type": "array",
+      "allOf": [
+        {
+          "contains": {
+            "type": "object",
+            "required": ["gate_id", "status"],
+            "properties": {"gate_id": {"const": "rl-lineage"}, "status": {"const": "pass"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["gate_id", "status"],
+            "properties": {"gate_id": {"const": "rl-reconciliation"}, "status": {"const": "pass"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["gate_id", "status"],
+            "properties": {"gate_id": {"const": "rl-backend-binding"}, "status": {"const": "pass"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["gate_id", "status"],
+            "properties": {"gate_id": {"const": "rl-timestep-binding"}, "status": {"const": "pass"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["gate_id", "status"],
+            "properties": {"gate_id": {"const": "rl-embodiment"}, "status": {"const": "pass"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["gate_id", "status"],
+            "properties": {"gate_id": {"const": "rl-affordance-reachability"}, "status": {"const": "pass"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["gate_id", "status"],
+            "properties": {"gate_id": {"const": "rl-collision-fidelity"}, "status": {"const": "pass"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["gate_id", "status"],
+            "properties": {"gate_id": {"const": "rl-reset-feasibility"}, "status": {"const": "pass"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["gate_id", "status"],
+            "properties": {"gate_id": {"const": "rl-smoke"}, "status": {"const": "pass"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["gate_id", "status"],
+            "properties": {"gate_id": {"const": "rl-reward-probes"}, "status": {"const": "pass"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["gate_id", "status"],
+            "properties": {"gate_id": {"const": "rl-evidence-rule"}, "status": {"const": "pass"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["gate_id", "status"],
+            "properties": {"gate_id": {"const": "rl-randomisation-provenance"}, "status": {"const": "pass"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["gate_id", "status"],
+            "properties": {"gate_id": {"const": "rl-identifiability"}, "status": {"const": "pass"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["gate_id", "status"],
+            "properties": {"gate_id": {"const": "rl-evaluation-protocol"}, "status": {"const": "pass"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["gate_id", "status"],
+            "properties": {"gate_id": {"const": "rl-environment-card"}, "status": {"const": "pass"}}
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      ]
+    },
+    "validatedTopLevelRlGates": {
+      "$ref": "#/$defs/managedRlGateCoverage",
+      "type": "array",
+      "items": {
+        "if": {
+          "type": "object",
+          "required": ["gate_id"],
+          "properties": {"gate_id": {"pattern": "^rl-"}}
+        },
+        "then": {
+          "required": ["gate_id", "status"],
+          "properties": {
+            "gate_id": {
+              "enum": [
+                "rl-lineage",
+                "rl-reconciliation",
+                "rl-backend-binding",
+                "rl-timestep-binding",
+                "rl-embodiment",
+                "rl-affordance-reachability",
+                "rl-collision-fidelity",
+                "rl-reset-feasibility",
+                "rl-smoke",
+                "rl-reward-probes",
+                "rl-evidence-rule",
+                "rl-randomisation-provenance",
+                "rl-identifiability",
+                "rl-evaluation-protocol",
+                "rl-environment-card"
+              ]
+            },
+            "status": {"const": "pass"}
+          }
+        }
+      }
+    },
+    "validatedExtensionRlGates": {
+      "$ref": "#/$defs/managedRlGateCoverage",
+      "type": "array",
+      "minItems": 15,
+      "maxItems": 15,
+      "items": {
+        "type": "object",
+        "required": ["gate_id", "status"],
+        "properties": {
+          "gate_id": {
+            "enum": [
+              "rl-lineage",
+              "rl-reconciliation",
+              "rl-backend-binding",
+              "rl-timestep-binding",
+              "rl-embodiment",
+              "rl-affordance-reachability",
+              "rl-collision-fidelity",
+              "rl-reset-feasibility",
+              "rl-smoke",
+              "rl-reward-probes",
+              "rl-evidence-rule",
+              "rl-randomisation-provenance",
+              "rl-identifiability",
+              "rl-evaluation-protocol",
+              "rl-environment-card"
+            ]
+          },
+          "status": {"const": "pass"}
+        }
+      }
+    }
+  },
   "type": "object",
   "additionalProperties": true,
   "required": [
@@ -106,9 +393,689 @@
         "rejected"
       ]
     },
+    "blocked_reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "review_reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "validation_gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "gate_id",
+          "status"
+        ],
+        "properties": {
+          "gate_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "pending",
+              "blocked",
+              "review_required"
+            ]
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
     "extensions": {
       "type": "object",
-      "additionalProperties": true
+      "additionalProperties": true,
+      "properties": {
+        "rl": {
+          "type": "object",
+          "description": "Evidence-bound PhysX pick environment contract for the Isaac Lab manager-based environment.",
+          "required": [
+            "schema_version",
+            "contract_sha256",
+            "status",
+            "runtime",
+            "task",
+            "scene",
+            "sensor_contract",
+            "observations",
+            "actions",
+            "rewards",
+            "terminations",
+            "resets",
+            "randomisation",
+            "variants",
+            "curriculum",
+            "evaluation_protocol",
+            "gates"
+          ],
+          "additionalProperties": true,
+          "properties": {
+            "schema_version": {
+              "const": "0.1.0"
+            },
+            "contract_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "blocked",
+                "review_required",
+                "validated"
+              ]
+            },
+            "lineage": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "manifest": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "sha256": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "runtime": {
+              "type": "object",
+              "required": [
+                "physics_backend",
+                "validated_physics_backend",
+                "isaac_lab_version",
+                "sim_dt",
+                "validated_physics_dt",
+                "decimation",
+                "control_dt",
+                "episode_length_s",
+                "num_envs",
+                "seeds",
+                "runtime_evidence",
+                "validated_package_dependency_fingerprint",
+                "validated_usd_sha256"
+              ],
+              "properties": {
+                "physics_backend": {
+                  "const": "physx"
+                },
+                "validated_physics_backend": {
+                  "type": "string",
+                  "enum": ["", "physx"]
+                },
+                "isaac_lab_version": {
+                  "type": "string"
+                },
+                "sim_dt": {
+                  "type": ["number", "null"],
+                  "exclusiveMinimum": 0
+                },
+                "validated_physics_dt": {
+                  "type": ["number", "null"],
+                  "exclusiveMinimum": 0
+                },
+                "decimation": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "episode_length_s": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "num_envs": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "seeds": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "control_dt": {
+                  "type": ["number", "null"],
+                  "exclusiveMinimum": 0
+                },
+                "runtime_evidence": {
+                  "type": "object",
+                  "required": ["path", "sha256"],
+                  "properties": {
+                    "path": {"type": "string"},
+                    "sha256": {"type": "string", "pattern": "^(?:[0-9a-f]{64})?$"}
+                  }
+                },
+                "validated_package_dependency_fingerprint": {
+                  "type": "string",
+                  "pattern": "^(?:sha256:[0-9a-f]{64})?$"
+                },
+                "validated_usd_sha256": {
+                  "type": "string",
+                  "pattern": "^(?:[0-9a-f]{64})?$"
+                }
+              }
+            },
+            "task": {
+              "type": "object",
+              "required": [
+                "behaviour",
+                "success",
+                "embodiment",
+                "grasp_frames"
+              ],
+              "properties": {
+                "behaviour": {
+                  "const": "pick"
+                },
+                "success_definition": {
+                  "type": "string"
+                },
+                "success": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["type", "height_m", "hold_seconds"],
+                  "properties": {
+                    "type": {"const": "object_height_above_support"},
+                    "height_m": {"type": "number", "exclusiveMinimum": 0},
+                    "hold_seconds": {"type": "number", "exclusiveMinimum": 0}
+                  }
+                },
+                "grasp_frames": {
+                  "type": "array",
+                  "minItems": 0,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["id", "frame", "frame_space", "quaternion_order", "approach_vector", "gripper_width", "confidence"],
+                    "properties": {
+                      "id": {"type": "string", "minLength": 1},
+                      "frame": {"type": "array", "minItems": 7, "maxItems": 7, "items": {"type": "number"}},
+                      "frame_space": {"const": "asset"},
+                      "quaternion_order": {"const": "wxyz"},
+                      "approach_vector": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}},
+                      "gripper_width": {"type": "number", "exclusiveMinimum": 0},
+                      "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+                    }
+                  }
+                },
+                "embodiment": {
+                  "type": "object",
+                  "required": [
+                    "source",
+                    "sha256",
+                    "format",
+                    "end_effector_body",
+                    "gripper_joints",
+                    "action_scale",
+                    "maximum_gripper_aperture_m",
+                    "gripper_open_positions",
+                    "gripper_closed_positions",
+                    "fixed_base",
+                    "actuator",
+                    "actuated_joints",
+                    "status"
+                  ],
+                  "properties": {
+                    "source": {"type": "string"},
+                    "sha256": {"type": "string", "pattern": "^(?:[0-9a-f]{64})?$"},
+                    "format": {"type": "string", "enum": ["", "urdf"]},
+                    "end_effector_body": {"type": "string"},
+                    "gripper_joints": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+                    "action_scale": {"type": ["number", "null"], "exclusiveMinimum": 0},
+                    "maximum_gripper_aperture_m": {"type": ["number", "null"], "exclusiveMinimum": 0},
+                    "gripper_open_positions": {"type": "object", "additionalProperties": {"type": "number"}},
+                    "gripper_closed_positions": {"type": "object", "additionalProperties": {"type": "number"}},
+                    "fixed_base": {"type": ["boolean", "null"]},
+                    "actuator": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "stiffness": {"type": "number", "minimum": 0},
+                        "damping": {"type": "number", "minimum": 0}
+                      }
+                    },
+                    "actuated_joints": {"type": "array", "items": {"type": "object"}},
+                    "status": {"type": "string", "enum": ["blocked", "validated"]}
+                  },
+                  "allOf": [
+                    {
+                      "if": {"properties": {"status": {"const": "validated"}}},
+                      "then": {
+                        "properties": {
+                          "source": {"minLength": 1},
+                          "sha256": {"pattern": "^[0-9a-f]{64}$"},
+                          "format": {"const": "urdf"},
+                          "end_effector_body": {"minLength": 1},
+                          "gripper_joints": {"minItems": 1},
+                          "action_scale": {"type": "number", "exclusiveMinimum": 0},
+                          "maximum_gripper_aperture_m": {"type": "number", "exclusiveMinimum": 0},
+                          "gripper_open_positions": {"minProperties": 1},
+                          "gripper_closed_positions": {"minProperties": 1},
+                          "fixed_base": {"const": true},
+                          "actuator": {"required": ["stiffness", "damping"]},
+                          "actuated_joints": {"minItems": 1}
+                        }
+                      }
+                    }
+                  ]
+                },
+                "reconciliation": {
+                  "type": "object"
+                }
+              }
+            },
+            "scene": {
+              "type": "object",
+              "required": ["composed_root", "object_initial_position", "support_height_m", "env_spacing", "object_asset_type"],
+              "properties": {
+                "composed_root": {"type": "string", "minLength": 1},
+                "object_initial_position": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}},
+                "support_height_m": {"type": "number"},
+                "env_spacing": {"type": "number", "exclusiveMinimum": 0},
+                "object_asset_type": {"type": "string", "enum": ["rigid_object", "articulation"]}
+              }
+            },
+            "context_prior": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "parameter",
+                  "manifest",
+                  "field"
+                ],
+                "properties": {
+                  "parameter": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "manifest": {
+                    "type": "string"
+                  },
+                  "field": {
+                    "type": "string"
+                  },
+                  "sha256": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "unit": {
+                    "type": "string"
+                  },
+                  "interval": {
+                    "type": [
+                      "array",
+                      "null"
+                    ],
+                    "items": {
+                      "type": "number"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "distribution": {
+                    "type": "string"
+                  },
+                  "confidence": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            },
+            "adaptation_mode": {
+              "type": "string",
+              "enum": [
+                "robust",
+                "adaptive"
+              ]
+            },
+            "observations": {
+              "type": "object",
+              "required": ["policy", "critic"],
+              "properties": {
+                "policy": {
+                  "type": "array"
+                },
+                "critic": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "term",
+                      "manifest_path"
+                    ]
+                  }
+                }
+              }
+            },
+            "sensor_contract": {
+              "type": "array",
+              "maxItems": 0
+            },
+            "actions": {
+              "type": "array",
+              "minItems": 0,
+              "items": {
+                "type": "object",
+                "required": ["term", "target", "joints", "mode"]
+              }
+            },
+            "rewards": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "component",
+                  "functional_form",
+                  "units",
+                  "shaping_class",
+                  "static_probe_status"
+                ],
+                "properties": {
+                  "component": {
+                    "type": "string",
+                    "enum": ["reach", "lift", "action_rate"]
+                  },
+                  "functional_form": {
+                    "type": "string",
+                    "enum": [
+                      "1 - tanh(distance_to_grasp_frame / 0.1)",
+                      "clip(object_height - support_height, 0, 0.1) / 0.1",
+                      "-sum(square(action_t - action_t_minus_1))"
+                    ]
+                  },
+                  "weight": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "units": {
+                    "type": "string"
+                  },
+                  "shaping_class": {
+                    "type": "string"
+                  },
+                  "depends_on_evidence": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "static_probe_status": {
+                    "type": "string",
+                    "enum": [
+                      "pass",
+                      "blocked"
+                    ]
+                  }
+                }
+              }
+            },
+            "terminations": {
+              "type": "array",
+              "minItems": 1,
+              "items": {"type": "object", "required": ["term"]}
+            },
+            "resets": {
+              "type": "array",
+              "minItems": 1,
+              "items": {"type": "object", "required": ["entity", "distribution"]}
+            },
+            "randomisation": {
+              "type": "array",
+              "maxItems": 2,
+              "items": {
+                "type": "object",
+                "required": [
+                  "axis",
+                  "interval",
+                  "provenance",
+                  "review_status"
+                ],
+                "properties": {
+                  "axis": {
+                    "type": "string",
+                    "enum": ["mass", "friction"]
+                  },
+                  "interval": {
+                    "type": [
+                      "array",
+                      "null"
+                    ],
+                    "items": {
+                      "type": "number"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "provenance": {
+                    "type": "string",
+                    "enum": [
+                      "evidence",
+                      "feasibility",
+                      "posterior",
+                      "policy_default"
+                    ]
+                  },
+                  "review_status": {
+                    "type": "string"
+                  },
+                  "sources": {
+                    "type": "array"
+                  }
+                }
+              }
+            },
+            "variants": {
+              "type": "array",
+              "maxItems": 0,
+              "items": {
+                "type": "object",
+                "required": [
+                  "variant_id",
+                  "affordance_invariant"
+                ]
+              }
+            },
+            "curriculum": {
+              "type": "object",
+              "required": [
+                "tier"
+              ],
+              "properties": {
+                "tier": {
+                  "const": "none"
+                }
+              }
+            },
+            "evaluation_protocol": {
+              "type": "object",
+              "required": [
+                "seeds",
+                "held_out_variants",
+                "proxy_audit_variants",
+                "aggregation"
+              ],
+              "properties": {
+                "seeds": {"type": "array", "minItems": 5, "uniqueItems": true, "items": {"type": "integer"}},
+                "held_out_variants": {"type": "array", "maxItems": 0},
+                "proxy_audit_variants": {"type": "array", "maxItems": 0},
+                "aggregation": {"type": "string", "minLength": 1}
+              }
+            },
+            "task_fitness_protocol": {
+              "type": "object",
+              "properties": {
+                "protocol_id": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "sha256": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                }
+              }
+            },
+            "command_contracts": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "required": [
+                  "argv",
+                  "working_directory",
+                  "available",
+                  "argument_digest"
+                ],
+                "properties": {
+                  "argv": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+                  "working_directory": {"type": "string", "minLength": 1},
+                  "available": {"type": "boolean"},
+                  "argument_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+                },
+                "additionalProperties": false
+              }
+            },
+            "gates": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "gate_id",
+                  "status"
+                ]
+              }
+            },
+            "environment_card": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "sha256": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "allOf": [
+            {
+              "if": {"properties": {"status": {"const": "validated"}}, "required": ["status"]},
+              "then": {
+                "properties": {
+                  "runtime": {
+                    "properties": {"isaac_lab_version": {"const": "2.3.1"}},
+                    "required": ["isaac_lab_version"]
+                  },
+                  "task": {
+                    "properties": {
+                      "embodiment": {
+                        "properties": {
+                          "status": {"const": "validated"},
+                          "maximum_gripper_aperture_m": {"type": "number", "exclusiveMinimum": 0},
+                          "fixed_base": {"const": true}
+                        },
+                        "required": ["status", "maximum_gripper_aperture_m", "fixed_base"]
+                      }
+                    },
+                    "required": ["embodiment"]
+                  },
+                  "scene": {
+                    "properties": {
+                      "support_height_m": {"const": 0},
+                      "object_asset_type": {"const": "rigid_object"}
+                    },
+                    "required": ["support_height_m", "object_asset_type"]
+                  }
+                },
+                "required": ["runtime", "task", "scene"]
+              }
+            }
+          ]
+        }
+      }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": ["status"],
+        "properties": {
+          "status": {
+            "enum": ["validated", "released"]
+          }
+        }
+      },
+      "then": {
+        "required": ["evidence", "validation_gates", "extensions"],
+        "properties": {
+          "evidence": {
+            "$ref": "#/$defs/managedRlEvidence"
+          },
+          "validation_gates": {
+            "$ref": "#/$defs/validatedTopLevelRlGates"
+          },
+          "extensions": {
+            "required": ["rl"],
+            "properties": {
+              "rl": {
+                "required": ["status", "gates"],
+                "properties": {
+                  "status": {"const": "validated"},
+                  "gates": {
+                    "$ref": "#/$defs/validatedExtensionRlGates"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }

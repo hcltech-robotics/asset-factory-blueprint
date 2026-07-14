@@ -8,7 +8,9 @@ from asset_factory_blueprint.skills.base import ToolResult
 def physics_plan(params: dict[str, Any]) -> ToolResult:
     properties = params.get("properties") or []
     validated = [item for item in properties if item.get("validation_status") == "validated"]
-    blocked = [item.get("property_name", "property") for item in properties if item.get("validation_status") != "validated"]
+    blocked = [
+        item.get("property_name", "property") for item in properties if item.get("validation_status") != "validated"
+    ]
     if not properties:
         blocked.append("physical property proposals")
     plan = {
@@ -37,8 +39,10 @@ def _normalise_grasp_points(raw: Any) -> tuple[list[dict[str, Any]], list[str]]:
             warnings.append(f"grasp_points[{index}] must be an object")
             continue
         record = {
-            "grasp_id": str(item.get("grasp_id") or f"grasp_{index}"),
+            "grasp_id": str(item.get("grasp_id") or ""),
             "frame": item.get("frame"),
+            "frame_space": item.get("frame_space"),
+            "quaternion_order": item.get("quaternion_order"),
             "approach_vector": item.get("approach_vector"),
             "gripper_width": item.get("gripper_width"),
             "confidence": item.get("confidence", 0.0),
@@ -47,6 +51,12 @@ def _normalise_grasp_points(raw: Any) -> tuple[list[dict[str, Any]], list[str]]:
         }
         if not record["frame"]:
             warnings.append(f"grasp_points[{index}] requires a frame")
+        if not record["grasp_id"]:
+            warnings.append(f"grasp_points[{index}] requires a grasp_id")
+        if record["frame_space"] != "asset":
+            warnings.append(f"grasp_points[{index}] requires frame_space asset")
+        if record["quaternion_order"] != "wxyz":
+            warnings.append(f"grasp_points[{index}] requires quaternion_order wxyz")
         if not record["approach_vector"]:
             warnings.append(f"grasp_points[{index}] requires an approach vector")
         grasp_points.append(record)

@@ -4,6 +4,7 @@ import json
 import os
 import shutil
 import tempfile
+import uuid
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
@@ -24,6 +25,83 @@ def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def fsync_directory(path: str | Path) -> None:
+    """Flush directory metadata after a filesystem mutation on POSIX."""
+
+    if os.name == "nt":
+        return
+    directory = Path(path)
+    flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
+    descriptor = os.open(directory, flags)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
+def _windows_move_file_ex(source: Path, target: Path | None, flags: int) -> None:
+    """Call MoveFileExW with error reporting suitable for durable mutations."""
+
+    import ctypes
+
+    move_file_ex = ctypes.WinDLL("kernel32", use_last_error=True).MoveFileExW
+    move_file_ex.argtypes = [ctypes.c_wchar_p, ctypes.c_wchar_p, ctypes.c_uint32]
+    move_file_ex.restype = ctypes.c_int
+    source_value = os.path.abspath(os.fspath(source))
+    target_value = os.path.abspath(os.fspath(target)) if target is not None else None
+    if move_file_ex(source_value, target_value, flags):
+        return
+    error_code = ctypes.get_last_error()
+    error = ctypes.WinError(error_code)
+    error.filename = source_value
+    error.filename2 = target_value
+    raise error
+
+
+def durable_replace(source: str | Path, target: str | Path) -> Path:
+    """Atomically replace a file and make its directory entry durable."""
+
+    source_path = Path(source)
+    target_path = Path(target)
+    if os.name == "nt":
+        movefile_replace_existing = 0x1
+        movefile_write_through = 0x8
+        _windows_move_file_ex(
+            source_path,
+            target_path,
+            movefile_replace_existing | movefile_write_through,
+        )
+    else:
+        os.replace(source_path, target_path)
+        fsync_directory(target_path.parent)
+    return target_path
+
+
+def durable_unlink(path: str | Path, *, missing_ok: bool = False) -> None:
+    """Remove a file and durably publish its absence."""
+
+    target = Path(path)
+    if os.name == "nt":
+        movefile_write_through = 0x8
+        tombstone = target.with_name(f".{target.name}.{os.getpid()}.{uuid.uuid4().hex}.deleted")
+        try:
+            _windows_move_file_ex(target, tombstone, movefile_write_through)
+        except OSError as exc:
+            error_codes = {exc.errno, getattr(exc, "winerror", None)}
+            if missing_ok and error_codes.intersection({2, 3}):
+                return
+            raise
+        tombstone.unlink()
+        return
+    try:
+        target.unlink()
+    except FileNotFoundError:
+        if missing_ok:
+            return
+        raise
+    fsync_directory(target.parent)
+
+
 def atomic_write_json(path: str | Path, payload: Any) -> Path:
     """Atomically replace a JSON file using a temporary file in the same directory."""
 
@@ -37,9 +115,9 @@ def atomic_write_json(path: str | Path, payload: Any) -> Path:
             stream.write("\n")
             stream.flush()
             os.fsync(stream.fileno())
-        os.replace(temporary, target)
+        durable_replace(temporary, target)
     except BaseException:
-        temporary.unlink(missing_ok=True)
+        durable_unlink(temporary, missing_ok=True)
         raise
     return target
 
@@ -250,7 +328,11 @@ def execute_stage_plan(
             resource_checks[resource_name] = {
                 "required": required,
                 "available": available_count,
-                "status": "unknown" if available_count is None else "pass" if available_count >= required else "blocked",
+                "status": "unknown"
+                if available_count is None
+                else "pass"
+                if available_count >= required
+                else "blocked",
             }
             if available_count is not None and available_count < required:
                 stage.blocked_reasons.append(

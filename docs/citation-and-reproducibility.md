@@ -1,6 +1,14 @@
 # Citation and reproducibility
 
-Asset Factory Blueprint publishes citation metadata in `CITATION.cff` and `codemeta.json`. Supporting standards and technical references are listed in `references.bib`.
+Asset Factory Blueprint records machine-readable project details in `CITATION.cff` and `codemeta.json`. `references.bib` lists supporting standards and technical sources.
+
+## Citing in the documentation
+
+`references.bib` is the single bibliography for the repository and documentation. Body pages cite entries with pandoc syntax such as `@voncsefalvay2026`, separating multiple keys with semicolons. The build renders author-year citations as footnotes using the Cite Them Right Harvard style vendored under `docs/assets/citation-style/`.
+
+Pages with citations end with a `References` heading and the bibliography command on its own line, as in `docs/extensions/rl-environment.md`. The [References](references.md) page renders the complete bibliography at build time.
+
+Unknown keys fail the strict build. Keys use `surname_keyword_year` for papers and books, and `organisation_topic_year` for online sources. Braces preserve the capitalisation of proper nouns, acronyms and venue names. The `pandoc` executable must be on `PATH`; the documentation workflows install it before building the site.
 
 ## What to cite
 

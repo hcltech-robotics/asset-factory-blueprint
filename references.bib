@@ -54,3 +54,696 @@
   url     = {https://spdx.dev/use/specifications/},
   urldate = {2026-07-09}
 }
+
+% ---------------------------------------------------------------------------
+% RL environment lane: simulation frameworks and runtimes
+% ---------------------------------------------------------------------------
+
+@inproceedings{makoviychuk_isaacgym_2021,
+  author    = {Makoviychuk, Viktor and Wawrzyniak, Lukasz and Guo, Yunrong and Lu, Michelle and Storey, Kier and Macklin, Miles and Hoeller, David and Rudin, Nikita and Allshire, Arthur and Handa, Ankur and State, Gavriel},
+  title     = {{Isaac Gym}: high performance {GPU}-based physics simulation for robot learning},
+  booktitle = {{Advances in Neural Information Processing Systems: Datasets and Benchmarks Track}},
+  year      = {2021},
+  eprint    = {2108.10470},
+  archiveprefix = {arXiv},
+  url       = {https://arxiv.org/abs/2108.10470}
+}
+
+@article{mittal_orbit_2023,
+  author  = {Mittal, Mayank and Yu, Calvin and Yu, Qinxi and Liu, Jingzhou and Rudin, Nikita and Hoeller, David and Yuan, Jia Lin and Singh, Ritvik and Guo, Yunrong and Mazhar, Hammad and Mandlekar, Ajay and Babich, Buck and State, Gavriel and Hutter, Marco and Garg, Animesh},
+  title   = {{Orbit}: a unified simulation framework for interactive robot learning environments},
+  journal = {{IEEE Robotics and Automation Letters}},
+  volume  = {8},
+  number  = {6},
+  pages   = {3740--3747},
+  year    = {2023},
+  doi     = {10.1109/LRA.2023.3270034}
+}
+
+@misc{mittal_isaaclab_2025,
+  author  = {Mittal, Mayank and Roth, Pascal and Tigue, James and Richard, Antoine and others},
+  title   = {{Isaac Lab}: a {GPU}-accelerated simulation framework for multi-modal robot learning},
+  year    = {2025},
+  eprint  = {2511.04831},
+  archiveprefix = {arXiv},
+  url     = {https://arxiv.org/abs/2511.04831},
+  note    = {NVIDIA}
+}
+
+@online{nvidia_isaaclab_arena_2026,
+  author  = {{NVIDIA Corporation} and {Lightwheel}},
+  title   = {{Isaac Lab-Arena}: a composable framework for environment setup and policy evaluation},
+  year    = {2026},
+  url     = {https://github.com/isaac-sim/IsaacLab-Arena},
+  urldate = {2026-08-27}
+}
+
+@online{nvidia_isaaclab_newton_2026,
+  author  = {{NVIDIA Corporation}},
+  title   = {{Newton} physics integration},
+  year    = {2026},
+  url     = {https://isaac-sim.github.io/IsaacLab/main/source/experimental-features/newton-physics-integration/index.html},
+  urldate = {2026-08-27}
+}
+
+@online{nvidia_isaaclab_manager_env_2026,
+  author  = {{NVIDIA Corporation}},
+  title   = {Creating a manager-based {RL} environment},
+  year    = {2026},
+  url     = {https://isaac-sim.github.io/IsaacLab/main/source/tutorials/03_envs/create_manager_rl_env.html},
+  urldate = {2026-08-27}
+}
+
+% ---------------------------------------------------------------------------
+% Domain randomisation and sim-to-real
+% ---------------------------------------------------------------------------
+
+@inproceedings{tobin_domain_2017,
+  author    = {Tobin, Josh and Fong, Rachel and Ray, Alex and Schneider, Jonas and Zaremba, Wojciech and Abbeel, Pieter},
+  title     = {Domain randomization for transferring deep neural networks from simulation to the real world},
+  booktitle = {{IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)}},
+  year      = {2017},
+  pages     = {23--30},
+  doi       = {10.1109/IROS.2017.8202133}
+}
+
+@inproceedings{peng_dynamics_2018,
+  author    = {Peng, Xue Bin and Andrychowicz, Marcin and Zaremba, Wojciech and Abbeel, Pieter},
+  title     = {Sim-to-real transfer of robotic control with dynamics randomization},
+  booktitle = {{IEEE International Conference on Robotics and Automation (ICRA)}},
+  year      = {2018},
+  pages     = {3803--3810},
+  doi       = {10.1109/ICRA.2018.8460528}
+}
+
+@misc{openai_rubiks_2019,
+  author  = {{OpenAI} and Akkaya, Ilge and Andrychowicz, Marcin and Chociej, Maciek and Litwin, Mateusz and McGrew, Bob and Petron, Arthur and Paino, Alex and Plappert, Matthias and Powell, Glenn and Ribas, Raphael and Schneider, Jonas and Tezak, Nikolas and Tworek, Jerry and Welinder, Peter and Weng, Lilian and Yuan, Qiming and Zaremba, Wojciech and Zhang, Lei},
+  title   = {Solving {Rubik's} cube with a robot hand},
+  year    = {2019},
+  eprint  = {1910.07113},
+  archiveprefix = {arXiv},
+  url     = {https://arxiv.org/abs/1910.07113}
+}
+
+@inproceedings{chebotar_simopt_2019,
+  author    = {Chebotar, Yevgen and Handa, Ankur and Makoviychuk, Viktor and Macklin, Miles and Issac, Jan and Ratliff, Nathan and Fox, Dieter},
+  title     = {Closing the sim-to-real loop: adapting simulation randomization with real world experience},
+  booktitle = {{IEEE International Conference on Robotics and Automation (ICRA)}},
+  year      = {2019},
+  pages     = {8973--8979},
+  doi       = {10.1109/ICRA.2019.8793789}
+}
+
+@inproceedings{ramos_bayessim_2019,
+  author    = {Ramos, Fabio and Possas, Rafael and Fox, Dieter},
+  title     = {{BayesSim}: adaptive domain randomization via probabilistic inference for robotics simulators},
+  booktitle = {{Robotics: Science and Systems (RSS)}},
+  year      = {2019},
+  doi       = {10.15607/RSS.2019.XV.029}
+}
+
+@inproceedings{mehta_active_2020,
+  author    = {Mehta, Bhairav and Diaz, Manfred and Golemo, Florian and Pal, Christopher J. and Paull, Liam},
+  title     = {Active domain randomization},
+  booktitle = {{Conference on Robot Learning (CoRL), Proceedings of Machine Learning Research 100}},
+  year      = {2020},
+  pages     = {1162--1176}
+}
+
+@article{tiboni_dropo_2023,
+  author  = {Tiboni, Gabriele and Arndt, Karol and Kyrki, Ville},
+  title   = {{DROPO}: sim-to-real transfer with offline domain randomization},
+  journal = {{Robotics and Autonomous Systems}},
+  volume  = {166},
+  pages   = {104432},
+  year    = {2023},
+  doi     = {10.1016/j.robot.2023.104432}
+}
+
+@inproceedings{tiboni_doraemon_2024,
+  author    = {Tiboni, Gabriele and Klink, Pascal and Peters, Jan and Kyrki, Ville and Ramos, Fabio and Kirk, Robert},
+  title     = {Domain randomization via entropy maximization},
+  booktitle = {{International Conference on Learning Representations (ICLR)}},
+  year      = {2024},
+  eprint    = {2311.01885},
+  archiveprefix = {arXiv}
+}
+
+@article{muratore_review_2022,
+  author  = {Muratore, Fabio and Ramos, Fabio and Turk, Greg and Yu, Wenhao and Gienger, Michael and Peters, Jan},
+  title   = {Robot learning from randomized simulations: a review},
+  journal = {{Frontiers in Robotics and AI}},
+  volume  = {9},
+  pages   = {799893},
+  year    = {2022},
+  doi     = {10.3389/frobt.2022.799893}
+}
+
+@inproceedings{chen_understanding_2022,
+  author    = {Chen, Xiaoyu and Hu, Jiachen and Jin, Chi and Li, Lihong and Wang, Liwei},
+  title     = {Understanding domain randomization for sim-to-real transfer},
+  booktitle = {{International Conference on Learning Representations (ICLR)}},
+  year      = {2022},
+  eprint    = {2110.03239},
+  archiveprefix = {arXiv}
+}
+
+@inproceedings{james_rcan_2019,
+  author    = {James, Stephen and Wohlhart, Paul and Kalakrishnan, Mrinal and Kalashnikov, Dmitry and Irpan, Alex and Ibarz, Julian and Levine, Sergey and Hadsell, Raia and Bousmalis, Konstantinos},
+  title     = {Sim-to-real via sim-to-sim: data-efficient robotic grasping via randomized-to-canonical adaptation networks},
+  booktitle = {{IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)}},
+  year      = {2019},
+  pages     = {12627--12637},
+  doi       = {10.1109/CVPR.2019.01291}
+}
+
+@inproceedings{zhao_survey_2020,
+  author    = {Zhao, Wenshuai and Queralta, Jorge Pe{\~n}a and Westerlund, Tomi},
+  title     = {Sim-to-real transfer in deep reinforcement learning for robotics: a survey},
+  booktitle = {{IEEE Symposium Series on Computational Intelligence (SSCI)}},
+  year      = {2020},
+  pages     = {737--744},
+  doi       = {10.1109/SSCI47803.2020.9308468}
+}
+
+@misc{aljalbout_realitygap_2025,
+  author  = {Aljalbout, Elie and Xing, Jiaxu and Romero, Angel and Akinola, Iretiayo and Garrett, Caelan Reed and Heiden, Eric and others},
+  title   = {The reality gap in robotics: challenges, solutions, and best practices},
+  year    = {2025},
+  eprint  = {2510.20808},
+  archiveprefix = {arXiv},
+  url     = {https://arxiv.org/abs/2510.20808}
+}
+
+% ---------------------------------------------------------------------------
+% Generalisation, context and privileged information
+% ---------------------------------------------------------------------------
+
+@misc{hallak_contextual_2015,
+  author  = {Hallak, Assaf and Di Castro, Dotan and Mannor, Shie},
+  title   = {Contextual {Markov} decision processes},
+  year    = {2015},
+  eprint  = {1502.02259},
+  archiveprefix = {arXiv},
+  url     = {https://arxiv.org/abs/1502.02259}
+}
+
+@inproceedings{ghosh_epistemic_2021,
+  author    = {Ghosh, Dibya and Rahme, Jad and Kumar, Aviral and Zhang, Amy and Adams, Ryan P. and Levine, Sergey},
+  title     = {Why generalization in {RL} is difficult: epistemic {POMDPs} and implicit partial observability},
+  booktitle = {{Advances in Neural Information Processing Systems (NeurIPS)}},
+  volume    = {34},
+  year      = {2021},
+  eprint    = {2107.06277},
+  archiveprefix = {arXiv}
+}
+
+@article{kirk_generalisation_2023,
+  author  = {Kirk, Robert and Zhang, Amy and Grefenstette, Edward and Rockt{\"a}schel, Tim},
+  title   = {A survey of zero-shot generalisation in deep reinforcement learning},
+  journal = {{Journal of Artificial Intelligence Research}},
+  volume  = {76},
+  pages   = {201--264},
+  year    = {2023},
+  doi     = {10.1613/jair.1.14174}
+}
+
+@inproceedings{pinto_asymmetric_2018,
+  author    = {Pinto, Lerrel and Andrychowicz, Marcin and Welinder, Peter and Zaremba, Wojciech and Abbeel, Pieter},
+  title     = {Asymmetric actor critic for image-based robot learning},
+  booktitle = {{Robotics: Science and Systems (RSS)}},
+  year      = {2018},
+  doi       = {10.15607/RSS.2018.XIV.008}
+}
+
+@inproceedings{chen_cheating_2020,
+  author    = {Chen, Dian and Zhou, Brady and Koltun, Vladlen and Kr{\"a}henb{\"u}hl, Philipp},
+  title     = {Learning by cheating},
+  booktitle = {{Conference on Robot Learning (CoRL), Proceedings of Machine Learning Research 100}},
+  year      = {2020},
+  pages     = {66--75}
+}
+
+@article{lee_terrain_2020,
+  author  = {Lee, Joonho and Hwangbo, Jemin and Wellhausen, Lorenz and Koltun, Vladlen and Hutter, Marco},
+  title   = {Learning quadrupedal locomotion over challenging terrain},
+  journal = {{Science Robotics}},
+  volume  = {5},
+  number  = {47},
+  pages   = {eabc5986},
+  year    = {2020},
+  doi     = {10.1126/scirobotics.abc5986}
+}
+
+@inproceedings{kumar_rma_2021,
+  author    = {Kumar, Ashish and Fu, Zipeng and Pathak, Deepak and Malik, Jitendra},
+  title     = {{RMA}: rapid motor adaptation for legged robots},
+  booktitle = {{Robotics: Science and Systems (RSS)}},
+  year      = {2021},
+  doi       = {10.15607/RSS.2021.XVII.011}
+}
+
+% ---------------------------------------------------------------------------
+% Environment design and curriculum
+% ---------------------------------------------------------------------------
+
+@inproceedings{dennis_paired_2020,
+  author    = {Dennis, Michael and Jaques, Natasha and Vinitsky, Eugene and Bayen, Alexandre and Russell, Stuart and Critch, Andrew and Levine, Sergey},
+  title     = {Emergent complexity and zero-shot transfer via unsupervised environment design},
+  booktitle = {{Advances in Neural Information Processing Systems (NeurIPS)}},
+  volume    = {33},
+  year      = {2020},
+  pages     = {13049--13061}
+}
+
+@inproceedings{jiang_plr_2021,
+  author    = {Jiang, Minqi and Grefenstette, Edward and Rockt{\"a}schel, Tim},
+  title     = {Prioritized level replay},
+  booktitle = {{International Conference on Machine Learning (ICML), Proceedings of Machine Learning Research 139}},
+  year      = {2021},
+  pages     = {4940--4950}
+}
+
+@inproceedings{jiang_replay_2021,
+  author    = {Jiang, Minqi and Dennis, Michael and Parker-Holder, Jack and Foerster, Jakob and Grefenstette, Edward and Rockt{\"a}schel, Tim},
+  title     = {Replay-guided adversarial environment design},
+  booktitle = {{Advances in Neural Information Processing Systems (NeurIPS)}},
+  volume    = {34},
+  year      = {2021},
+  pages     = {1884--1897}
+}
+
+@inproceedings{parkerholder_accel_2022,
+  author    = {Parker-Holder, Jack and Jiang, Minqi and Dennis, Michael and Samvelyan, Mikayel and Foerster, Jakob and Grefenstette, Edward and Rockt{\"a}schel, Tim},
+  title     = {Evolving curricula with regret-based environment design},
+  booktitle = {{International Conference on Machine Learning (ICML), Proceedings of Machine Learning Research 162}},
+  year      = {2022},
+  pages     = {17473--17498}
+}
+
+@inproceedings{wang_poet_2019,
+  author    = {Wang, Rui and Lehman, Joel and Clune, Jeff and Stanley, Kenneth O.},
+  title     = {Paired open-ended trailblazer ({POET}): endlessly generating increasingly complex and diverse learning environments and their solutions},
+  booktitle = {{Genetic and Evolutionary Computation Conference (GECCO)}},
+  year      = {2019},
+  eprint    = {1901.01753},
+  archiveprefix = {arXiv}
+}
+
+@misc{wang_gcl_2024,
+  author  = {Wang, Linji and Xu, Zifan and Stone, Peter and Xiao, Xuesu},
+  title   = {Grounded curriculum learning},
+  year    = {2024},
+  eprint  = {2409.19816},
+  archiveprefix = {arXiv},
+  url     = {https://arxiv.org/abs/2409.19816}
+}
+
+@inproceedings{rudin_walk_2022,
+  author    = {Rudin, Nikita and Hoeller, David and Reist, Philipp and Hutter, Marco},
+  title     = {Learning to walk in minutes using massively parallel deep reinforcement learning},
+  booktitle = {{Conference on Robot Learning (CoRL), Proceedings of Machine Learning Research 164}},
+  year      = {2022},
+  pages     = {91--100}
+}
+
+@inproceedings{portelas_curriculum_2020,
+  author    = {Portelas, R{\'e}my and Colas, C{\'e}dric and Weng, Lilian and Hofmann, Katja and Oudeyer, Pierre-Yves},
+  title     = {Automatic curriculum learning for deep {RL}: a short survey},
+  booktitle = {{International Joint Conference on Artificial Intelligence (IJCAI)}},
+  year      = {2020},
+  pages     = {4819--4825},
+  doi       = {10.24963/ijcai.2020/671}
+}
+
+% ---------------------------------------------------------------------------
+% Generative simulation, digital cousins and articulated assets
+% ---------------------------------------------------------------------------
+
+@inproceedings{dai_cousins_2024,
+  author    = {Dai, Tianyuan and Wong, Josiah and Jiang, Yunfan and Wang, Chen and Gokmen, Cem and Zhang, Ruohan and Wu, Jiajun and Fei-Fei, Li},
+  title     = {Automated creation of digital cousins for robust policy learning},
+  booktitle = {{Conference on Robot Learning (CoRL)}},
+  year      = {2024},
+  eprint    = {2410.07408},
+  archiveprefix = {arXiv}
+}
+
+@inproceedings{wang_robogen_2024,
+  author    = {Wang, Yufei and Xian, Zhou and Chen, Feng and Wang, Tsun-Hsuan and Wang, Yian and Fragkiadaki, Katerina and Erickson, Zackory and Held, David and Gan, Chuang},
+  title     = {{RoboGen}: towards unleashing infinite data for automated robot learning via generative simulation},
+  booktitle = {{International Conference on Machine Learning (ICML)}},
+  year      = {2024},
+  eprint    = {2311.01455},
+  archiveprefix = {arXiv}
+}
+
+@inproceedings{katara_gen2sim_2024,
+  author    = {Katara, Pushkal and Xian, Zhou and Fragkiadaki, Katerina},
+  title     = {{Gen2Sim}: scaling up robot learning in simulation with generative models},
+  booktitle = {{IEEE International Conference on Robotics and Automation (ICRA)}},
+  year      = {2024},
+  pages     = {6672--6679},
+  doi       = {10.1109/ICRA57147.2024.10610968}
+}
+
+@inproceedings{deitke_procthor_2022,
+  author    = {Deitke, Matt and VanderBilt, Eli and Herrasti, Alvaro and Weihs, Luca and Salvador, Jordi and Ehsani, Kiana and Han, Winson and Kolve, Eric and Farhadi, Ali and Kembhavi, Aniruddha and Mottaghi, Roozbeh},
+  title     = {{ProcTHOR}: large-scale embodied {AI} using procedural generation},
+  booktitle = {{Advances in Neural Information Processing Systems (NeurIPS)}},
+  volume    = {35},
+  year      = {2022}
+}
+
+@inproceedings{jiang_ditto_2022,
+  author    = {Jiang, Zhenyu and Hsu, Cheng-Chun and Zhu, Yuke},
+  title     = {Ditto: building digital twins of articulated objects from interaction},
+  booktitle = {{IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)}},
+  year      = {2022},
+  pages     = {5616--5626},
+  doi       = {10.1109/CVPR52688.2022.00553}
+}
+
+@misc{chen_urdformer_2024,
+  author  = {Chen, Zoey and Walsman, Aaron and Memmel, Marius and Mo, Kaichun and Fang, Alex and Vemuri, Karthikeya and Wu, Alan and Fox, Dieter and Gupta, Abhishek},
+  title   = {{URDFormer}: a pipeline for constructing articulated simulation environments from real-world images},
+  year    = {2024},
+  eprint  = {2405.11656},
+  archiveprefix = {arXiv},
+  url     = {https://arxiv.org/abs/2405.11656}
+}
+
+@inproceedings{xiang_sapien_2020,
+  author    = {Xiang, Fanbo and Qin, Yuzhe and Mo, Kaichun and Xia, Yikuan and Zhu, Hao and Liu, Fangchen and Liu, Minghua and Jiang, Hanxiao and Yuan, Yifu and Wang, He and Yi, Li and Chang, Angel X. and Guibas, Leonidas J. and Su, Hao},
+  title     = {{SAPIEN}: a simulated part-based interactive environment},
+  booktitle = {{IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)}},
+  year      = {2020},
+  pages     = {11097--11107},
+  doi       = {10.1109/CVPR42600.2020.01111}
+}
+
+@inproceedings{mo_where2act_2021,
+  author    = {Mo, Kaichun and Guibas, Leonidas J. and Mukadam, Mustafa and Gupta, Abhinav and Tulsiani, Shubham},
+  title     = {{Where2Act}: from pixels to actions for articulated {3D} objects},
+  booktitle = {{IEEE/CVF International Conference on Computer Vision (ICCV)}},
+  year      = {2021},
+  pages     = {6813--6823},
+  doi       = {10.1109/ICCV48922.2021.00674}
+}
+
+% ---------------------------------------------------------------------------
+% Contact geometry and physical fidelity
+% ---------------------------------------------------------------------------
+
+@article{wei_coacd_2022,
+  author  = {Wei, Xinyue and Liu, Minghua and Ling, Zhan and Su, Hao},
+  title   = {Approximate convex decomposition for {3D} meshes with collision-aware concavity and tree search},
+  journal = {{ACM Transactions on Graphics}},
+  volume  = {41},
+  number  = {4},
+  pages   = {42:1--42:18},
+  year    = {2022},
+  doi     = {10.1145/3528223.3530103}
+}
+
+@inproceedings{mamou_hacd_2009,
+  author    = {Mamou, Khaled and Ghorbel, Faouzi},
+  title     = {A simple and efficient approach for {3D} mesh approximate convex decomposition},
+  booktitle = {{IEEE International Conference on Image Processing (ICIP)}},
+  year      = {2009},
+  pages     = {3501--3504},
+  doi       = {10.1109/ICIP.2009.5414068}
+}
+
+@misc{vuong_contact_2023,
+  author  = {Vuong, Nghia and Pham, Quang-Cuong},
+  title   = {Contact reduction with bounded stiffness for robust sim-to-real transfer of robot assembly},
+  year    = {2023},
+  eprint  = {2306.06675},
+  archiveprefix = {arXiv},
+  url     = {https://arxiv.org/abs/2306.06675}
+}
+
+@misc{vu_empart_2025,
+  author  = {Vu, Brandon and Ganguly, Shameek and Joshi, Pushkar},
+  title   = {{Empart}: interactive convex decomposition for converting meshes to parts},
+  year    = {2025},
+  eprint  = {2509.22847},
+  archiveprefix = {arXiv},
+  url     = {https://arxiv.org/abs/2509.22847}
+}
+
+@misc{xu_realikea_2026,
+  author  = {Xu, Kunqi and Huang, Zhenhao and Luo, Siyuan and Zeng, Ziqiu and Shi, Fan},
+  title   = {{Real-IKEA}: physical fidelity is the prerequisite for robust manipulation},
+  year    = {2026},
+  eprint  = {2606.08564},
+  archiveprefix = {arXiv},
+  url     = {https://arxiv.org/abs/2606.08564}
+}
+
+@misc{hu_simweaver_2026,
+  author  = {Hu, Wenkang and Wang, Haoran and Li, Yitong and Liu, Liu and Zhao, Mengao and Jiang, Lai and others},
+  title   = {{SimWeaver}: zero-shot {RGB} sim-to-real for deformable manipulation},
+  year    = {2026},
+  eprint  = {2606.15338},
+  archiveprefix = {arXiv},
+  url     = {https://arxiv.org/abs/2606.15338}
+}
+
+% ---------------------------------------------------------------------------
+% Reward design, specification gaming and goal misgeneralisation
+% ---------------------------------------------------------------------------
+
+@inproceedings{ng_shaping_1999,
+  author    = {Ng, Andrew Y. and Harada, Daishi and Russell, Stuart},
+  title     = {Policy invariance under reward transformations: theory and application to reward shaping},
+  booktitle = {{International Conference on Machine Learning (ICML)}},
+  year      = {1999},
+  pages     = {278--287}
+}
+
+@misc{amodei_concrete_2016,
+  author  = {Amodei, Dario and Olah, Chris and Steinhardt, Jacob and Christiano, Paul and Schulman, John and Man{\'e}, Dan},
+  title   = {Concrete problems in {AI} safety},
+  year    = {2016},
+  eprint  = {1606.06565},
+  archiveprefix = {arXiv},
+  url     = {https://arxiv.org/abs/1606.06565}
+}
+
+@inproceedings{skalse_hacking_2022,
+  author    = {Skalse, Joar and Howe, Nikolaus H. R. and Krasheninnikov, Dmitrii and Krueger, David},
+  title     = {Defining and characterizing reward hacking},
+  booktitle = {{Advances in Neural Information Processing Systems (NeurIPS)}},
+  volume    = {35},
+  year      = {2022}
+}
+
+@inproceedings{pan_misspecification_2022,
+  author    = {Pan, Alexander and Bhatia, Kush and Steinhardt, Jacob},
+  title     = {The effects of reward misspecification: mapping and mitigating misaligned models},
+  booktitle = {{International Conference on Learning Representations (ICLR)}},
+  year      = {2022},
+  eprint    = {2201.03544},
+  archiveprefix = {arXiv}
+}
+
+@inproceedings{langosco_misgeneralization_2022,
+  author    = {Langosco, Lauro and Koch, Jack and Sharkey, Lee and Pfau, Jacob and Krueger, David},
+  title     = {Goal misgeneralization in deep reinforcement learning},
+  booktitle = {{International Conference on Machine Learning (ICML), Proceedings of Machine Learning Research 162}},
+  year      = {2022},
+  pages     = {12004--12019}
+}
+
+@misc{shah_misgeneralization_2022,
+  author  = {Shah, Rohin and Varma, Vikrant and Kumar, Ramana and Phuong, Mary and Krakovna, Victoria and Uesato, Jonathan and Kenton, Zac},
+  title   = {Goal misgeneralization: why correct specifications aren't enough for correct goals},
+  year    = {2022},
+  eprint  = {2210.01790},
+  archiveprefix = {arXiv},
+  url     = {https://arxiv.org/abs/2210.01790}
+}
+
+@inproceedings{ma_eureka_2024,
+  author    = {Ma, Yecheng Jason and Liang, William and Wang, Guanzhi and Huang, De-An and Bastani, Osbert and Jayaraman, Dinesh and Zhu, Yuke and Fan, Linxi and Anandkumar, Anima},
+  title     = {Eureka: human-level reward design via coding large language models},
+  booktitle = {{International Conference on Learning Representations (ICLR)}},
+  year      = {2024},
+  eprint    = {2310.12931},
+  archiveprefix = {arXiv}
+}
+
+@inproceedings{ma_dreureka_2024,
+  author    = {Ma, Yecheng Jason and Liang, William and Wang, Hung-Ju and Wang, Sam and Zhu, Yuke and Fan, Linxi and Bastani, Osbert and Jayaraman, Dinesh},
+  title     = {{DrEureka}: language model guided sim-to-real transfer},
+  booktitle = {{Robotics: Science and Systems (RSS)}},
+  year      = {2024},
+  eprint    = {2406.01967},
+  archiveprefix = {arXiv}
+}
+
+@inproceedings{yu_l2r_2023,
+  author    = {Yu, Wenhao and Gileadi, Nimrod and Fu, Chuyuan and Kirmani, Sean and Lee, Kuang-Huei and Arenas, Montse Gonzalez and Chiang, Hao-Tien Lewis and Erez, Tom and Hasenclever, Leonard and Humplik, Jan and Ichter, Brian and Xiao, Ted and Xu, Peng and Zeng, Andy and Zhang, Tingnan and Heess, Nicolas and Sadigh, Dorsa and Tan, Jie and Tassa, Yuval and Xia, Fei},
+  title     = {Language to rewards for robotic skill synthesis},
+  booktitle = {{Conference on Robot Learning (CoRL)}},
+  year      = {2023},
+  eprint    = {2306.08647},
+  archiveprefix = {arXiv}
+}
+
+@inproceedings{xie_text2reward_2024,
+  author    = {Xie, Tianbao and Zhao, Siheng and Wu, Chen Henry and Liu, Yitao and Luo, Qian and Zhong, Victor and Yang, Yanchao and Yu, Tao},
+  title     = {{Text2Reward}: reward shaping with language models for reinforcement learning},
+  booktitle = {{International Conference on Learning Representations (ICLR)}},
+  year      = {2024},
+  eprint    = {2309.11489},
+  archiveprefix = {arXiv}
+}
+
+% ---------------------------------------------------------------------------
+% Safety
+% ---------------------------------------------------------------------------
+
+@book{altman_cmdp_1999,
+  author    = {Altman, Eitan},
+  title     = {Constrained {Markov} decision processes},
+  publisher = {{Chapman and Hall/CRC}},
+  year      = {1999}
+}
+
+@inproceedings{achiam_cpo_2017,
+  author    = {Achiam, Joshua and Held, David and Tamar, Aviv and Abbeel, Pieter},
+  title     = {Constrained policy optimization},
+  booktitle = {{International Conference on Machine Learning (ICML), Proceedings of Machine Learning Research 70}},
+  year      = {2017},
+  pages     = {22--31}
+}
+
+@misc{ray_safetygym_2019,
+  author  = {Ray, Alex and Achiam, Joshua and Amodei, Dario},
+  title   = {Benchmarking safe exploration in deep reinforcement learning},
+  year    = {2019},
+  howpublished = {{OpenAI technical report}},
+  url     = {https://cdn.openai.com/safexp-short.pdf}
+}
+
+% ---------------------------------------------------------------------------
+% Evaluation and reproducibility
+% ---------------------------------------------------------------------------
+
+@inproceedings{henderson_matters_2018,
+  author    = {Henderson, Peter and Islam, Riashat and Bachman, Philip and Pineau, Joelle and Precup, Doina and Meger, David},
+  title     = {Deep reinforcement learning that matters},
+  booktitle = {{AAAI Conference on Artificial Intelligence}},
+  year      = {2018},
+  doi       = {10.1609/aaai.v32i1.11694}
+}
+
+@inproceedings{agarwal_precipice_2021,
+  author    = {Agarwal, Rishabh and Schwarzer, Max and Castro, Pablo Samuel and Courville, Aaron and Bellemare, Marc G.},
+  title     = {Deep reinforcement learning at the edge of the statistical precipice},
+  booktitle = {{Advances in Neural Information Processing Systems (NeurIPS)}},
+  volume    = {34},
+  year      = {2021},
+  pages     = {29304--29320}
+}
+
+@article{patterson_empirical_2024,
+  author  = {Patterson, Andrew and Neumann, Samuel and White, Martha and White, Adam},
+  title   = {Empirical design in reinforcement learning},
+  journal = {{Journal of Machine Learning Research}},
+  volume  = {25},
+  number  = {318},
+  pages   = {1--63},
+  year    = {2024}
+}
+
+% ---------------------------------------------------------------------------
+% Documentation and governance
+% ---------------------------------------------------------------------------
+
+@inproceedings{gilbert_rewardreports_2023,
+  author    = {Gilbert, Thomas Krendl and Lambert, Nathan and Dean, Sarah and Zick, Tom and Snoswell, Aaron and Mehta, Soham},
+  title     = {Reward reports for reinforcement learning},
+  booktitle = {{AAAI/ACM Conference on AI, Ethics, and Society (AIES)}},
+  year      = {2023},
+  pages     = {84--130},
+  doi       = {10.1145/3600211.3604698}
+}
+
+@inproceedings{mitchell_modelcards_2019,
+  author    = {Mitchell, Margaret and Wu, Simone and Zaldivar, Andrew and Barnes, Parker and Vasserman, Lucy and Hutchinson, Ben and Spitzer, Elena and Raji, Inioluwa Deborah and Gebru, Timnit},
+  title     = {Model cards for model reporting},
+  booktitle = {{Conference on Fairness, Accountability, and Transparency (FAT*)}},
+  year      = {2019},
+  pages     = {220--229},
+  doi       = {10.1145/3287560.3287596}
+}
+
+@article{gebru_datasheets_2021,
+  author  = {Gebru, Timnit and Morgenstern, Jamie and Vecchione, Briana and Vaughan, Jennifer Wortman and Wallach, Hanna and Daum{\'e} III, Hal and Crawford, Kate},
+  title   = {Datasheets for datasets},
+  journal = {{Communications of the ACM}},
+  volume  = {64},
+  number  = {12},
+  pages   = {86--92},
+  year    = {2021},
+  doi     = {10.1145/3458723}
+}
+
+% ---------------------------------------------------------------------------
+% Affordances, cybernetics and history of simulation
+% ---------------------------------------------------------------------------
+
+@book{gibson_ecological_1979,
+  author    = {Gibson, James J.},
+  title     = {The ecological approach to visual perception},
+  publisher = {{Houghton Mifflin}},
+  address   = {Boston},
+  year      = {1979}
+}
+
+@book{ashby_cybernetics_1956,
+  author    = {Ashby, W. Ross},
+  title     = {An introduction to cybernetics},
+  publisher = {{Chapman and Hall}},
+  address   = {London},
+  year      = {1956}
+}
+
+@article{conant_regulator_1970,
+  author  = {Conant, Roger C. and Ashby, W. Ross},
+  title   = {Every good regulator of a system must be a model of that system},
+  journal = {{International Journal of Systems Science}},
+  volume  = {1},
+  number  = {2},
+  pages   = {89--97},
+  year    = {1970},
+  doi     = {10.1080/00207727008920220}
+}
+
+@book{jakab_visions_1990,
+  author    = {Jakab, Peter L.},
+  title     = {Visions of a flying machine: the {Wright} brothers and the process of invention},
+  publisher = {{Smithsonian Institution Press}},
+  address   = {Washington, DC},
+  year      = {1990}
+}
+
+@book{reisswitz_kriegsspiel_1824,
+  author    = {von Reisswitz, Georg Heinrich Rudolf Johann},
+  title     = {Anleitung zur Darstellung militairischer Manöver mit dem Apparat des Kriegs-Spieles},
+  publisher = {{Trowitzsch und Sohn}},
+  address   = {Berlin},
+  year      = {1824}
+}
+
+@book{verdy_kriegsspiel_1876,
+  author    = {von Verdy du Vernois, Julius},
+  title     = {Beitrag zum Kriegsspiel},
+  publisher = {{E. S. Mittler und Sohn}},
+  address   = {Berlin},
+  year      = {1876}
+}

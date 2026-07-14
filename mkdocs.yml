@@ -55,6 +55,17 @@ extra:
       link: https://github.com/hcltech-robotics/asset-factory-blueprint
       name: Asset Factory Blueprint on GitHub
 
+plugins:
+  - search
+  - bibtex:
+      bib_file: references.bib
+      csl_file: docs/assets/citation-style/harvard-cite-them-right.csl
+      bib_by_default: false
+      enable_inline_citations: false
+
+hooks:
+  - scripts/docs/bibliography_hook.py
+
 markdown_extensions:
   - fenced_code
   - sane_lists
@@ -118,6 +129,7 @@ nav:
       - Agent system: agent-system.md
       - Governance: platform/governance.md
       - Mandatory early mesh verification decision: design-decisions/mandatory-mesh-verification.md
+      - RL runtime evidence boundary: design-decisions/rl-runtime-evidence-boundary.md
       - Manifest contracts: manifest-contracts.md
       - Layer ownership and variants: platform/layer-ownership-and-variants.md
       - Layout and mutation plans: platform/layout-and-mutation-plans.md
@@ -133,3 +145,4 @@ nav:
       - Provider abstraction: provider-abstraction.md
       - Skill SDK: skill-sdk.md
       - Source map: source-map.md
+      - References: references.md

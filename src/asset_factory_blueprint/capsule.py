@@ -28,12 +28,20 @@ from asset_factory_blueprint.physics_evidence import (
     physics_evidence_secret_from_environment,
     verify_physics_evidence_attestation,
 )
+from asset_factory_blueprint.rl_evidence import (
+    FIDELITY_REPORT_ID,
+    PROBE_REPORT_ID,
+    environment_manifest_sha256,
+    verify_import_receipt_payload,
+    verify_report,
+)
 from asset_factory_blueprint.schemas.common import RunPlan, RunRequest
 from asset_factory_blueprint.security import ensure_path_component
 from asset_factory_blueprint.services.official_validator import (
     normalise_official_profile_report,
     verify_official_profile_report_attestation,
 )
+from asset_factory_blueprint.services.fitness import FITNESS_TESTS_BY_SCOPE, RL_RIGID_BODY_TESTS
 from asset_factory_blueprint.services.simready import _revalidate_packaged_physics_evidence
 from asset_factory_blueprint.utils.checksums import sha256_file, sha256_text
 from asset_factory_blueprint.utils.ids import content_id, stage_attempt_id
@@ -60,12 +68,6 @@ _UNRESOLVED_MODEL_VALUES = {
     "unknown",
     "unresolved",
 }
-_FITNESS_TESTS_BY_SCOPE = {
-    "visualisation": ("visual_render_acceptance",),
-    "rigid_body_manipulation": ("manipulation_contact_fidelity",),
-    "articulated_training": ("joint_task_fidelity",),
-    "redistribution": ("consumer_install_reproduction",),
-}
 _POSITIVE_EVIDENCE_PATHS = {
     "task_fitness": "validation/task-fitness-evidence.json",
     "task_protocol": "validation/task-fitness-protocol.json",
@@ -73,6 +75,13 @@ _POSITIVE_EVIDENCE_PATHS = {
     "official_raw": "validation/official-validator-raw.json",
     "openusd": "validation/openusd-compliance.json",
     "package_closure": "validation/package-dependency-closure.json",
+}
+_RL_POSITIVE_EVIDENCE_PATHS = {
+    "manifest": "validation/rl-environment-manifest.json",
+    "probe": "validation/rl-probe-evidence.json",
+    "probe_receipt": "validation/rl-probe-evidence.import.json",
+    "fidelity": "validation/rl-collision-fidelity.json",
+    "fidelity_receipt": "validation/rl-collision-fidelity.import.json",
 }
 _WINDOWS_PATH_PATTERN = re.compile(r"(?i)(?<![A-Za-z0-9])(?:[a-z]:[\\/]|\\\\[^\\/\s]+[\\/])")
 _POSIX_HOME_PATTERN = re.compile(r"(?:^|[\s\"'])/(?:home|Users)/[^/\s\"']+(?:/|$)")
@@ -1500,6 +1509,184 @@ def _copy_bound_file_evidence(
     roles[capsule_relative] = (role, licence_expression, actual)
 
 
+def _rl_protocol_extension(protocol: Mapping[str, Any]) -> Mapping[str, Any] | None:
+    extensions = protocol.get("extensions") if isinstance(protocol.get("extensions"), Mapping) else {}
+    rl_extension = extensions.get("rl") if isinstance(extensions.get("rl"), Mapping) else None
+    return rl_extension
+
+
+def _rl_evidence_records(manifest: Mapping[str, Any]) -> dict[str, Mapping[str, Any]]:
+    records = [item for item in manifest.get("evidence") or [] if isinstance(item, Mapping)]
+    by_id: dict[str, Mapping[str, Any]] = {}
+    for record in records:
+        evidence_id = str(record.get("evidence_id") or "")
+        if evidence_id in by_id:
+            raise CapsuleCreationError([f"RL manifest contains duplicate evidence ID {evidence_id!r}"])
+        by_id[evidence_id] = record
+    return by_id
+
+
+def _rl_static_stage_core(manifest: Mapping[str, Any]) -> dict[str, Any]:
+    extensions = manifest.get("extensions") if isinstance(manifest.get("extensions"), Mapping) else {}
+    block = json.loads(json.dumps(extensions.get("rl") or {}))
+    for field in (
+        "contract_sha256",
+        "status",
+        "gates",
+        "blocked_reasons",
+        "review_reasons",
+        "known_gaps",
+        "environment_card",
+        "task_fitness_protocol",
+    ):
+        block.pop(field, None)
+    return {
+        "asset_id": manifest.get("asset_id"),
+        "run_id": manifest.get("run_id"),
+        "rl": block,
+    }
+
+
+def _verify_rl_report_pair(
+    manifest: Mapping[str, Any],
+    protocol: Mapping[str, Any],
+    report_relative: str,
+    report_bytes: bytes,
+    report: Mapping[str, Any],
+    receipt: Mapping[str, Any],
+    report_id: str,
+) -> list[str]:
+    block = (
+        manifest.get("extensions", {}).get("rl", {})
+        if isinstance(manifest.get("extensions"), Mapping)
+        else {}
+    )
+    runtime = block.get("runtime") if isinstance(block.get("runtime"), Mapping) else {}
+    protocol_rl = _rl_protocol_extension(protocol) or {}
+    errors = verify_report(
+        report,
+        report_id,
+        expected_backend=str(runtime.get("physics_backend") or ""),
+        expected_usd_sha256=str(runtime.get("validated_usd_sha256") or ""),
+        expected_request_digest=str(protocol_rl.get("request_digest") or ""),
+        expected_manifest_sha256=environment_manifest_sha256(manifest),
+        expected_contract_sha256=str(block.get("contract_sha256") or ""),
+        expected_package_fingerprint=str(runtime.get("validated_package_dependency_fingerprint") or ""),
+        expected_sim_dt=runtime.get("sim_dt"),
+        expected_decimation=runtime.get("decimation"),
+    )
+    errors.extend(
+        verify_import_receipt_payload(
+            report_relative,
+            report_bytes,
+            report,
+            receipt,
+        )
+    )
+    return errors
+
+
+def _copy_rl_evidence_chain(
+    project_root: Path,
+    staging: Path,
+    *,
+    protocol: Mapping[str, Any],
+    roles: dict[str, tuple[str, str, str | None]],
+    licence_expression: str,
+) -> None:
+    manifest_path = _project_file(project_root, "manifests/rl-environment-manifest.json")
+    assert manifest_path is not None
+    manifest = _load_json(manifest_path, "RL environment manifest")
+    if validate_payload("rl-environment-manifest", manifest):
+        raise CapsuleCreationError(["positive RL capsule requires a schema-valid RL environment manifest"])
+    block = (
+        manifest.get("extensions", {}).get("rl", {})
+        if isinstance(manifest.get("extensions"), Mapping)
+        else {}
+    )
+    if manifest.get("status") not in {"validated", "released"} or block.get("status") != "validated":
+        raise CapsuleCreationError(["positive RL capsule requires a validated RL environment manifest"])
+    protocol_binding = block.get("task_fitness_protocol") if isinstance(block.get("task_fitness_protocol"), Mapping) else {}
+    copied_protocol_path = staging / _POSITIVE_EVIDENCE_PATHS["task_protocol"]
+    if (
+        protocol_binding.get("sha256") != sha256_file(copied_protocol_path)
+        or protocol_binding.get("protocol_id") != protocol.get("protocol_id")
+    ):
+        raise CapsuleCreationError(["RL manifest and positive task-fitness protocol are not the same contract"])
+
+    manifest_destination = staging / _RL_POSITIVE_EVIDENCE_PATHS["manifest"]
+    _copy_exact_safe(manifest_path, manifest_destination)
+    roles[_RL_POSITIVE_EVIDENCE_PATHS["manifest"]] = (
+        "rl_environment_manifest",
+        licence_expression,
+        sha256_file(manifest_path),
+    )
+
+    evidence = _rl_evidence_records(manifest)
+    definitions = (
+        (
+            "probe",
+            "rl_probe_evidence",
+            "rl_probe_import_receipt",
+            PROBE_REPORT_ID,
+            "reports/rl-probe-evidence.json",
+            "reports/rl-probe-evidence.import.json",
+        ),
+        (
+            "fidelity",
+            "rl_collision_fidelity",
+            "rl_fidelity_import_receipt",
+            FIDELITY_REPORT_ID,
+            "reports/rl-collision-fidelity.json",
+            "reports/rl-collision-fidelity.import.json",
+        ),
+    )
+    for key, report_id_key, receipt_id_key, report_identity, report_uri, receipt_uri in definitions:
+        report_record = evidence.get(report_id_key)
+        receipt_record = evidence.get(receipt_id_key)
+        if not isinstance(report_record, Mapping) or not isinstance(receipt_record, Mapping):
+            raise CapsuleCreationError([f"positive RL capsule lacks {report_id_key} or its import receipt"])
+        if report_record.get("uri") != report_uri or receipt_record.get("uri") != receipt_uri:
+            raise CapsuleCreationError([f"positive RL capsule has a non-canonical {key} evidence path"])
+        report, _ = _copy_bound_json_evidence(
+            project_root,
+            staging,
+            project_relative=str(report_record.get("uri") or ""),
+            expected_sha256=str(report_record.get("checksum") or ""),
+            capsule_relative=_RL_POSITIVE_EVIDENCE_PATHS[key],
+            role=f"{key}_rl_evidence",
+            licence_expression=licence_expression,
+            redactions=Counter(),
+            roles=roles,
+            exact=True,
+        )
+        receipt, _ = _copy_bound_json_evidence(
+            project_root,
+            staging,
+            project_relative=str(receipt_record.get("uri") or ""),
+            expected_sha256=str(receipt_record.get("checksum") or ""),
+            capsule_relative=_RL_POSITIVE_EVIDENCE_PATHS[f"{key}_receipt"],
+            role=f"{key}_rl_import_receipt",
+            licence_expression=licence_expression,
+            redactions=Counter(),
+            roles=roles,
+            exact=True,
+        )
+        report_path = _project_file(project_root, str(report_record.get("uri") or ""))
+        assert report_path is not None
+        errors = _verify_rl_report_pair(
+            manifest,
+            protocol,
+            str(report_record.get("uri") or ""),
+            report_path.read_bytes(),
+            report,
+            receipt,
+            report_identity,
+        )
+        if errors:
+            raise CapsuleCreationError([f"{key} RL evidence is not trusted: " + "; ".join(errors)])
+
+
 def _copy_positive_evidence_chain(
     project_root: Path,
     staging: Path,
@@ -1541,7 +1728,7 @@ def _copy_positive_evidence_chain(
     protocol = task_source.get("protocol")
     if not isinstance(protocol, Mapping):
         raise CapsuleCreationError(["positive capsule task-fitness report has no protocol binding"])
-    _copy_bound_json_evidence(
+    _, task_protocol = _copy_bound_json_evidence(
         project_root,
         staging,
         project_relative=str(protocol.get("path") or ""),
@@ -1553,6 +1740,14 @@ def _copy_positive_evidence_chain(
         roles=roles,
         exact=True,
     )
+    if _rl_protocol_extension(task_protocol) is not None:
+        _copy_rl_evidence_chain(
+            project_root,
+            staging,
+            protocol=task_protocol,
+            roles=roles,
+            licence_expression=licence_expression,
+        )
     evidence_records = [item for item in task_source.get("evidence") or [] if isinstance(item, Mapping)]
     if not evidence_records:
         raise CapsuleCreationError(["positive capsule task-fitness report has no measurement evidence"])
@@ -2626,9 +2821,20 @@ def _task_fitness_revalidation_blockers(
     *,
     manifest: Mapping[str, Any],
     governance: Mapping[str, Any],
+    protocol: Mapping[str, Any] | None = None,
 ) -> list[str]:
     scope = str(manifest.get("release_scope") or "")
-    required_test_ids = list(_FITNESS_TESTS_BY_SCOPE.get(scope, ()))
+    protocol_extensions = (
+        protocol.get("extensions")
+        if isinstance(protocol, Mapping) and isinstance(protocol.get("extensions"), Mapping)
+        else {}
+    )
+    rl_protocol = isinstance(protocol_extensions.get("rl"), Mapping)
+    required_test_ids = list(
+        RL_RIGID_BODY_TESTS
+        if scope == "rigid_body_manipulation" and rl_protocol
+        else FITNESS_TESTS_BY_SCOPE.get(scope, ())
+    )
     profile = manifest.get("simready_profile")
     profile = profile if isinstance(profile, Mapping) else {}
     expected_bindings = {
@@ -3253,6 +3459,186 @@ def _physics_binding_revalidation_blockers(
     return blockers
 
 
+def _validate_rl_capsule_evidence(
+    root: Path,
+    capsule_manifest: Mapping[str, Any],
+    protocol: Mapping[str, Any],
+    inventory: Mapping[str, Mapping[str, Any]],
+    errors: list[dict[str, str]],
+) -> None:
+    if _rl_protocol_extension(protocol) is None:
+        return
+    documents: dict[str, dict[str, Any]] = {}
+    for name, relative in _RL_POSITIVE_EVIDENCE_PATHS.items():
+        path = root.joinpath(*PurePosixPath(relative).parts)
+        try:
+            documents[name] = _read_strict_json_object(path)
+        except (OSError, UnicodeDecodeError, ValueError, TypeError) as exc:
+            _validation_error(errors, "rl_evidence_missing", str(exc), relative)
+            continue
+        entry = inventory.get(relative, {})
+        if entry.get("sha256") != sha256_file(path):
+            _validation_error(
+                errors,
+                "rl_evidence_inventory_mismatch",
+                "RL evidence differs from the immutable capsule inventory",
+                relative,
+            )
+    if len(documents) != len(_RL_POSITIVE_EVIDENCE_PATHS):
+        return
+
+    manifest = documents["manifest"]
+    for issue in validate_payload("rl-environment-manifest", manifest):
+        _validation_error(
+            errors,
+            "rl_manifest_invalid",
+            issue.render(),
+            _RL_POSITIVE_EVIDENCE_PATHS["manifest"],
+        )
+    block = (
+        manifest.get("extensions", {}).get("rl", {})
+        if isinstance(manifest.get("extensions"), Mapping)
+        else {}
+    )
+    if manifest.get("status") not in {"validated", "released"} or block.get("status") != "validated":
+        _validation_error(
+            errors,
+            "rl_manifest_not_validated",
+            "positive RL capsule does not contain a validated RL environment manifest",
+            _RL_POSITIVE_EVIDENCE_PATHS["manifest"],
+        )
+    latest = _latest_capsule_stage_manifest(root, "rl-environment", capsule_manifest, inventory)
+    if latest is None or _canonical_json(_rl_static_stage_core(latest)) != _canonical_json(
+        _rl_static_stage_core(manifest)
+    ):
+        _validation_error(
+            errors,
+            "rl_manifest_snapshot_mismatch",
+            "RL environment evidence does not descend from the selected run's environment design",
+            _RL_POSITIVE_EVIDENCE_PATHS["manifest"],
+        )
+    protocol_rl = _rl_protocol_extension(protocol) or {}
+    if (
+        manifest.get("run_id") != capsule_manifest.get("run_id")
+        or protocol_rl.get("run_id") != capsule_manifest.get("run_id")
+        or protocol_rl.get("request_digest") != capsule_manifest.get("request_digest")
+    ):
+        _validation_error(
+            errors,
+            "rl_run_binding_mismatch",
+            "RL manifest and protocol do not identify the selected capsule run",
+            _RL_POSITIVE_EVIDENCE_PATHS["manifest"],
+        )
+    protocol_binding = (
+        block.get("task_fitness_protocol")
+        if isinstance(block.get("task_fitness_protocol"), Mapping)
+        else {}
+    )
+    protocol_path = root / _POSITIVE_EVIDENCE_PATHS["task_protocol"]
+    if (
+        protocol_binding.get("protocol_id") != protocol.get("protocol_id")
+        or protocol_binding.get("sha256") != sha256_file(protocol_path)
+    ):
+        _validation_error(
+            errors,
+            "rl_protocol_binding_mismatch",
+            "RL environment manifest is not bound to the approved task-fitness protocol",
+            _POSITIVE_EVIDENCE_PATHS["task_protocol"],
+        )
+
+    try:
+        evidence = _rl_evidence_records(manifest)
+    except CapsuleCreationError as exc:
+        for blocker in exc.blockers:
+            _validation_error(
+                errors,
+                "rl_evidence_record_invalid",
+                blocker,
+                _RL_POSITIVE_EVIDENCE_PATHS["manifest"],
+            )
+        return
+    definitions = (
+        (
+            "probe",
+            "rl_probe_evidence",
+            "rl_probe_import_receipt",
+            PROBE_REPORT_ID,
+            "rl-probe-evidence",
+            "reports/rl-probe-evidence.json",
+            "reports/rl-probe-evidence.import.json",
+        ),
+        (
+            "fidelity",
+            "rl_collision_fidelity",
+            "rl_fidelity_import_receipt",
+            FIDELITY_REPORT_ID,
+            "rl-collision-fidelity",
+            "reports/rl-collision-fidelity.json",
+            "reports/rl-collision-fidelity.import.json",
+        ),
+    )
+    for key, report_id_key, receipt_id_key, report_identity, schema_name, report_uri, receipt_uri in definitions:
+        report_record = evidence.get(report_id_key)
+        receipt_record = evidence.get(receipt_id_key)
+        if not isinstance(report_record, Mapping) or not isinstance(receipt_record, Mapping):
+            _validation_error(
+                errors,
+                "rl_evidence_record_missing",
+                f"RL manifest lacks {report_id_key} or its import receipt",
+                _RL_POSITIVE_EVIDENCE_PATHS["manifest"],
+            )
+            continue
+        if report_record.get("uri") != report_uri or receipt_record.get("uri") != receipt_uri:
+            _validation_error(
+                errors,
+                "rl_evidence_path_invalid",
+                f"{key} RL evidence does not use the canonical report and receipt paths",
+                _RL_POSITIVE_EVIDENCE_PATHS["manifest"],
+            )
+        report_path = root / _RL_POSITIVE_EVIDENCE_PATHS[key]
+        receipt_path = root / _RL_POSITIVE_EVIDENCE_PATHS[f"{key}_receipt"]
+        report = documents[key]
+        receipt = documents[f"{key}_receipt"]
+        report_sha256 = sha256_file(report_path)
+        receipt_sha256 = sha256_file(receipt_path)
+        if (
+            str(report_record.get("checksum") or "").removeprefix("sha256:").lower() != report_sha256
+            or str(receipt_record.get("checksum") or "").removeprefix("sha256:").lower() != receipt_sha256
+            or inventory.get(_RL_POSITIVE_EVIDENCE_PATHS[key], {}).get("origin_sha256") != report_sha256
+            or inventory.get(_RL_POSITIVE_EVIDENCE_PATHS[f"{key}_receipt"], {}).get("origin_sha256")
+            != receipt_sha256
+        ):
+            _validation_error(
+                errors,
+                "rl_evidence_origin_mismatch",
+                f"{key} RL evidence or receipt differs from the manifest binding",
+                _RL_POSITIVE_EVIDENCE_PATHS[key],
+            )
+        for issue in validate_payload(schema_name, report):
+            _validation_error(
+                errors,
+                "rl_evidence_schema_invalid",
+                issue.render(),
+                _RL_POSITIVE_EVIDENCE_PATHS[key],
+            )
+        trust_errors = _verify_rl_report_pair(
+            manifest,
+            protocol,
+            str(report_record.get("uri") or ""),
+            report_path.read_bytes(),
+            report,
+            receipt,
+            report_identity,
+        )
+        for blocker in trust_errors:
+            _validation_error(
+                errors,
+                "rl_evidence_revalidation_failed",
+                blocker,
+                _RL_POSITIVE_EVIDENCE_PATHS[key],
+            )
+
+
 def _validate_positive_underlying_evidence(
     root: Path,
     manifest: Mapping[str, Any],
@@ -3317,6 +3703,7 @@ def _validate_positive_underlying_evidence(
         task_blockers = _task_fitness_revalidation_blockers(
             documents["task_fitness"],
             task_summary,
+            protocol=documents["task_protocol"],
             manifest=manifest,
             governance=governance,
         )
@@ -3330,6 +3717,7 @@ def _validate_positive_underlying_evidence(
 
     task_report = documents["task_fitness"]
     task_protocol = documents["task_protocol"]
+    _validate_rl_capsule_evidence(root, manifest, task_protocol, inventory, errors)
     task_materialisation_blockers: list[str] = []
     expected_report_id = content_id(
         "task_fitness",

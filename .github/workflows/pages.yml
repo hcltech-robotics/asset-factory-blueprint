@@ -27,6 +27,8 @@ jobs:
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
         with:
           enablement: true
+      - name: Install pandoc for bibliography rendering
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends pandoc
       - run: python -m pip install -e ".[docs]"
       - run: mkdocs build --strict
       - name: Add machine-readable documentation assets

@@ -10,9 +10,6 @@
     "protocol_version",
     "status",
     "scope",
-    "authority",
-    "approval_id",
-    "approved_at",
     "tests"
   ],
   "properties": {
@@ -60,5 +57,11 @@
       }
     },
     "extensions": {"type": "object", "additionalProperties": true}
-  }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "approved"}}, "required": ["status"]},
+      "then": {"required": ["authority", "approval_id", "approved_at"]}
+    }
+  ]
 }
