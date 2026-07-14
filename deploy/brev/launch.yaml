@@ -1,2 +1,2 @@
 name: asset-factory-blueprint
-command: afb provider check --policy configs/provider-policy.json
+command: bash deploy/brev/launch.sh

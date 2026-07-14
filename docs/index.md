@@ -1,6 +1,12 @@
 # Asset Factory Blueprint
 
-This blueprint turns source evidence into governed OpenUSD asset candidates and controlled simulation variants. It records the visual detail, physical behaviour, material state and articulation needed for robotics policy training, subject to named conformance and runtime gates.
+Robotic policies learn from what the simulator shows them. Clean-looking but physically wrong scenes teach brittle cues. Traceable geometry, scale, mass, friction, joints and material state make failures easier to find before they reach training. **The Asset Factory Blueprint creates the repeatable, governed USD pipelines that automatically build assets from your photos, meshes, USD files and other source evidence that will be _useful_, not just good-looking.**
+
+![asset factory pipeline](assets/asset-factory-pipeline.svg)
+
+The key idea is _repeatability_. A simulation asset should be rebuildable from its sources, with its geometry, materials, textures, physical properties, articulation and variants tied to evidence.
+
+The Asset Factory Blueprint is a coordinator that works with your tools, patches into your workflow where you want it to pick up, and integrates with your governance and Profiles. Asset Factories power high-performance, high-throughput environment generation for reinforcement learning, simulation and verification.
 
 ## Read first
 
@@ -48,37 +54,28 @@ This blueprint turns source evidence into governed OpenUSD asset candidates and 
 - [Citation and reproducibility](citation-and-reproducibility.md)
 - [Reference-run capsule](reference-run-capsule.md)
 
-## Generated visualisations
+## About the Asset Factory Blueprint
 
-Core architecture:
+The Asset Factory Blueprint was developed at HCLTech's Robotics Intelligence Lab in early 2026. We are a team of engineers, developers and roboticists who have to navigate a world of increasing complexity and provide training environments that reflect reality so that our robots can learn the right policies, faster. Asset factories make this possible at scale and in an economically efficient manner.
 
-- [Architecture diagram](assets/architecture.svg)
-- [Eight-stage pipeline diagram](assets/asset-factory-pipeline.svg)
-- [Image to USD storyboard](assets/image-to-usd-storyboard.svg)
-- [Runtime layer contract](assets/runtime-layer-contract.svg)
-- [Agent workflow diagram](assets/agent-workflow.svg)
-- [Agentic loop diagram](assets/agentic-loop.svg)
-- [Execution lanes diagram](assets/execution-lanes.svg)
-- [Library grounding diagram](assets/library-grounding.svg)
+### Principal investigators
 
-Stage flows:
+* Chris von Csefalvay, HCLTech
+* Tamas Foldi, HCLTech, Head of Lab
 
-- [Source ingestion lineage](assets/source-ingestion-lineage.svg)
-- [Segmentation lane](assets/segmentation-lane.svg)
-- [Material and physical inference lane](assets/material-inference-lane.svg)
-- [Texturing lane](assets/texturing-lane.svg)
-- [Texture and physics consistency lane](assets/texture-physics-consistency-lane.svg)
-- [Physics and articulation lane](assets/physics-articulation-lane.svg)
-- [Nonvisual materials lane](assets/nonvisual-materials-lane.svg)
-- [SimReady verification gates](assets/simready-verification-gates.svg)
-- [RL environment loop](assets/rl-environment-loop.svg)
+### Citation
 
-Operations and governance:
+```bibtex
+@software{voncsefalvay_asset_factory_blueprint_2026,
+  author  = {von Csefalvay, Chris},
+  title   = {{Asset Factory Blueprint}},
+  year    = {2026},
+  version = {1.0.0},
+  url     = {https://github.com/hcltech-robotics/asset-factory-blueprint}
+}
+```
 
-- [Orchestrator routing](assets/orchestrator-routing.svg)
-- [Direct partial invocation](assets/partial-invocation-convergence.svg)
-- [Tool service authorisation](assets/tool-service-authorisation.svg)
-- [Record graph](assets/record-graph.svg)
-- [USD layer ownership](assets/usd-layer-ownership.svg)
-- [Governance release decision](assets/governance-release-decision.svg)
-- [Reference capsule trust chain](assets/capsule-trust-chain.svg)
+
+### License
+
+The Asset Factory Blueprint and all its code are released under the MIT license. 
