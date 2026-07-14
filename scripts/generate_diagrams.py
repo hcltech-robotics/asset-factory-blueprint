@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Generate the documentation figures for the asset factory blueprint.
 
-Figures are composed SVG schematics: titled panels with item chips, highlighted
-borders for NVIDIA surfaces, accent connectors for the hot path. Check mode
+Figures are composed SVG schematics: titled panels with item chips, template
+palette highlights and accent connectors for focused paths. Check mode
 regenerates every figure in memory and fails on drift against the committed
 assets. PNG export through a headless Chromium is optional.
 """
@@ -23,39 +23,18 @@ DEFAULT_PNG_DIR = ROOT / "artifacts" / "diagrams"
 
 THEME = {
     "bg": "transparent",
-    "panel": "#0a100c",
-    "panel_hot": "#0b1608",
-    "panel_accent": "#160929",
-    "inner_accent": "#1b0c31",
-    "stroke": "#7d8780",
-    "stroke_dim": "#3d4a42",
-    "green": "#76b900",
-    "accent": "#5f1ebe",
-    "text": "#edf3ef",
-    "muted": "#c6cec8",
+    # Mirrors the dark-scheme tokens in docs/assets/stylesheets/hcltech-robotics.css.
+    "panel": "#222229",
+    "panel_hot": "#292931",
+    "inner": "#2f3039",
+    "stroke": "#526476",
+    "stroke_dim": "#3b3e49",
+    "primary": "#3c91ff",
+    "accent": "#8c69f0",
+    "signal": "#4bc3af",
+    "text": "#f0f2f8",
+    "muted": "#c8d2dd",
 }
-
-GREEN_BORDER_LABELS = {
-    "isaac",
-    "isaacsim",
-    "isaaclab",
-    "nim",
-    "omniverse",
-    "simready",
-    "usdsearch",
-    "vmaterials",
-    "physx",
-    "nucleus",
-}
-
-
-def label_key(label: str) -> str:
-    return "".join(ch for ch in label.lower() if ch.isalnum())
-
-
-def has_green_border(label: str) -> bool:
-    key = label_key(label)
-    return key in GREEN_BORDER_LABELS or key.startswith(("isaac", "omniverse", "simready", "usdsearch", "vmaterials"))
 
 
 def svg_open(title: str, desc: str, width: int = 1360, height: int = 620) -> list[str]:
@@ -67,22 +46,21 @@ def svg_open(title: str, desc: str, width: int = 1360, height: int = 620) -> lis
         "    <style>",
         f"      .bg {{ fill: {THEME['bg']}; }}",
         f"      .box {{ fill: {THEME['panel']}; stroke: {THEME['stroke_dim']}; stroke-width: 2; }}",
-        f"      .boxHot {{ fill: {THEME['panel_hot']}; stroke: {THEME['green']}; stroke-width: 2.3; }}",
-        f"      .boxAccent {{ fill: {THEME['panel_accent']}; stroke: {THEME['accent']}; stroke-width: 2.3; }}",
-        f"      .inner {{ fill: #0d130f; stroke: {THEME['stroke']}; stroke-width: 1.9; }}",
-        f"      .innerHot {{ fill: #0d1809; stroke: {THEME['green']}; stroke-width: 1.9; }}",
-        f"      .innerAccent {{ fill: {THEME['inner_accent']}; stroke: {THEME['accent']}; stroke-width: 1.9; }}",
+        f"      .boxHot {{ fill: {THEME['panel_hot']}; stroke: {THEME['primary']}; stroke-width: 2.3; }}",
+        f"      .inner {{ fill: {THEME['inner']}; stroke: {THEME['stroke']}; stroke-width: 1.9; }}",
+        f"      .innerHot {{ fill: {THEME['panel_hot']}; stroke: {THEME['primary']}; stroke-width: 1.9; }}",
+        f"      .innerAccent {{ fill: {THEME['inner']}; stroke: {THEME['accent']}; stroke-width: 1.9; }}",
         f"      .label {{ fill: {THEME['text']}; font-family: Aptos, Helvetica, sans-serif; font-size: 20px; font-weight: 680; }}",
         f"      .small {{ fill: {THEME['muted']}; font-family: Aptos, Helvetica, sans-serif; font-size: 13px; font-weight: 620; }}",
-        "      .line { stroke: #e6ece8; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }",
-        f"      .greenLine {{ stroke: {THEME['green']}; stroke-width: 2.4; fill: none; marker-end: url(#arrowGreen); }}",
+        f"      .line {{ stroke: {THEME['signal']}; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }}",
+        f"      .primaryLine {{ stroke: {THEME['primary']}; stroke-width: 2.4; fill: none; marker-end: url(#arrowPrimary); }}",
         f"      .accentLine {{ stroke: {THEME['accent']}; stroke-width: 2.4; fill: none; marker-end: url(#arrowAccent); }}",
         "    </style>",
         '    <marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">',
-        '      <path d="M 0 1 L 8 4 L 0 7 z" fill="#e6ece8"/>',
+        f'      <path d="M 0 1 L 8 4 L 0 7 z" fill="{THEME["signal"]}"/>',
         "    </marker>",
-        '    <marker id="arrowGreen" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">',
-        f'      <path d="M 0 1 L 8 4 L 0 7 z" fill="{THEME["green"]}"/>',
+        '    <marker id="arrowPrimary" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">',
+        f'      <path d="M 0 1 L 8 4 L 0 7 z" fill="{THEME["primary"]}"/>',
         "    </marker>",
         '    <marker id="arrowAccent" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">',
         f'      <path d="M 0 1 L 8 4 L 0 7 z" fill="{THEME["accent"]}"/>',
@@ -122,8 +100,7 @@ def outer_box(
     title_size: int | None = None,
 ) -> list[str]:
     hot_items = hot_items or set()
-    title_is_nvidia = has_green_border(title)
-    cls = "boxHot" if title_is_nvidia else "boxAccent" if hot else "box"
+    cls = "boxHot" if hot else "box"
     out = [f'  <rect class="{cls}" x="{x:.0f}" y="{y:.0f}" width="{w:.0f}" height="{h:.0f}" rx="8"/>']
     title_y = y + (34 if h <= 110 else 42)
     style = f' style="font-size:{title_size}px"' if title_size else ""
@@ -141,7 +118,6 @@ def outer_box(
     total_height = ih * len(items) + gap * (len(items) - 1)
     start_y = content_top + max(0, int((available - total_height) / 2))
     for i, item in enumerate(items):
-        item_is_nvidia = has_green_border(item)
         out.extend(
             inner_box(
                 ix,
@@ -149,34 +125,33 @@ def outer_box(
                 iw,
                 ih,
                 item,
-                hot=item_is_nvidia,
-                accent=item in hot_items and not item_is_nvidia,
+                accent=item in hot_items,
             )
         )
     return out
 
 
 def arrow(x1: float, y1: float, x2: float, y2: float, hot: bool = False, accent: bool = False) -> str:
-    cls = "greenLine" if hot else "accentLine" if accent else "line"
+    cls = "primaryLine" if hot else "accentLine" if accent else "line"
     return f'  <path class="{cls}" d="M{x1:.0f} {y1:.0f} L{x2:.0f} {y2:.0f}"/>'
 
 
 def elbow(points: list[tuple[float, float]], hot: bool = False, accent: bool = False) -> str:
-    cls = "greenLine" if hot else "accentLine" if accent else "line"
+    cls = "primaryLine" if hot else "accentLine" if accent else "line"
     path = [f"M{points[0][0]:.0f} {points[0][1]:.0f}"]
     path.extend(f"L{x:.0f} {y:.0f}" for x, y in points[1:])
     return f'  <path class="{cls}" d="{" ".join(path)}"/>'
 
 
 def trunk(points: list[tuple[float, float]], hot: bool = False, accent: bool = False) -> str:
-    colour = THEME["green"] if hot else THEME["accent"] if accent else "#e6ece8"
+    colour = THEME["primary"] if hot else THEME["accent"] if accent else THEME["signal"]
     path = [f"M{points[0][0]:.0f} {points[0][1]:.0f}"]
     path.extend(f"L{x:.0f} {y:.0f}" for x, y in points[1:])
     return f'  <path d="{" ".join(path)}" style="stroke:{colour};stroke-width:2.2;fill:none"/>'
 
 
 def junction(x: float, y: float, accent: bool = False) -> str:
-    colour = THEME["accent"] if accent else "#e6ece8"
+    colour = THEME["accent"] if accent else THEME["signal"]
     return f'  <circle cx="{x:.0f}" cy="{y:.0f}" r="4" fill="{colour}"/>'
 
 

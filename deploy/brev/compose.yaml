@@ -1,0 +1,30 @@
+services:
+  asset-factory:
+    init: true
+    user: "${AFB_BREV_UID:?Set AFB_BREV_UID}:${AFB_BREV_GID:?Set AFB_BREV_GID}"
+    build:
+      context: ../..
+      dockerfile: deploy/Dockerfile
+    environment:
+      AFB_ENV: brev
+      AFB_TRUSTED_TOOL_SERVER_NETWORK: "1"
+      AFB_TOOL_SERVER_TOKEN: "${AFB_TOOL_SERVER_TOKEN:?Set AFB_TOOL_SERVER_TOKEN in Brev secrets}"
+      AFB_TOOL_SERVER_APPROVAL_SECRET: "${AFB_TOOL_SERVER_APPROVAL_SECRET:?Set AFB_TOOL_SERVER_APPROVAL_SECRET in Brev secrets}"
+      AFB_TOOL_SERVER_ALLOWED_TOOLS: "${AFB_TOOL_SERVER_ALLOWED_TOOLS:-asset_programme_intake,asset_factory_start}"
+      AFB_TOOL_SERVER_JOB_STORE: /workspace/artifacts/tool-server-state
+    ports:
+      - "${AFB_BREV_BIND_ADDRESS:-0.0.0.0}:${AFB_BREV_PORT:-8181}:8181"
+    volumes:
+      - ../../projects:/workspace/projects
+      - ../../artifacts:/workspace/artifacts
+      - ../../library/downloads:/workspace/library/downloads
+      - ../../.cache/afb:/workspace/.cache/afb
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+    stop_grace_period: 30s
