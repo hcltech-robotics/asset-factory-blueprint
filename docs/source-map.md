@@ -1,3 +1,7 @@
+---
+description: "Trace each blueprint requirement to its governing schema, service, command and generated proof artefacts."
+---
+
 # Source map
 
 The source map ties each blueprint requirement to its schema, service, command and generated artefacts so readers can locate the implementation and its proof surface.

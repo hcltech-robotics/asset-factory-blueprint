@@ -1,3 +1,7 @@
+---
+description: "Review the accepted boundary for Isaac Lab runtime evidence, including supported pick-task semantics, checksum bindings and rejected behaviours."
+---
+
 # RL runtime evidence boundary
 
 Status: accepted

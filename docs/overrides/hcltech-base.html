@@ -20,6 +20,85 @@
   {{ super() }}
   <meta name="theme-color" content="#f7f9fc" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#19191e" media="(prefers-color-scheme: dark)">
+  <link rel="describedby" href="{{ 'llms.txt' | url }}" type="text/plain">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css?family=Manrope:300,300i,400,400i,700,700i%7CIBM+Plex+Mono:400,400i,700,700i&amp;display=optional" as="style">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Manrope:300,300i,400,400i,700,700i%7CIBM+Plex+Mono:400,400i,700,700i&amp;display=optional" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Manrope:300,300i,400,400i,700,700i%7CIBM+Plex+Mono:400,400i,700,700i&amp;display=optional">
+  </noscript>
+  {% set publisher_name = config.extra.publisher_name | d(config.site_author, true) %}
+  {% set publisher_url = config.extra.publisher_url %}
+  {% set software_id = config.repo_url ~ '#software' %}
+  {% set website_id = config.site_url ~ '#website' %}
+  {% set organisation_id = publisher_url ~ '#organisation' %}
+  {% if page and page.meta and page.meta.description %}
+    {% set page_description = page.meta.description %}
+  {% else %}
+    {% set page_description = config.site_description %}
+  {% endif %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": {{ organisation_id | tojson }},
+          "name": {{ publisher_name | tojson }},
+          "url": {{ publisher_url | tojson }}
+        },
+        {
+          "@type": "WebSite",
+          "@id": {{ website_id | tojson }},
+          "url": {{ config.site_url | tojson }},
+          "name": {{ config.site_name | tojson }},
+          "description": {{ config.site_description | tojson }},
+          "publisher": { "@id": {{ organisation_id | tojson }} },
+          "inLanguage": "en"
+        },
+        {
+          "@type": "SoftwareSourceCode",
+          "@id": {{ software_id | tojson }},
+          "name": {{ config.site_name | tojson }},
+          "description": {{ config.extra.software_description | tojson }},
+          "codeRepository": {{ config.repo_url | tojson }},
+          "license": "https://opensource.org/license/mit",
+          "programmingLanguage": "Python",
+          "publisher": { "@id": {{ organisation_id | tojson }} }
+        }{% if page and page.canonical_url %},
+        {
+          "@type": "WebPage",
+          "@id": {{ (page.canonical_url ~ '#webpage') | tojson }},
+          "url": {{ page.canonical_url | tojson }},
+          "name": {% if page.is_homepage %}{{ config.site_name | tojson }}{% else %}{{ page.title | striptags | tojson }}{% endif %},
+          "description": {{ page_description | tojson }},
+          "isPartOf": { "@id": {{ website_id | tojson }} },
+          "about": { "@id": {{ software_id | tojson }} },
+          "publisher": { "@id": {{ organisation_id | tojson }} }{% if not page.is_homepage %},
+          "breadcrumb": { "@id": {{ (page.canonical_url ~ '#breadcrumb') | tojson }} }{% endif %},
+          "inLanguage": "en"
+        }{% if not page.is_homepage %},
+        {
+          "@type": "BreadcrumbList",
+          "@id": {{ (page.canonical_url ~ '#breadcrumb') | tojson }},
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": {{ (config.site_url ~ 'index.html') | tojson }}
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": {{ page.title | striptags | tojson }},
+              "item": {{ page.canonical_url | tojson }}
+            }
+          ]
+        }{% endif %}{% endif %}
+      ]
+    }
+  </script>
 {% endblock %}
 
 {% block scripts %}

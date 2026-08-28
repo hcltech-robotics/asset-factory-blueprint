@@ -1,3 +1,7 @@
+---
+description: "Use the public Asset Factory Skill SDK to extend stage logic through typed contexts, tools and structured proposals."
+---
+
 # Skill SDK
 
 The public SDK is exported from `asset_factory_blueprint.skills`.

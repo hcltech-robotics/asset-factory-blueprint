@@ -1,3 +1,7 @@
+---
+description: "Define ownership of OpenUSD source, geometry, look, physics and articulation layers and validate controlled variants."
+---
+
 # Layer ownership and variants
 
 Layer authority is explicit. Tools write only to their owned layer family.

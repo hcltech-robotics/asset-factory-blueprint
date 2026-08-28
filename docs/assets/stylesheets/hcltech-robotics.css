@@ -1,5 +1,5 @@
 /*
- * HCLTech Robotics for Material for MkDocs
+ * HCLTech Robotics Intelligence CoE for Material for MkDocs
  *
  * This is an original adaptation of the supplied brand principles. It maps a
  * deliberately small token set onto Material and adds documentation-specific
@@ -7,6 +7,8 @@
  */
 
 :root {
+  --md-text-font: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --md-code-font: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   --hclr-blue: #0f5fdc;
   --hclr-blue-bright: #3c91ff;
   --hclr-blue-mid: #8cc8fa;
@@ -317,7 +319,7 @@ body {
   text-decoration-color: currentColor;
 }
 
-/* Keep a descriptive permalink for assistive technology, but render a link glyph. */
+/* Keep a descriptive permalink title for assistive technology, but render a link glyph. */
 .md-typeset .headerlink {
   display: inline-block;
   width: 1.1rem;

@@ -1,3 +1,7 @@
+---
+description: "Ground asset, material, texture and physical-property choices in indexed local, Omniverse, USD Search or remote library evidence."
+---
+
 # Libraries
 
 Libraries index operator backings such as material folders, texture sets, USD assets, an Omniverse content estate, a USD Search endpoint and remote free sources. Agents use those indexes to ground asset, material, texture and property choices.

@@ -1,3 +1,7 @@
+---
+description: "Propose hidden thermal, acoustic and electrical material properties only when independent evidence supports promotion."
+---
+
 # Nonvisual materials
 
 The optional nonvisual-materials stage infers hidden thermal, acoustic and electrical behaviour. Pixels may support a proposal; hidden physics requires independent evidence.

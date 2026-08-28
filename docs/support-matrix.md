@@ -1,3 +1,7 @@
+---
+description: "Distinguish release-verified, CI-checked, declared and provisional platform support across Asset Factory targets."
+---
+
 # Support matrix
 
 This matrix separates declared interfaces from combinations that have release evidence. A target is supported only when a tagged release names it as release-verified and links its verification record.

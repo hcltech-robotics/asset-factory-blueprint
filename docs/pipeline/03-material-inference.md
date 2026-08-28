@@ -1,3 +1,7 @@
+---
+description: "Propose evidence-bound visual materials and physical properties for each segmented component using constrained library candidates."
+---
+
 # Material and physical inference
 
 Material inference selects constrained material-library candidates for each segmented component and proposes the physical properties that follow from them. Both are evidence-bound proposals until review promotes them.
@@ -52,13 +56,13 @@ Values enter as `review_required` or `needs_measurement` and stay there until me
 
 The generated package separates a renderer-neutral sidecar from the operative USD material:
 
-- `materials.mtlx` is a MaterialX 1.39 sidecar using Standard Surface, explicit texture colour spaces and package-relative filenames
-- `mtl.usda` is the canonical operative `UsdPreviewSurface` material and USD binding layer for the universal render context
+- `materials.mtlx` is a MaterialX 1.39 sidecar using Standard Surface, explicit texture colour spaces and package-relative filenames [@materialx_specification_2025]
+- `mtl.usda` is the canonical operative `UsdPreviewSurface` material and USD binding layer for the universal render context [@aousd_preview_surface_2026]
 - `material-adapters.json` binds both files by digest and explicitly marks the MaterialX sidecar as unbound until an `outputs:mtlx:surface` network or equivalent source-asset adapter has been authored and validated
 - MDL remains blocked until its adapter is configured
 - Storm and RTX remain pending until runtime render evidence is attached; authoring the files does not imply renderer parity
 
-The USD `mtlx` adapter gate records an explicitly unbound MaterialX sidecar as not applicable. This status is distinct from a pass. Claiming an authored MaterialX render-context adapter makes the gate applicable; the bound artefact and digest must then validate. The universal Preview Surface gate remains independent.
+The USD `mtlx` adapter gate records an explicitly unbound MaterialX sidecar as not applicable. This status is distinct from a pass. Claiming an authored MaterialX render-context adapter makes the gate applicable; the bound artefact and digest must then validate [@aousd_materialx_2026]. The universal Preview Surface gate remains independent.
 
 The package-closure validator traverses USD dependencies and MaterialX filename inputs. Missing, external or escaping texture paths block promotion.
 
@@ -69,3 +73,7 @@ The package-closure validator traverses USD dependencies and MaterialX filename 
 - every selected material has evidence
 - physical property proposals carry units, uncertainty and evidence
 - numeric values are never promoted from visual evidence alone
+
+## References
+
+\bibliography

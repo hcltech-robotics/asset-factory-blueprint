@@ -1,3 +1,7 @@
+---
+description: "Navigate the Asset Factory repository across documentation, schemas, runtime code, skills, configuration, scripts and examples."
+---
+
 # Repository structure
 
 The repository separates documentation, schemas, runtime code, skills, configs, scripts, examples and generated project workspaces.

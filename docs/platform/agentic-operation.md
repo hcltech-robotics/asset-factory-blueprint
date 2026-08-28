@@ -1,3 +1,7 @@
+---
+description: "Run the governed agent loop with deterministic gates, bounded visual review, remediation and operator escalation."
+---
+
 # Agentic operation
 
 The agent loop materialises the workspace and runs each stage's deterministic gates. A vision-language reviewer checks the artefacts, the fix library applies bounded remediations and unresolved findings go to an operator.

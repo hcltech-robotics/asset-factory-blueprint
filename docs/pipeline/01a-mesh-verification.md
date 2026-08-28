@@ -1,8 +1,16 @@
+---
+description: "Verify candidate meshes with deterministic diagnostics and visual review before promoting checksum-bound canonical geometry."
+---
+
 # Mandatory mesh verification
 
-Mesh verification is the early promotion boundary between reconstruction and every downstream geometry consumer. It reduces the risk that missing parts, malformed topology, wrong proportions or reconstruction artefacts become embedded in segmentation, materials, physics or SimReady packages.
+Mesh verification is the early promotion boundary between [reconstruction](01-reconstruction.md) and every downstream geometry consumer. It reduces the risk that missing parts, malformed topology, wrong proportions or reconstruction artefacts become embedded in [segmentation](02-segmentation.md), [materials](03-material-inference.md), physics or [SimReady packages](07-simready-verification.md).
 
 Reconstruction writes `candidate-geometry`. It does not write `canonical-geometry`. The `mesh-verification-agent` is the only stage that can promote the candidate and its approval is bound to the candidate SHA-256 checksum.
+
+## Why is mesh verification mandatory?
+
+Every downstream geometry stage depends on the same approved shape. Asset Factory therefore treats reconstruction output as candidate geometry and permits only the mesh-verification stage to promote it. Promotion requires checksum-bound topology diagnostics, fixed-view renders, source comparison and governed visual review; failures remain blocked or return to bounded repair.
 
 ## Verification sequence
 
@@ -31,7 +39,7 @@ The blind identity check prevents the intended label from biasing the approval. 
 
 ## Repair and regeneration
 
-`revise_local` selects a registered structure-preserving mesh repair such as healing holes, pruning floating fragments or repairing normals. `regenerate` executes a new reconstruction backend run with changed conditioning. The remediation sequence can remove the background from the original, select another rights-cleared source view, remove the background from that alternate or apply another registered source repair. A send-back never reuses the rejected mesh as a new candidate.
+`revise_local` selects a registered structure-preserving mesh repair such as healing holes, pruning floating fragments or repairing normals, operations grounded in established polygon-mesh repair methods [@attene_mesh_repair_2010]. `regenerate` executes a new reconstruction backend run with changed conditioning. The remediation sequence can remove the background from the original, select another rights-cleared source view, remove the background from that alternate or apply another registered source repair. A send-back never reuses the rejected mesh as a new candidate.
 
 The retry budget is bounded by both inference and review caps. Inference failures consume an inference attempt but are not mesh rejections. Reviewer transport or response-format failures are recorded as review unavailability and are not mesh rejections. Exhausted attempts leave the stage blocked with its full evidence history.
 
@@ -57,3 +65,7 @@ afb stage run mesh-verification --project projects/<slug> --live --max-fix-attem
 Downstream stages remain blocked until this invocation produces an approved checksum-bound record.
 
 The [mandatory early mesh verification design decision](../design-decisions/mandatory-mesh-verification.md) records the alternatives, compatibility effect and migration path for this promotion boundary.
+
+## References
+
+\bibliography

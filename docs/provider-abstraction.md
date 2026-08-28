@@ -1,10 +1,18 @@
+---
+description: "Configure replaceable model providers by role and capability while retaining validation authority in repository gates."
+---
+
 # Provider abstraction
 
 Providers are selected by role and capability, not by hard-coded vendor logic.
 
+## How are model providers controlled?
+
+Asset Factory selects providers by declared role and capability, then treats every model response as proposal material. [Provider policy](platform/orchestrator.md) controls lanes, credentials and fallback behaviour; schemas and deterministic repository gates retain authority over durable state. This keeps vendor-specific clients replaceable without allowing a model to promote its own output.
+
 ## Provider authority
 
-Models may generate proposals, classify evidence, draft texture prompts or summarise stage records. Provider selection remains replaceable and repository gates retain validation authority.
+Models may generate proposals, classify evidence, draft texture prompts or summarise stage records. Provider selection remains replaceable and repository [governance](platform/governance.md) retains validation authority. Credentials are configured through the [environment reference](environment-reference.md), while isolated backend processes follow the [external model runner](platform/external-model-runners.md) contract.
 
 ## Lanes
 
@@ -33,7 +41,7 @@ Raw API keys, bearer tokens and signed URLs are not logged.
 
 ## Proposal policy
 
-Provider outputs are written as proposal artefacts. Promotion requires deterministic validation or reviewer approval.
+Provider outputs are written as proposal artefacts in durable [manifest records](manifest-contracts.md). Promotion requires deterministic validation or reviewer approval.
 
 ## Request flow
 

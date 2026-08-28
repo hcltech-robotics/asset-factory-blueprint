@@ -1,3 +1,7 @@
+---
+description: "Deploy Asset Factory services with bounded request execution, secret handles, release checks and operator-controlled hosting."
+---
+
 # Deployment
 
 Deployment covers operator hosting, secret handles and bounded request execution outside a one-off local command.

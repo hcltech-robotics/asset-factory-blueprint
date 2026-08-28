@@ -1,3 +1,7 @@
+---
+description: "Review the accepted decision to require checksum-bound mesh verification after reconstruction and before downstream geometry stages."
+---
+
 # Mandatory early mesh verification
 
 Status: accepted

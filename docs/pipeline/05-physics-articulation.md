@@ -1,3 +1,7 @@
+---
+description: "Plan colliders, mass, materials, joints and grasp affordances from reviewed evidence for reliable robotic simulation behaviour."
+---
+
 # Physics and articulation
 
 The physics-articulation stage converts physical property proposals into USD physics plans, builds the kinematic plan for moving parts and records grasp affordances.
@@ -131,7 +135,7 @@ Joint authoring is driven by `constraints.articulation.joints` in the run reques
 }
 ```
 
-The author writes `UsdPhysics.ArticulationRootAPI` and typed Fixed, Revolute or Prismatic joint prims. Body targets must already be defined; authoring neither creates over-only body prims nor silently enables rigid bodies to satisfy a joint relationship. Verification reopens the composed stage, requires distinct defined targets with enabled rigid-body schemas and inspects axes, limits and typed drives. An articulated or RL request without joint evidence remains blocked; descriptive stand-in metadata is insufficient.
+The author writes `UsdPhysics.ArticulationRootAPI` and typed Fixed, Revolute or Prismatic joint prims [@aousd_usdphysics_2026]. Body targets must already be defined; authoring neither creates over-only body prims nor silently enables rigid bodies to satisfy a joint relationship. Verification reopens the composed stage, requires distinct defined targets with enabled rigid-body schemas and inspects axes, limits and typed drives. An articulated or RL request without joint evidence remains blocked; descriptive stand-in metadata is insufficient.
 
 ## Grasp affordances
 
@@ -180,3 +184,7 @@ Affordance labels tie grasp points to task semantics. Grasp points are proposals
 - task-critical mass, friction or stiffness unknown
 - impossible collider topology
 - high-risk property not validated or review-approved
+
+## References
+
+\bibliography

@@ -1,6 +1,14 @@
+---
+description: "Use the afb CLI and repository scripts for capability discovery, pipeline operations, verification, deployment and release."
+---
+
 # Toolchain
 
 `afb` and the repository scripts form the factory's operating surface.
+
+## Which commands should operators use?
+
+`afb` is the primary interface for planning, running, validating and packaging Asset Factory work. Repository scripts supply bounded backend adapters, diagram generation and specialised verification helpers. Operators should begin with `afb info` and `afb capabilities`, then use the documented command whose service owns the intended state change.
 
 ## Primary surfaces
 
@@ -16,11 +24,11 @@
 
 ## Release workflow
 
-1. Verify and install the locked source appliance with `uv sync --frozen --all-extras`.
-2. Generate or validate the run plan.
-3. Run the workflow in dry-run or live mode.
-4. Validate manifests, skills, diagrams and the complete record graph.
-5. Build the source archive, inspect its appliance contents, extract it into a clean directory and rerun the locked workflow there.
+1. Verify the [requirements](requirements.md) and install the locked source appliance with `uv sync --frozen --all-extras`.
+2. Generate or validate the [run plan](platform/orchestrator.md).
+3. Run the [agentic workflow](platform/agentic-operation.md) in dry-run or live mode.
+4. Validate [manifests](manifest-contracts.md), skills, diagrams and the complete record graph.
+5. Build the source archive, inspect its appliance contents, extract it into a clean directory and rerun the locked workflow there before creating reusable [reference-run evidence](reference-run-capsule.md).
 
 Pytest suites, benchmarks and repository contract validation live in the asset-factory-verification repository and run against a checkout of this blueprint.
 

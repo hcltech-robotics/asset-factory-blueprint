@@ -1,3 +1,7 @@
+---
+description: "Inspect the persistent project workspace that stores source copies, plans, manifests, reports, evidence and generated artefacts."
+---
+
 # Project workspaces
 
 Every run writes a persistent project folder. The folder is the unit of replay, review and packaging.

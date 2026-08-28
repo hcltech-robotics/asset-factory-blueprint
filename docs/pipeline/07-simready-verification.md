@@ -1,6 +1,14 @@
+---
+description: "Assemble and verify a SimReady candidate against an exact Profile, runtime, package dependency and declared task-fitness gates."
+---
+
 # SimReady verification
 
 The final stage assembles a SimReady candidate, verifies the USD and records the evidence required before any scoped promotion claim.
+
+## What must pass before an asset is SimReady?
+
+An asset can be promoted only when it matches an exact SimReady Profile, passes the applicable Requirements, loads in the named runtime, closes package dependencies and demonstrates fitness for its declared task [@nvidia_simready_faq_2026]. Repository checks produce evidence for that decision, but they do not by themselves constitute NVIDIA certification.
 
 <p align="center">
   <img src="../assets/simready-verification-gates.svg" alt="simready verification gates" width="920">
@@ -12,7 +20,7 @@ SimReady status is a promotion state. A candidate must carry an exact Profile, p
 
 ## Run the gate
 
-Agent skill: `simready-verification-lead`. The orchestrator reaches this gate after segmentation, material, texturing and physics-articulation records are present.
+Agent skill: `simready-verification-lead`. The [orchestrator](../platform/orchestrator.md) reaches this gate after [segmentation](02-segmentation.md), [material](03-material-inference.md), [texturing](04-texturing.md) and [physics-articulation](05-physics-articulation.md) records are present.
 
 Run readiness after upstream stages have written their manifests. The report expresses the release decision and its blockers.
 
@@ -27,10 +35,10 @@ If the report is blocked, fix the named missing record before rerunning. Visual 
 - units and up axis
 - default prim
 - layer stack completeness and reference resolution
-- current OpenUSD `UsdValidation` registry results, including the registered validator inventory, bound to the root digest
-- canonical Preview Surface material, unbound MaterialX sidecar status and texture colour-space records
+- current OpenUSD `UsdValidation` registry results, including the registered validator inventory, bound to the root digest [@aousd_validation_2026]
+- canonical Preview Surface material, unbound MaterialX sidecar status and texture colour-space records [@materialx_specification_2025; @aousd_materialx_2026]
 - clean package replacement plus exact declared-file, USD, MaterialX and non-layer dependency closure
-- current `SemanticsLabelsAPI:<taxonomy>` labels
+- current `SemanticsLabelsAPI:<taxonomy>` labels [@nvidia_semantic_labels_2026]
 - applied physics schemas
 - articulation roots, defined and enabled rigid-body targets, collider coverage, evidence-backed local frames, axes, limits and bounded typed drives
 - texture paths
@@ -42,7 +50,7 @@ If the report is blocked, fix the named missing record before rerunning. Visual 
 
 ## Official Profile validation
 
-Configure the trusted [NVIDIA Omni Asset Validator CLI](https://docs.omniverse.nvidia.com/kit/docs/asset-validator/latest/source/python/docs/cli.html), then validate the composed root against the exact Profile recorded in the asset manifest. The current NVIDIA validator distribution exposes `nvidia_usd_validate`; pin and record the installed package version and executable digest.
+Configure the trusted NVIDIA Omni Asset Validator CLI [@nvidia_asset_validator_2026], then validate the composed root against the exact Profile recorded in the asset manifest. The current NVIDIA validator distribution exposes `nvidia_usd_validate`; pin and record the installed package version and executable digest.
 
 ```bash
 export AFB_ASSET_VALIDATOR_EXECUTABLE="$(command -v nvidia_usd_validate)"
@@ -118,3 +126,7 @@ The result is recorded in the manifest as `isaac_sim_load_check`.
 - `validated`: required checks passed and governance allows release.
 - `review_required`: the package loads, but a reviewer must accept a weak or task-critical claim.
 - `blocked`: a required record, artefact or gate is missing or failed.
+
+## References
+
+\bibliography

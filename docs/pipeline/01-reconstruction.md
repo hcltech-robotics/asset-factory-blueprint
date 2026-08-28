@@ -1,3 +1,7 @@
+---
+description: "Choose governed image-to-mesh, conditioning, harvesting or repair routes while preserving source evidence and geometry provenance."
+---
+
 # Reconstruction
 
 The optional reconstruction stage creates mesh geometry from image(s), with or without text descriptions, through governed external backends. Supported mesh and USD sources use the non-generative conditioning, harvesting and repair routes. Native CAD files remain source evidence until the operator supplies a USD or supported mesh export; the runtime does not convert them directly.
@@ -18,7 +22,7 @@ Agent skill: `reconstruction-lead`. The orchestrator normally selects and runs t
 
 Condition a supported mesh or USD source when its geometry, hierarchy and units are trustworthy. Harvest an approved library asset when its provenance and geometry fit the task. Choose image-to-3D reconstruction when images are the only usable source; the result remains a proposal until geometry, scale and task-critical surfaces pass review.
 
-The governed backends are registered in `configs/reconstruction-backends.json` with adapters, provisioning and install scripts under `scripts/reconstruction/`. Single-image backends are TRELLIS.2, Hunyuan3D, TripoSG and PartCrafter. Multi-view backends consume several photos of the same object: Hunyuan3D multi-view conditions on ordered views and DUSt3R fuses arbitrary view sets into geometry. The video lane samples frames from a capture and delegates to the multi-view chain. Segmentation priors from stage 2 can condition part-aware backends such as PartCrafter. The capability registry (`afb capabilities`) records which backend serves each lane on this machine and what gates block the rest.
+The governed backends are registered in `configs/reconstruction-backends.json` with adapters, provisioning and install scripts under `scripts/reconstruction/`. Single-image backends are TRELLIS.2 [@xiang_trellis2_2025], Hunyuan3D [@tencent_hunyuan3d2_2025], TripoSG [@li_triposg_2025] and PartCrafter [@lin_partcrafter_2025]. Multi-view backends consume several photos of the same object: Hunyuan3D multi-view conditions on ordered views and DUSt3R [@wang_dust3r_2024] fuses arbitrary view sets into geometry. The video lane samples frames from a capture and delegates to the multi-view chain. Segmentation priors from stage 2 can condition part-aware backends such as PartCrafter. The capability registry (`afb capabilities`) records which backend serves each lane on this machine and what gates block the rest.
 
 Multiple inputs are passed with the `input_assets` list in the run manifest or the `AFB_RECONSTRUCTION_INPUT_ASSETS` environment handle; single-image backends keep using `input_asset`.
 
@@ -75,3 +79,7 @@ The reconstruction stage never publishes canonical geometry.
 - Geometry scale and axis policy must be known before physics stages.
 - Task-critical missing surfaces require review or block release.
 - A checksum-matched `mesh-verification-record` must approve the candidate before any downstream geometry stage begins.
+
+## References
+
+\bibliography

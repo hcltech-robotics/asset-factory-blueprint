@@ -1,3 +1,7 @@
+---
+description: "Build an Isaac Lab task contract from a validated asset package while carrying recorded asset uncertainty into training and evaluation."
+---
+
 # RL environment
 
 This downstream extension takes a validated asset package and produces an Isaac Lab RL task with complete evidence lineage. It runs only after stage 7 simready-verification and the target runtime's `isaac-load` check.

@@ -1,6 +1,14 @@
+---
+description: "See how Asset Factory turns source evidence into reproducible, SimReady OpenUSD assets through staged generation, validation and review."
+---
+
 # Blueprint
 
-The Asset Factory is a governed process for creating reproducible, sim-ready OpenUSD assets. Source handling, provider-assisted generation, deterministic validation and operator review share one project workspace.
+The Asset Factory is a governed process for creating reproducible, sim-ready OpenUSD assets [@aousd_openusd_2026; @nvidia_simready_faq_2026]. Source handling, provider-assisted generation, deterministic validation and operator review share one [project workspace](project-workspaces.md).
+
+## What is the Asset Factory process?
+
+The process converts source evidence into a reviewable asset package through intake, reconstruction or conditioning, mandatory mesh verification, segmentation, material and texture work, physics authoring and final SimReady verification. A dependency-closed run plan controls the route, while manifests and checksums make every promotion decision inspectable and reproducible.
 
 ## Simulation problem
 
@@ -12,9 +20,9 @@ The output is an asset package that can be rebuilt from source evidence, explain
 
 Start with a CAD file, USD asset, image set, scan, robot description or specification. The factory copies the source into a project workspace and records checksums to detect later changes.
 
-The orchestrator builds a route from the source evidence and requested outputs. Every geometry route includes mandatory mesh verification. An image-only asset may need reconstruction, mesh verification, segmentation, material and physical inference, texturing, physics and articulation authoring and SimReady verification before release. The route is recorded before mutation.
+The [orchestrator](platform/orchestrator.md) builds a route from the source evidence and requested outputs. Every geometry route includes [mandatory mesh verification](pipeline/01a-mesh-verification.md). An image-only asset may need reconstruction, mesh verification, segmentation, material and physical inference, texturing, physics and articulation authoring and [SimReady verification](pipeline/07-simready-verification.md) before release. The route is recorded before mutation.
 
-Each stage writes inspectable manifests, reports, evidence, generated artefacts and checksums. Missing evidence blocks the output or marks it review-required; passing gates permits the next stage.
+Each stage writes inspectable [manifests](manifest-contracts.md), reports, evidence, generated artefacts and checksums. Missing evidence blocks the output or marks it review-required; passing gates permits the next stage.
 
 ## Factory process
 
@@ -60,9 +68,9 @@ Provider output and plausible renders cannot become validated truth without thes
 
 ## Permutation model
 
-Variants must preserve lineage. Texture variants, mesh deformations, material swaps, physics ranges, articulation settings and layout mutations are recorded as variant layers or mutation plans. The base asset remains explainable and every variation has explicit bounds.
+Variants must preserve lineage. Texture variants, mesh deformations, material swaps, physics ranges, articulation settings and layout mutations are recorded as variant layers or mutation plans [@aousd_openusd_2026]. The base asset remains explainable and every variation has explicit bounds.
 
-Controlled permutation exposes the robot to worn surfaces, lighting changes, small dents, material shifts, friction ranges, object placement changes and articulation tolerances. This broadens the training conditions while preserving traceability.
+Controlled permutation exposes the robot to worn surfaces, lighting changes, small dents, material shifts, friction ranges, object placement changes and articulation tolerances. This follows the visual and dynamics randomisation approaches used to broaden simulation training conditions while preserving explicit project bounds [@tobin_domain_2017; @peng_dynamics_2018].
 
 ## Policy-quality link
 
@@ -71,3 +79,7 @@ Robotic policies are sensitive to visual and physical detail. Source handling co
 ## Operating posture
 
 Source assets are immutable. Generated artefacts live under a project workspace. Public tools call service functions. Heavy USD, rendering, Isaac, CUDA or runner imports stay out of schemas and thin tool surfaces. The CLI is the operating surface, and validation remains file-backed and command-backed.
+
+## References
+
+\bibliography

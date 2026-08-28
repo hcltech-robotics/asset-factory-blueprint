@@ -1,3 +1,7 @@
+---
+description: "Split approved geometry into stable semantic regions that support traceable material, texture, physics and grasp decisions."
+---
+
 # Segmentation and semantic inference
 
 Segmentation splits an asset into stable, semantically labelled regions. Image priors may condition reconstruction, but the segmentation stage consumes only canonical geometry approved by mandatory mesh verification. Every later material, texture and physics decision can therefore point at a reviewed named part.
@@ -16,7 +20,7 @@ Agent skill: `segmentation-lead`. Tools: `asset_image_segmentation_prior` and `a
 
 ## Image segmentation priors
 
-Before reconstruction, `asset_image_segmentation_prior` splits a source image into appearance or SAM-derived region masks. Its outputs are semantic masks, an overlay, a conditioning image and a manifest with the suggested part count.
+Before reconstruction, `asset_image_segmentation_prior` splits a source image into appearance or SAM-derived region masks [@kirillov_segment_anything_2023]. Its outputs are semantic masks, an overlay, a conditioning image and a manifest with the suggested part count.
 
 Use the prior before PartCrafter when material or appearance regions should influence the generated part structure. PartCrafter exposes no native mask input. The conditioning image and part count carry the prior; downstream validation scores the generated parts against the masks.
 
@@ -25,7 +29,7 @@ Use the prior before PartCrafter when material or appearance regions should infl
 1. Read the source asset, reconstruction result and material cues.
 2. Propose stable appearance segments with ids, labels, semantic classes, material hints and confidence.
 3. Write segment masks under `assets/<asset>/textures/segments/`.
-4. Author `SemanticsLabelsAPI:class` and `SemanticsLabelsAPI:label` token arrays on the asset root and segment prims in `sem.usda`.
+4. Author `SemanticsLabelsAPI:class` and `SemanticsLabelsAPI:label` token arrays on the asset root and segment prims in `sem.usda` [@nvidia_semantic_labels_2026].
 5. Hand the segment records to material inference, texturing and SimReady verification.
 
 Segment ids remain stable across later reconstruction upgrades. If geometry supports separate prims or mesh subsets, those prim paths replace the mask-only material-region proposal while the same segment ids, material regions and semantic labels remain valid.
@@ -62,3 +66,7 @@ The supporting script lives at `scripts/segmentation/condition_usd_mesh_segments
 - segment ids are stable
 - mesh conditioning operations carry explicit selectors
 - source lineage is recorded
+
+## References
+
+\bibliography

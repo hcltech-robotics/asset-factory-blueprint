@@ -1,6 +1,10 @@
+---
+description: "Understand the file-backed manifest contracts that make Asset Factory stages resumable, reviewable, validatable and reproducible."
+---
+
 # Manifest contracts
 
-Manifest contracts are the file-backed interface between stages. They let a project be resumed, reviewed, validated and replayed without relying on process memory.
+Manifest contracts are the file-backed interface between stages. They let a [project](project-workspaces.md) be resumed, reviewed, validated and replayed without relying on process memory.
 
 <p align="center">
   <img src="assets/record-graph.svg" alt="Run identity and immutable attempts connect stage manifests and evidence to cross-record validation, governance and release." width="920">
@@ -12,7 +16,7 @@ Stages can produce geometry, materials, textures, physics, articulation and envi
 
 ## How to read a manifest
 
-Agent skill: `evaluation-validation-lead`. The orchestrator usually hands manifests to validation as each stage completes.
+Agent skill: `evaluation-validation-lead`. The [orchestrator](platform/orchestrator.md) usually hands manifests to validation as each stage completes.
 
 Read a manifest from top to bottom before looking at generated files. The manifest should name the stage, inputs, outputs, evidence, validation state and review state. If a file exists but is missing from the manifest, treat the file as unmanaged.
 
@@ -27,12 +31,12 @@ afb manifest validate <schema-name> projects/<slug>/manifests/<manifest-name>.js
 1. Pick the schema for the stage output.
 2. Generate a skeleton when starting a new manifest.
 3. Fill required fields from project evidence and service output.
-4. Validate against JSON Schema before downstream stages consume it.
+4. Validate against JSON Schema before downstream stages consume it [@json_schema_2022].
 5. Record errors as report artefacts rather than console-only failures.
 
 ## Stage manifests
 
-Each project writes stage manifests as `manifests/<schema-name>.json`. The geometry boundary uses `reconstruction-manifest` for candidate geometry and `mesh-verification-record` for checksum-bound promotion to canonical geometry. The remaining stage manifests cover segmentation, material inference, texturing, physics and articulation, nonvisual materials and SimReady verification. Cross-cutting records cover the run request, immutable stage attempts, evaluation, governance, provenance, external models, runtime evidence, layout, mutation, skills, review, library and task-fitness contracts.
+Each project writes stage manifests as `manifests/<schema-name>.json`. The geometry boundary uses `reconstruction-manifest` for candidate geometry and `mesh-verification-record` for checksum-bound promotion to canonical geometry. The remaining [pipeline stage](blueprint.md#factory-process) manifests cover segmentation, material inference, texturing, physics and articulation, nonvisual materials and [SimReady verification](pipeline/07-simready-verification.md). Cross-cutting records cover the run request, immutable stage attempts, evaluation, [governance](platform/governance.md), provenance, external models, runtime evidence, layout, mutation, skills, review, library and task-fitness contracts.
 
 ## Contract rules
 
@@ -54,3 +58,7 @@ afb manifest validate source-asset-manifest artifacts/source-asset-manifest.json
 ## Release dependency
 
 A release record is only meaningful when its upstream manifests are valid. The governance record can then cite validated stage records instead of restating every technical detail.
+
+## References
+
+\bibliography

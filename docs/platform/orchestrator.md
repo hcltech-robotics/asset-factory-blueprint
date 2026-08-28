@@ -1,6 +1,10 @@
+---
+description: "See how a run request becomes a dependency-closed DAG with stage contracts, providers, validation gates and stop conditions."
+---
+
 # Orchestrator
 
-The orchestrator converts a run request into a dependency-closed DAG. The plan records versioned stage contracts, provider assignments, validation gates, W&B settings and stop conditions.
+The orchestrator converts a [run request](../quickstart.md#3-describe-the-job-to-an-agent) into a dependency-closed DAG. The plan records versioned [stage contracts](../manifest-contracts.md), [provider assignments](../provider-abstraction.md), [validation gates](../pipeline/07-simready-verification.md), W&B settings and stop conditions.
 
 <p align="center">
   <img src="../assets/orchestrator-routing.svg" alt="A run request and policy contracts branch into source-driven and deliverable-driven routes before a dependency-complete run plan." width="920">

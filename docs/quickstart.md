@@ -1,4 +1,12 @@
+---
+description: "Install Asset Factory, configure providers, run a dry pipeline, inspect outputs and progress to governed live operation."
+---
+
 # Quickstart
+
+## How do I run Asset Factory?
+
+Clone the repository, install the locked dependencies with `uv`, confirm capabilities, then create a project and generate a dry run plan before enabling live providers. The dry path exercises contracts and records without model credentials; live stages require the relevant provider keys, backend dependencies and review gates.
 
 ## 1. Clone and install
 
@@ -54,7 +62,7 @@ afb progress --project projects/metal_jerrycan
 
 Use this direct [agentic entry point](platform/agentic-operation.md) when a validated run-request JSON already exists. `asset_factory_start` invokes the same loop automatically after guided intake. The loop runs every routed stage, asks the VLM reviewer to sign off against its rubric, applies bounded fixes when a stage does not pass review and writes the project record under `projects/<id>/`: stage manifests, review records, `progress.json` and the operator contact sheet. Without `--live` the same command is a dry run that writes the workspace and skips provider calls.
 
-The bundled jerrycan request deliberately omits its Profile, so direct CLI execution demonstrates fail-closed planning rather than a release-ready configuration. Guided intake stops earlier and asks for the exact Profile before starting. Copy the request and pin the exact Profile before running the release gates below.
+The bundled jerrycan request deliberately omits its Profile, so direct CLI execution demonstrates fail-closed planning rather than a release-ready configuration. Guided intake stops earlier and asks for the exact Profile before starting. Copy the request and pin the exact Profile before running the release gates below [@nvidia_simready_faq_2026].
 
 On a machine with no reconstruction backend, the loop records the stages it can judge and the prerequisites still missing; see the [observed runthrough](runthrough.md).
 
@@ -104,7 +112,7 @@ afb readiness --project projects/<id> --output artifacts/<id>-readiness.md
 
 Replace `<profile-id>` and `<profile-version>` with the exact `simready_profile.profile_id` and `simready_profile.profile_version` values in the asset manifest. The runtime report must not infer or substitute a Profile version. Its fixed protocol identity, pinned producer digest, portable USD label, package inventory and schema-versioned, protocol-domain-separated HMAC attestation are verified before import and independently rechecked by the canonical consumer.
 
-Release requires a blocker-free exact-Profile result from the configured NVIDIA validator, the Isaac load and behavioural report, a task-protocol fitness report with materialised evidence, a complete package and record graph, current rights and retention and a content-bound operator decision. Review cannot waive a failed technical gate or substitute for missing physical evidence. The [SimReady verification page](pipeline/07-simready-verification.md) defines the evidence contracts and the [governance page](platform/governance.md) shows the decision path.
+Release requires a blocker-free exact-Profile result from the configured NVIDIA validator [@nvidia_asset_validator_2026], the Isaac load and behavioural report, a task-protocol fitness report with materialised evidence, a complete package and record graph, current rights and retention and a content-bound operator decision. Review cannot waive a failed technical gate or substitute for missing physical evidence. The [SimReady verification page](pipeline/07-simready-verification.md) defines the evidence contracts and the [governance page](platform/governance.md) shows the decision path.
 
 ## Optional: configure library backings
 
@@ -129,3 +137,7 @@ For guided start-up, expose `asset_programme_intake,asset_factory_start` and giv
 ## Review outputs
 
 Generated artefacts live under `projects/` and `artifacts/`, intentionally ignored by Git. Start with `progress.json` and `reports/contact-sheet.md` in the project workspace, then `run-plan.json`, `manifests/` and `reports/`. The docs site builds with `pip install -e ".[docs]"` and `make site`; the verification suite lives in the sibling asset-factory-verification repository.
+
+## References
+
+\bibliography

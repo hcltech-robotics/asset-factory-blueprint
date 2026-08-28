@@ -1,4 +1,12 @@
+---
+description: "Explore the Asset Factory Blueprint for producing governed, reproducible OpenUSD assets and controlled variants for robotics simulation."
+---
+
 # Asset Factory Blueprint
+
+## What does Asset Factory Blueprint do?
+
+Asset Factory Blueprint turns CAD, USD, images, scans and specifications into governed OpenUSD asset candidates for robotics simulation [@aousd_openusd_2026]. It routes each source through explicit stages, records evidence and checksums, verifies geometry and SimReady requirements [@nvidia_simready_faq_2026], and keeps generated variants traceable to the source, policy and review decisions that produced them.
 
 Robotic policies learn from what the simulator shows them. Clean-looking but physically wrong scenes teach brittle cues. Traceable geometry, scale, mass, friction, joints and material state make failures easier to find before they reach training. **The Asset Factory Blueprint creates the repeatable, governed USD pipelines that automatically build assets from your photos, meshes, USD files and other source evidence that will be _useful_, not just good-looking.**
 
@@ -56,7 +64,7 @@ The Asset Factory Blueprint is a coordinator that works with your tools, patches
 
 ## About the Asset Factory Blueprint
 
-The Asset Factory Blueprint was developed at HCLTech's Robotics Intelligence Lab in early 2026. We are a team of engineers, developers and roboticists who have to navigate a world of increasing complexity and provide training environments that reflect reality so that our robots can learn the right policies, faster. Asset factories make this possible at scale and in an economically efficient manner.
+The Asset Factory Blueprint was developed by HCLTech Robotics Intelligence CoE in early 2026. We are a team of engineers, developers and roboticists who have to navigate a world of increasing complexity and provide training environments that reflect reality so that our robots can learn the right policies, faster. Asset factories make this possible at scale and in an economically efficient manner.
 
 ### Principal investigators
 
@@ -75,7 +83,10 @@ The Asset Factory Blueprint was developed at HCLTech's Robotics Intelligence Lab
 }
 ```
 
-
 ### License
 
-The Asset Factory Blueprint and all its code are released under the MIT license. 
+The Asset Factory Blueprint and all its code are released under the MIT licence.
+
+## References
+
+\bibliography

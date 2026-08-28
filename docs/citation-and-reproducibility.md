@@ -1,6 +1,10 @@
+---
+description: "Learn how to cite Asset Factory releases and record source commits, schemas, dependencies, runtime versions and reference-run evidence."
+---
+
 # Citation and reproducibility
 
-Asset Factory Blueprint records machine-readable project details in `CITATION.cff` and `codemeta.json`. `references.bib` lists supporting standards and technical sources.
+Asset Factory Blueprint records machine-readable project details in `CITATION.cff` and `codemeta.json` [@cff_specification_2021; @codemeta_project_2026]. `references.bib` lists supporting standards and technical sources.
 
 ## Citing in the documentation
 
@@ -26,7 +30,7 @@ A repository branch name is not a reproducible software identifier. Prefer a sig
 
 ## Schema identities
 
-The release schema catalogue records every schema `$id`, major schema version, JSON Schema draft, title and file SHA-256, together with an exact count. Manifests are associated with those schemas by the stage-contract catalogue and are validated against the archived files. Public `$id` values must resolve without repository credentials. The documentation site publishes a convenience copy under `/schemas/v1/`, but that mirror is not a second schema identity: the canonical identity remains the schema's versioned `$id`. A release archives the exact schema directory beside the source archive; consumers must not silently substitute a newer schema fetched from a mutable branch.
+The release schema catalogue records every schema `$id`, major schema version, JSON Schema draft [@json_schema_2022], title and file SHA-256, together with an exact count. Manifests are associated with those schemas by the stage-contract catalogue and are validated against the archived files. Public `$id` values must resolve without repository credentials. The documentation site publishes a convenience copy under `/schemas/v1/`, but that mirror is not a second schema identity: the canonical identity remains the schema's versioned `$id`. A release archives the exact schema directory beside the source archive; consumers must not silently substitute a newer schema fetched from a mutable branch.
 
 Schema changes follow the compatibility rules in `GOVERNANCE.md`. A breaking meaning or required-field change receives a new schema major identity and a migration note.
 
@@ -39,3 +43,7 @@ Before tagging a release, keep the version aligned across `pyproject.toml`, `src
 Start from the tagged source archive rather than an arbitrary checkout. Verify the archive, `uv.lock` and capsule checksums, run `uv sync --frozen` and follow the capsule's reproduction commands. Compare regenerated manifest and artefact digests with the capsule, allowing only fields explicitly marked as run-instance values.
 
 The source archive is the canonical distribution because the runtime intentionally consumes repository-relative schemas, policies, skills, scripts and examples. A Python wheel alone is not a complete factory distribution.
+
+## References
+
+\bibliography

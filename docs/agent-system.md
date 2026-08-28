@@ -1,3 +1,7 @@
+---
+description: "Understand how Asset Factory stage skills use the public SDK, registry, tool router and shared mutation boundary to run governed asset operations."
+---
+
 # Agent system
 
 Stage skills run through the public runtime SDK. Registry discovery and the tool router connect them to the runtime.

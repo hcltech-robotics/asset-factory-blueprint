@@ -1,0 +1,54 @@
+# Asset Factory Blueprint
+
+> Asset Factory Blueprint is an executable reference implementation for turning source evidence into governed, reproducible OpenUSD asset candidates and controlled simulation variants for robotics.
+
+Publisher: HCLTech Robotics Intelligence CoE
+
+Source code: [hcltech-robotics/asset-factory-blueprint](https://github.com/hcltech-robotics/asset-factory-blueprint)
+
+Licence: [MIT](https://github.com/hcltech-robotics/asset-factory-blueprint/blob/main/LICENSE)
+
+Generated model output remains a proposal until the required deterministic checks, evidence, runtime gates, review state and governance records permit promotion. SimReady claims require an exact Profile and applicable Requirements; repository checks do not constitute NVIDIA certification.
+
+## Start here
+
+- [Documentation index](https://hcltech-robotics.github.io/asset-factory-blueprint/index.html): Task-oriented map of the documentation.
+- [Blueprint](https://hcltech-robotics.github.io/asset-factory-blueprint/blueprint.html): Purpose, eight-stage process, promotion model and controlled variants.
+- [Quickstart](https://hcltech-robotics.github.io/asset-factory-blueprint/quickstart.html): Installation, provider configuration, dry runs and live operation.
+- [Reference architecture](https://hcltech-robotics.github.io/asset-factory-blueprint/reference-architecture.html): Runtime layers, artefact flow, provider boundary and release evidence.
+- [Walkthrough](https://hcltech-robotics.github.io/asset-factory-blueprint/walkthrough.html): One-photo example from intake to a governed workspace.
+- [Requirements](https://hcltech-robotics.github.io/asset-factory-blueprint/requirements.html): Supported Python versions, optional dependencies, credentials and hardware.
+
+## Pipeline
+
+- [Intake and source ingestion](https://hcltech-robotics.github.io/asset-factory-blueprint/pipeline/00-intake-and-sources.html): Immutable source evidence and programme intent.
+- [Reconstruction](https://hcltech-robotics.github.io/asset-factory-blueprint/pipeline/01-reconstruction.html): Governed reconstruction, conditioning and repair routes.
+- [Mandatory mesh verification](https://hcltech-robotics.github.io/asset-factory-blueprint/pipeline/01a-mesh-verification.html): Deterministic diagnostics, visual review and geometry promotion.
+- [Segmentation and semantic inference](https://hcltech-robotics.github.io/asset-factory-blueprint/pipeline/02-segmentation.html): Stable semantic regions for downstream decisions.
+- [Material and physical inference](https://hcltech-robotics.github.io/asset-factory-blueprint/pipeline/03-material-inference.html): Evidence-bound material and physical-property proposals.
+- [Texturing](https://hcltech-robotics.github.io/asset-factory-blueprint/pipeline/04-texturing.html): PBR maps, variants and decals.
+- [Physics and articulation](https://hcltech-robotics.github.io/asset-factory-blueprint/pipeline/05-physics-articulation.html): Colliders, mass, joints, limits and grasp affordances.
+- [SimReady verification](https://hcltech-robotics.github.io/asset-factory-blueprint/pipeline/07-simready-verification.html): Profile, runtime, package and task-fitness gates.
+
+## Operation and evidence
+
+- [Orchestrator](https://hcltech-robotics.github.io/asset-factory-blueprint/platform/orchestrator.html): Dependency-closed run plans and stop conditions.
+- [Agentic operation](https://hcltech-robotics.github.io/asset-factory-blueprint/platform/agentic-operation.html): Deterministic gates, bounded model review and escalation.
+- [Provider abstraction](https://hcltech-robotics.github.io/asset-factory-blueprint/provider-abstraction.html): Replaceable model providers with repository-controlled validation.
+- [Manifest contracts](https://hcltech-robotics.github.io/asset-factory-blueprint/manifest-contracts.html): Durable records for resumability, review and reproduction.
+- [Governance](https://hcltech-robotics.github.io/asset-factory-blueprint/platform/governance.html): Rights, privacy, retention, provenance and release decisions.
+- [Citation and reproducibility](https://hcltech-robotics.github.io/asset-factory-blueprint/citation-and-reproducibility.html): Software, schema, provider and run citation requirements.
+- [Reference-run capsule](https://hcltech-robotics.github.io/asset-factory-blueprint/reference-run-capsule.html): Minimal redistributable evidence for a release claim.
+
+## Primary specifications
+
+- [OpenUSD documentation](https://openusd.org/release/index.html): First-party OpenUSD concepts and APIs.
+- [OpenUSD validation framework](https://openusd.org/release/api/md_pxr_usd_validation_usd_validation__r_e_a_d_m_e.html): First-party validation registry and validator APIs.
+- [NVIDIA SimReady FAQ](https://docs.omniverse.nvidia.com/simready/latest/simready-faq.html): Profile, Feature and Requirement terminology.
+- [MaterialX specification](https://materialx.org/Specification.html): First-party material-network specification.
+- [W3C PROV-O](https://www.w3.org/TR/prov-o/): W3C provenance ontology used by the JSON-LD projection.
+
+## Optional
+
+- [Observed runthrough](https://hcltech-robotics.github.io/asset-factory-blueprint/runthrough.html): Workstation-specific timings, resource use, outputs and blockers; not a portable performance promise.
+- [Support matrix](https://hcltech-robotics.github.io/asset-factory-blueprint/support-matrix.html): Release-verified, CI-checked, declared and provisional support levels.

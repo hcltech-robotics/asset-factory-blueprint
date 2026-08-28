@@ -1,6 +1,14 @@
+---
+description: "Review measured timings, resource use, outputs and blockers from an observed Asset Factory replay on an RTX 3090 workstation."
+---
+
 # Observed runthrough
 
-The [walkthrough](walkthrough.md) gives the commands. The measurements below record order, timing and outputs from replays on one workstation. They are operating observations, not a release-verification record; a citable release uses the exact Profile, runtime, fitness, graph and capsule evidence described later in the documentation.
+The [walkthrough](walkthrough.md) gives the commands. The measurements below record order, timing and outputs from replays on one workstation. They are operating observations, not a release-verification record; a citable release uses the exact Profile, runtime, fitness, graph and [reference-run capsule](reference-run-capsule.md) evidence described later in the documentation.
+
+## What was observed in the reference replay?
+
+The observed replay planned deterministically on CPU, reconstructed a single-photo jerrycan with a pinned GPU backend, and recorded stage outputs in one [project workspace](project-workspaces.md). Timings and resource figures describe that workstation only. They demonstrate operating behaviour, not a portable performance promise or a complete SimReady release claim.
 
 ## Captured machine
 
@@ -42,7 +50,7 @@ The review records still contain minor findings: `baked_lighting` in the base co
   <img src="assets/runthrough-gpu-contact-sheet.png" alt="contact sheet after the GPU-backed run" width="920">
 </p>
 
-The Isaac Sim report recorded 62 prims, a ray-traced render, 911 frames and no load errors against the packaged USD. The runtime check also records drop-and-settle, impulse, reset and applicable joint behaviour. `afb isaac-load apply` binds that report to the exact USD composition and Profile. This report cannot release the package by itself. The official Profile result, task-fitness report, record graph, rights state and content-bound operator decision must all pass for the declared scope. The [governance page](platform/governance.md) shows that decision path.
+The Isaac Sim report recorded 62 prims, a ray-traced render, 911 frames and no load errors against the packaged USD. The runtime check also records drop-and-settle, impulse, reset and applicable joint behaviour. `afb isaac-load apply` binds that report to the exact USD composition and Profile. This report cannot release the package by itself. The [official Profile result](pipeline/07-simready-verification.md#official-profile-validation), task-fitness report, record graph, rights state and content-bound operator decision must all pass for the declared scope. The [governance page](platform/governance.md) shows that decision path.
 
 ## Observed operational issues
 

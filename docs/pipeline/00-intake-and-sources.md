@@ -1,3 +1,7 @@
+---
+description: "Record programme intent and ingest CAD, USD, robot, scan, image and specification sources as immutable evidence for the asset pipeline."
+---
+
 # Intake and source ingestion
 
 Intake records programme requirements. Source ingestion turns raw project material into immutable evidence. These records feed reconstruction or source conditioning, followed by mandatory mesh verification.

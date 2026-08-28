@@ -1,3 +1,7 @@
+---
+description: "Create and validate a minimal redistributable reference-run capsule for inspecting and reproducing an Asset Factory release claim."
+---
+
 # Reference-run capsule
 
 A reference-run capsule is the minimal redistributable record for inspecting and reproducing a release claim. It excludes developer workspace state and includes screenshots only as supporting evidence.

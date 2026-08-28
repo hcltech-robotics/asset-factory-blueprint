@@ -1,3 +1,7 @@
+---
+description: "Run one pipeline stage through the CLI or agent tool while preserving the same review, remediation and progress contracts."
+---
+
 # Direct partial invocation
 
 Direct partial invocation runs one pipeline stage with the same review, fix and progress contracts as the orchestrated loop. An agent calls the `asset_stage_run` tool; a person runs `afb stage run`. Both paths call the same service function and produce identical records.

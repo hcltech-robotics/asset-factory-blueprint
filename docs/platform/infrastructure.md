@@ -1,3 +1,7 @@
+---
+description: "Choose local, workstation, batch or service execution lanes while returning traceable artefacts to the project workspace."
+---
+
 # Infrastructure
 
 Infrastructure lanes describe where work can run and how the resulting artefacts return to the project workspace.

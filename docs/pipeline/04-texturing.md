@@ -1,3 +1,7 @@
+---
+description: "Generate evidence-backed PBR maps, variants and decals after material bindings, UV readiness and physical constraints are established."
+---
+
 # Texturing
 
 Texturing generates PBR map sets, texture variants and decals for the materials selected in stage 3. Texture work starts only after material bindings, UV readiness and physical consistency requirements are known.

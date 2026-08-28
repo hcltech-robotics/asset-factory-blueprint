@@ -1,3 +1,7 @@
+---
+description: "Follow a runnable one-photo jerrycan example from source intake through planning, model-assisted stages, review and workspace outputs."
+---
+
 # Walkthrough: one photo to a governed workspace
 
 A worn 20 litre metal jerrycan provides the example, with runnable commands and abridged captured output. The bundled sample photo is a CC0 render of the Poly Haven `metal_jerrycan` model. The source and dry planning path ship with the repository. Live model output is illustrative and must be cited with its recorded run rather than treated as invariant across checkouts.

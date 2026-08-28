@@ -1,3 +1,7 @@
+---
+description: "Diagnose Asset Factory installation, provider, workflow, mesh, packaging and verification failures from observable symptoms."
+---
+
 # Troubleshooting
 
 Each row maps an observable symptom to its likely cause and corrective action.

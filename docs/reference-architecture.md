@@ -1,6 +1,10 @@
+---
+description: "Understand the architecture separating source evidence, model proposals, project mutation, validation and release decisions."
+---
+
 # Reference architecture
 
-The architecture assigns separate layers to source evidence, proposal generation, project mutation, validation and release. Recorded hand-offs keep promoted assets replayable.
+The architecture assigns separate layers to [source evidence](pipeline/00-intake-and-sources.md), [proposal generation](provider-abstraction.md), [project mutation](runtime-architecture.md), [validation](pipeline/07-simready-verification.md) and [release](platform/governance.md). Recorded hand-offs keep promoted assets replayable.
 
 <p align="center">
   <img src="assets/architecture.svg" alt="architecture" width="920">
@@ -26,7 +30,7 @@ The factory writes a chain of durable records:
 4. Stage services write manifests, reports and proposal artefacts; the attempt snapshots their exact outputs by digest.
 5. Validators record JSON and graph validity, OpenUSD validity, exact Profile conformance, runtime behaviour and task fitness as distinct levels.
 6. Governance derives release state from rights, the current asset fingerprint, exact Profile, task scope and an expiring operator decision.
-7. Native provenance and its W3C PROV-O JSON-LD projection bind runs, attempts, sources, software, models, manifests and the dependency lock.
+7. Native provenance and its W3C PROV-O JSON-LD projection bind runs, attempts, sources, software, models, manifests and the dependency lock [@w3c_provo_2013].
 
 Stages rely on durable records rather than process memory or console output. Reruns create new attempts and cannot replace the evidence of an earlier attempt. The project workspace is the audit surface.
 
@@ -40,4 +44,8 @@ Review happens through the CLI and the project files themselves. Reviewers read 
 
 ## Release evidence
 
-A released package carries source lineage, layer stack records, material and physics evidence, requirement-level validator output, runtime and task evidence, graph validation and governance status. A blocked package carries the same structure plus the exact missing evidence or failed gate. Publication adds the locked SBOM and positive or negative reference capsule without changing the original run records.
+A released package carries source lineage, layer stack records, material and physics evidence, requirement-level validator output, runtime and task evidence, graph validation and governance status. A blocked package carries the same structure plus the exact missing evidence or failed gate. Publication adds the locked SBOM [@spdx_specifications_2026] and positive or negative reference capsule without changing the original run records.
+
+## References
+
+\bibliography

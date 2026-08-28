@@ -1,3 +1,7 @@
+---
+description: "Validate scene layouts and mutation plans before writing controlled post-verification asset permutations."
+---
+
 # Layout and mutation plans
 
 Batch layout and mutation files are validated before any write. Layout sweeps and controlled mutations start from assets that have passed simready verification. The validating tools are `scene_layout_validate` and `governance_mutation_validate`.

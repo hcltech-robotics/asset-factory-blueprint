@@ -1,3 +1,7 @@
+---
+description: "Convert material classes and property ranges into reviewable PBR map plans without asserting unsupported numeric physics values."
+---
+
 # Texture defaults
 
 Texture defaults convert declared material classes and property ranges into reviewable PBR map plans supporting [texturing](04-texturing.md). They never author numeric physics values.

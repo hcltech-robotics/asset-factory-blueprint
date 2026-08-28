@@ -1,3 +1,7 @@
+---
+description: "Check supported Python versions, optional dependencies, simulator integrations, provider credentials and hardware needs."
+---
+
 # Requirements
 
 Requirements range from contract-only operation to full generative runs.

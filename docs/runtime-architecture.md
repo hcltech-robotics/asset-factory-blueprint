@@ -1,3 +1,7 @@
+---
+description: "Understand the runtime boundaries between schemas, tools, services, utilities, skills and external integrations."
+---
+
 # Runtime architecture
 
 The runtime uses fixed layers so public capabilities stay testable.

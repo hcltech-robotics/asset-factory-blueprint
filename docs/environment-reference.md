@@ -1,3 +1,7 @@
+---
+description: "Reference every Asset Factory environment handle for paths, provider credentials, model backends, runtimes, provenance and verification."
+---
+
 # Environment reference
 
 Environment handles carry machine-specific paths, credentials, trust anchors and deployment overrides. This page lists the handles the blueprint reads, what consumes them, their defaults and when each one is required. Run requests, policy files and CLI arguments remain the durable configuration surfaces.

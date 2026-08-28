@@ -1,3 +1,7 @@
+---
+description: "Configure external reconstruction and generation backends through declared manifests while treating every model output as a proposal."
+---
+
 # External model runners
 
 External models run from declared manifests and structured configs. Their outputs are proposals until a downstream validator or reviewer promotes them.

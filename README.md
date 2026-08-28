@@ -223,4 +223,4 @@ Project decisions and releases follow [GOVERNANCE.md](GOVERNANCE.md) and [RELEAS
 
 The repository code is [licensed under the MIT License](LICENSE).
 
-The Asset Factory Blueprint was developed in early 2026 at HCLTech's Robotics Information Lab. Its material workflows draw on NVIDIA's `content-agents`, while Omniverse, Isaac Sim and SimReady inform its runtime and promotion model; see [acknowledged foundations](THIRD_PARTY_NOTICES.md#acknowledged-foundations) for attribution.
+The Asset Factory Blueprint was developed in early 2026 by HCLTech Robotics Intelligence CoE. Its material workflows draw on NVIDIA's `content-agents`, while Omniverse, Isaac Sim and SimReady inform its runtime and promotion model; see [acknowledged foundations](THIRD_PARTY_NOTICES.md#acknowledged-foundations) for attribution.

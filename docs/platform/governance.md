@@ -1,6 +1,10 @@
+---
+description: "Record source rights, privacy, retention, provenance and reviewer decisions required for governed asset release."
+---
+
 # Governance
 
-Governance records rights, privacy, retention, reviewer decisions and provenance.
+Governance records [source rights](../pipeline/00-intake-and-sources.md), privacy, retention, reviewer decisions and provenance.
 
 ## Release basis
 
@@ -8,7 +12,7 @@ Loading in simulation does not make an asset releasable. Source rights may be un
 
 ## How to make a release decision
 
-Agent skill: `governance-provenance-lead`. Tools: `governance_record`, `governance_project_create`, `governance_external_model_run` and `governance_mutation_validate`. The orchestrator generally leaves governance until the end, then gathers source, provider, validation and review records for the release decision.
+Agent skill: `governance-provenance-lead`. Tools: `governance_record`, `governance_project_create`, `governance_external_model_run` and `governance_mutation_validate`. The orchestrator generally leaves governance until the end, then gathers source, [provider](../provider-abstraction.md), [validation](../pipeline/07-simready-verification.md) and review records for the release decision.
 
 Technical claims originate in source, provider, validation and review records. Governance cites those records when deciding release state.
 
@@ -18,7 +22,7 @@ Before release, confirm:
 - provider traces are redacted
 - validation reports match the claimed promotion state
 - review-required claims have reviewer decisions
-- the record graph and task-fitness gate pass for the declared release scope
+- the [record graph](../manifest-contracts.md) and task-fitness gate pass for the declared release scope
 - blocked reasons are empty
 
 ## Required records
@@ -58,7 +62,7 @@ The decision records a timezone-aware `evaluated_at` value and a fixed evaluatio
 
 ## Worked example: releasing the walkthrough project
 
-The walkthrough project proposes a mass value for the jerrycan from visual evidence alone, so material inference marks it `review_required`, and the workflow keeps the governance release status blocked. A release decision cannot waive that technical blocker. The decision does not live in a stage manifest because the workflow regenerates those files. The command derives a decision from current project state and writes a content-addressed history record plus a current pointer after the missing evidence has been supplied.
+The [walkthrough project](../walkthrough.md) proposes a mass value for the jerrycan from visual evidence alone, so material inference marks it `review_required`, and the workflow keeps the governance release status blocked. A release decision cannot waive that technical blocker. The decision does not live in a stage manifest because the workflow regenerates those files. The command derives a decision from current project state and writes a content-addressed history record plus a current pointer after the missing evidence has been supplied.
 
 Preview the exact decision before writing it:
 
