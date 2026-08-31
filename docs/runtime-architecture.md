@@ -40,4 +40,4 @@ afb tools list --format json
 afb skills list
 ```
 
-Test suites and repository contract checks live in the asset-factory-verification repository and run against a checkout of this blueprint.
+Test suites and the reproducibility benchmark live in this repository under `tests/` and `benchmarks/`, and `.github/workflows/ci.yml` runs them together with the tool-service, diagram and workflow checks.

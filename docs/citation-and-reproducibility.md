@@ -21,7 +21,7 @@ Cite the tagged software release used to produce the asset. A reproducible resul
 - the source commit and whether the checkout was clean
 - the `uv.lock` digest and supported Python resolution marker
 - the release schema catalogue with each JSON Schema identity, version and file digest
-- the verification repository commit
+- the verified commit and its CI run
 - the reference-run capsule identifier and digest
 - OpenUSD, validator, simulator, driver and GPU versions
 - every external backend code revision, model or weight revision and random seed

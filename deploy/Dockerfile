@@ -3,7 +3,7 @@ FROM ${PYTHON_IMAGE}
 ARG UV_VERSION=0.7.13
 
 LABEL org.opencontainers.image.title="Asset Factory Blueprint" \
-      org.opencontainers.image.version="1.0.0" \
+      org.opencontainers.image.version="1.1.0" \
       org.opencontainers.image.source="https://github.com/hcltech-robotics/asset-factory-blueprint" \
       org.opencontainers.image.licenses="MIT"
 

@@ -159,12 +159,6 @@ These handles describe the environment used for a run. Set them from trusted run
 | `WANDB_API_KEY` | `wandb_logging.py` | unset | `AFB_WANDB_ENABLED` is on |
 | `AFB_CHROMIUM` | `scripts/generate_diagrams.py` | Playwright Chromium | rasterising figures with a specific browser binary |
 
-## Verification sibling
-
-| Handle | Consumer | Default | Required when |
-| --- | --- | --- | --- |
-| `AFB_REPO_ROOT` | asset-factory-verification `conftest.py` and `repo_checks/` | unset | running the verification suite against a blueprint checkout |
-
 ## Conventions
 
 - Handles are read at call time, so exporting them in the shell that runs `afb` is sufficient.

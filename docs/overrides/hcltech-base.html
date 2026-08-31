@@ -27,16 +27,41 @@
   <noscript>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Manrope:300,300i,400,400i,700,700i%7CIBM+Plex+Mono:400,400i,700,700i&amp;display=optional">
   </noscript>
-  {% set publisher_name = config.extra.publisher_name | d(config.site_author, true) %}
-  {% set publisher_url = config.extra.publisher_url %}
-  {% set software_id = config.repo_url ~ '#software' %}
-  {% set website_id = config.site_url ~ '#website' %}
-  {% set organisation_id = publisher_url ~ '#organisation' %}
+  {% set brand_title = config.extra.brand_title | d(config.site_name, true) %}
+  {% if page and page.meta and page.meta.title %}
+    {% set og_title = page.meta.title ~ ' - ' ~ brand_title %}
+  {% elif page and page.title and not page.is_homepage %}
+    {% set og_title = (page.title | striptags) ~ ' - ' ~ brand_title %}
+  {% else %}
+    {% set og_title = brand_title %}
+  {% endif %}
   {% if page and page.meta and page.meta.description %}
     {% set page_description = page.meta.description %}
   {% else %}
     {% set page_description = config.site_description %}
   {% endif %}
+  {% set og_image = config.site_url ~ 'assets/social-card.jpg' %}
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ config.site_name }}">
+  <meta property="og:title" content="{{ og_title }}">
+  <meta property="og:description" content="{{ page_description }}">
+  {% if page and page.canonical_url %}
+  <meta property="og:url" content="{{ page.canonical_url }}">
+  {% endif %}
+  <meta property="og:image" content="{{ og_image }}">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="{{ config.site_name }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ og_title }}">
+  <meta name="twitter:description" content="{{ page_description }}">
+  <meta name="twitter:image" content="{{ og_image }}">
+  {% set publisher_name = config.extra.publisher_name | d(config.site_author, true) %}
+  {% set publisher_url = config.extra.publisher_url %}
+  {% set software_id = config.repo_url ~ '#software' %}
+  {% set website_id = config.site_url ~ '#website' %}
+  {% set organisation_id = publisher_url ~ '#organisation' %}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -45,15 +70,28 @@
           "@type": "Organization",
           "@id": {{ organisation_id | tojson }},
           "name": {{ publisher_name | tojson }},
-          "url": {{ publisher_url | tojson }}
-        },
+          "url": {{ publisher_url | tojson }}{% if config.extra.parent_org_name %},
+          "parentOrganization": {
+            "@type": "Organization",
+            "name": {{ config.extra.parent_org_name | tojson }},
+            "url": {{ config.extra.parent_org_url | tojson }}
+          }{% endif %}
+        },{% for a in config.extra.authors | d([]) %}
+        {
+          "@type": "Person",
+          "@id": {{ a.orcid | tojson }},
+          "name": {{ a.name | tojson }},
+          "affiliation": { "@id": {{ organisation_id | tojson }} },
+          "sameAs": [{{ a.orcid | tojson }}{% if a.url %}, {{ a.url | tojson }}{% endif %}]
+        },{% endfor %}
         {
           "@type": "WebSite",
           "@id": {{ website_id | tojson }},
           "url": {{ config.site_url | tojson }},
           "name": {{ config.site_name | tojson }},
           "description": {{ config.site_description | tojson }},
-          "publisher": { "@id": {{ organisation_id | tojson }} },
+          "publisher": { "@id": {{ organisation_id | tojson }} },{% if config.extra.authors %}
+          "author": [{% for a in config.extra.authors %}{ "@id": {{ a.orcid | tojson }} }{% if not loop.last %}, {% endif %}{% endfor %}],{% endif %}
           "inLanguage": "en"
         },
         {
@@ -61,7 +99,8 @@
           "@id": {{ software_id | tojson }},
           "name": {{ config.site_name | tojson }},
           "description": {{ config.extra.software_description | tojson }},
-          "codeRepository": {{ config.repo_url | tojson }},
+          "codeRepository": {{ config.repo_url | tojson }},{% if config.extra.authors %}
+          "author": [{% for a in config.extra.authors %}{ "@id": {{ a.orcid | tojson }} }{% if not loop.last %}, {% endif %}{% endfor %}],{% endif %}
           "license": "https://opensource.org/license/mit",
           "programmingLanguage": "Python",
           "publisher": { "@id": {{ organisation_id | tojson }} }

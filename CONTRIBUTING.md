@@ -14,13 +14,14 @@ Contributions are welcome. The blueprint is contract-first: every change must ke
 1. Fork and branch.
 2. Make the change; regenerate figures with `python scripts/generate_diagrams.py` when diagrams change.
 3. Build the docs strictly: `make site`.
-4. Run the verification suite from a checkout of the asset-factory-verification repository:
+4. Run the verification suite from this checkout:
 
     ```bash
-    set AFB_REPO_ROOT=<this checkout>
-    pytest
-    python repo_checks/validate_repository.py --repo-root %AFB_REPO_ROOT%
-    python benchmarks/run_benchmarks.py --spec benchmarks/benchmark-spec.json --repo-root %AFB_REPO_ROOT%
+    uv run --frozen pytest -q tests
+    uv run --frozen python scripts/ci/stdio_tool_server_smoke.py
+    uv run --frozen python scripts/generate_diagrams.py --check
     ```
+
+    The reproducibility benchmark under `benchmarks/reproducibility/` has its own README; run it when a change touches reconstruction or mesh verification.
 
 5. Open a pull request describing the contract surfaces the change touches.

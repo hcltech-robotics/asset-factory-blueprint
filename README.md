@@ -1,5 +1,7 @@
 # Asset Factory Blueprint
 
+Asset Factory Blueprint (AFB) is an MIT-licensed reference implementation from the HCLTech Robotics Intelligence CoE that turns photos, scans, CAD and USD sources into governed, reproducible OpenUSD assets and Isaac Lab reinforcement learning environments for robotics simulation, with every geometry, physics and variant decision verified against SimReady requirements and tied to recorded evidence.
+
 Robotic policies learn from what the simulator shows them. Clean-looking but physically wrong scenes teach brittle cues. Traceable geometry, scale, mass, friction, joints and material state make failures easier to find before they reach training. **The Asset Factory Blueprint creates the repeatable, governed USD pipelines that automatically build assets from your photos, meshes, USD files and other source evidence that will be _useful_, not just good-looking.**
 
 ![asset factory pipeline](docs/assets/asset-factory-pipeline.svg)
@@ -201,7 +203,7 @@ Provider routing comes from `configs/provider-policy.json`. Each public tool cal
 
 ## Verification
 
-Tests, benchmarks, repository contract checks and continuous integration live in the sibling `asset-factory-verification` repository. Set `AFB_REPO_ROOT` to this checkout, then run that repository's pytest suite and `repo_checks/validate_repository.py` against it.
+Tests, the reproducibility benchmark and continuous integration live in this repository: `tests/` holds the pytest suite, `benchmarks/reproducibility/` holds the benchmark and `.github/workflows/ci.yml` runs both alongside the stdio tool-service smoke test, the diagram drift gate, the example workflow runs, the strict documentation build, release evidence and the source-archive exercise. Run `uv run --frozen pytest -q tests` against a checkout to reproduce the core suite locally.
 
 ## Citation and project policy
 
@@ -212,7 +214,7 @@ Use `CITATION.cff` for software citation and record the signed release tag, sche
   author  = {von Csefalvay, Chris},
   title   = {{Asset Factory Blueprint}},
   year    = {2026},
-  version = {1.0.0},
+  version = {1.1.0},
   url     = {https://github.com/hcltech-robotics/asset-factory-blueprint}
 }
 ```

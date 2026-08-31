@@ -1,0 +1,36 @@
+{
+  "title": "Asset Factory Blueprint",
+  "description": "Asset Factory Blueprint (AFB) is an MIT-licensed reference implementation from the HCLTech Robotics Intelligence CoE that turns photos, scans, CAD and USD sources into governed, reproducible OpenUSD assets and Isaac Lab reinforcement learning environments for robotics simulation, with every geometry, physics and variant decision verified against SimReady requirements and tied to recorded evidence.",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "creators": [
+    {
+      "name": "von Csefalvay, Chris",
+      "affiliation": "HCLTech Robotics Intelligence CoE",
+      "orcid": "0000-0003-3131-0864"
+    },
+    {
+      "name": "Foldi, Tamas",
+      "affiliation": "HCLTech Robotics Intelligence CoE",
+      "orcid": "0000-0001-9283-6865"
+    }
+  ],
+  "keywords": [
+    "OpenUSD",
+    "SimReady",
+    "robotics",
+    "simulation",
+    "asset pipeline",
+    "reinforcement learning",
+    "Isaac Lab",
+    "provenance"
+  ],
+  "related_identifiers": [
+    {
+      "relation": "isDocumentedBy",
+      "identifier": "https://hcltech-robotics.github.io/asset-factory-blueprint/",
+      "resource_type": "publication-softwaredocumentation"
+    }
+  ]
+}

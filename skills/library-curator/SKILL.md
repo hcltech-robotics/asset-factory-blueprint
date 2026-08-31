@@ -154,9 +154,8 @@ Include next skill name.
 Do not mutate downstream layers directly.
 
 ## Eval coverage
-Benchmark and eval payloads for this skill live in the asset-factory-verification repository under skill-checks/library-curator.
-Run them from that repository against a blueprint checkout.
-Eval cases cover the library curation contract path with structured output and explicit validation status.
+Benchmark and eval payloads for this skill are not yet published. The pytest suite under `tests/` and the CI workflow exercise the runtime contracts this skill depends on.
+Intended eval cases cover the library curation contract path with structured output and explicit validation status.
 
 ## References
 See references/operating-playbook.md.

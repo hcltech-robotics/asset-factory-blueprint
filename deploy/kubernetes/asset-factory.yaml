@@ -33,7 +33,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: tool-server
-          image: asset-factory-blueprint:1.0.0
+          image: asset-factory-blueprint:1.1.0
           imagePullPolicy: IfNotPresent
           args:
             - afb

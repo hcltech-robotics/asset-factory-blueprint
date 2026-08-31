@@ -4,10 +4,10 @@ The canonical release artefact is a tagged source archive. Editable installation
 
 ## Version and evidence
 
-1. Choose the semantic version and update `pyproject.toml`, `src/asset_factory_blueprint/__init__.py`, `CITATION.cff`, `codemeta.json` and `CHANGELOG.md` together.
+1. Choose the semantic version and update `pyproject.toml`, `src/asset_factory_blueprint/__init__.py`, `CITATION.cff`, `codemeta.json`, `CHANGELOG.md`, the `org.opencontainers.image.version` label in `deploy/Dockerfile`, the image tag in `deploy/kubernetes/asset-factory.yaml` and the BibTeX blocks in `README.md` and `docs/index.md` together. `afb release evidence` checks the first four for alignment; check the rest by hand.
 2. Confirm every public schema has the intended schema major version and resolvable identifier.
 3. Run `uv lock --check`, then install with `uv sync --frozen --all-extras`.
-4. Run the verification repository against the clean release checkout. Record its commit and the exact commands in the release notes.
+4. Run the verification suite against the clean release checkout: `uv run --frozen pytest -q tests`, `uv run --frozen python scripts/ci/stdio_tool_server_smoke.py`, `uv run --frozen python scripts/generate_diagrams.py --check` and the example workflow runs and record-graph validations listed in `.github/workflows/ci.yml`. Record the verified commit, its CI run and the exact commands in the release notes.
 5. Build the documentation strictly and check generated diagrams.
 6. Build the source archive and wheel with `uv run --frozen python -m build --sdist --wheel`, install the extracted source archive into a clean environment and run the documented dry run.
 7. Run `afb release evidence --output-dir artifacts/release-evidence`. This writes a CycloneDX 1.6 SBOM from `uv.lock`, an exact versioned schema catalogue, configuration digests, aligned citation-metadata digests, the container-recipe and declared default base-image digests and release checksums. Repository cleanliness is recorded as `clean`, `dirty` or `unknown`; an unavailable Git command never produces a clean claim.
@@ -21,7 +21,7 @@ Create a signed `vMAJOR.MINOR.PATCH` tag from `main`. Publish the source archive
 The release notes identify:
 
 - software and schema versions
-- verification repository commit
+- verified commit and its CI run
 - supported runtime matrix
 - migrations and deprecations
 - known blocked profiles or runtimes

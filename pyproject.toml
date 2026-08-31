@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "asset-factory-blueprint"
-version = "1.0.0"
+version = "1.1.0"
 description = "Executable Asset Factory blueprint for governed OpenUSD asset pipelines"
 readme = "README.md"
 license = "MIT"

@@ -1,12 +1,12 @@
 ---
-description: "Explore the Asset Factory Blueprint for producing governed, reproducible OpenUSD assets and controlled variants for robotics simulation."
+description: "Governed, reproducible OpenUSD assets and Isaac Lab RL environments from photos, scans, CAD and USD. MIT-licensed, from the HCLTech Robotics Intelligence CoE."
 ---
 
 # Asset Factory Blueprint
 
 ## What does Asset Factory Blueprint do?
 
-Asset Factory Blueprint turns CAD, USD, images, scans and specifications into governed OpenUSD asset candidates for robotics simulation [@aousd_openusd_2026]. It routes each source through explicit stages, records evidence and checksums, verifies geometry and SimReady requirements [@nvidia_simready_faq_2026], and keeps generated variants traceable to the source, policy and review decisions that produced them.
+Asset Factory Blueprint (AFB) is an MIT-licensed reference implementation from the HCLTech Robotics Intelligence CoE that turns photos, scans, CAD and USD sources into governed, reproducible OpenUSD assets [@aousd_openusd_2026] and Isaac Lab reinforcement learning environments for robotics simulation, with every geometry, physics and variant decision verified against SimReady requirements [@nvidia_simready_faq_2026] and tied to recorded evidence. It routes each source through explicit stages, records evidence and checksums, and keeps generated variants traceable to the source, policy and review decisions that produced them.
 
 Robotic policies learn from what the simulator shows them. Clean-looking but physically wrong scenes teach brittle cues. Traceable geometry, scale, mass, friction, joints and material state make failures easier to find before they reach training. **The Asset Factory Blueprint creates the repeatable, governed USD pipelines that automatically build assets from your photos, meshes, USD files and other source evidence that will be _useful_, not just good-looking.**
 
@@ -78,7 +78,7 @@ The Asset Factory Blueprint was developed by HCLTech Robotics Intelligence CoE i
   author  = {von Csefalvay, Chris},
   title   = {{Asset Factory Blueprint}},
   year    = {2026},
-  version = {1.0.0},
+  version = {1.1.0},
   url     = {https://github.com/hcltech-robotics/asset-factory-blueprint}
 }
 ```

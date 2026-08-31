@@ -30,7 +30,7 @@ description: "Use the afb CLI and repository scripts for capability discovery, p
 4. Validate [manifests](manifest-contracts.md), skills, diagrams and the complete record graph.
 5. Build the source archive, inspect its appliance contents, extract it into a clean directory and rerun the locked workflow there before creating reusable [reference-run evidence](reference-run-capsule.md).
 
-Pytest suites, benchmarks and repository contract validation live in the asset-factory-verification repository and run against a checkout of this blueprint.
+Pytest suites and the reproducibility benchmark live in this repository under `tests/` and `benchmarks/`; `.github/workflows/ci.yml` runs them on every push.
 
 ## Commands
 

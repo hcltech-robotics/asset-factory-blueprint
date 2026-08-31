@@ -41,4 +41,4 @@ Variants let the same asset support policy training across visual, physical and 
 
 ## Validation
 
-`configs/tool-surface.json` encodes layer authority. Prefix and service ownership checks live in the asset-factory-verification repository and run against a checkout of this blueprint.
+`configs/tool-surface.json` encodes layer authority, including prefix and service ownership.

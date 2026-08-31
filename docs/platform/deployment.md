@@ -86,7 +86,7 @@ afb provider check --policy configs/provider-policy.json
 afb skill-audit --root . --output artifacts/skill-audit.json
 ```
 
-Repository contract validation and benchmark tooling live in the asset-factory-verification repository and run against a checkout of this blueprint.
+Repository tests, the reproducibility benchmark and continuous integration live in this repository under `tests/`, `benchmarks/` and `.github/workflows/ci.yml`.
 
 Deployment should expose the same artefacts that local runs produce: manifests, reports, evidence, checksums and governance records.
 

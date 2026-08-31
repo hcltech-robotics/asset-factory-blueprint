@@ -1,0 +1,22 @@
+# Asset Factory Blueprint documentation. All crawlers are welcome,
+# including AI and answer-engine crawlers.
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: *
+Allow: /
+
+Sitemap: https://hcltech-robotics.github.io/asset-factory-blueprint/sitemap.xml

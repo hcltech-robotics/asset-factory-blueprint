@@ -2,14 +2,18 @@ cff-version: 1.2.0
 message: "If you use this blueprint, cite the software release and the exact schema version used by your run."
 title: "Asset Factory Blueprint"
 type: software
-abstract: "An executable reference implementation for governed, evidence-backed OpenUSD asset pipelines."
+abstract: "Asset Factory Blueprint (AFB) is an MIT-licensed reference implementation from the HCLTech Robotics Intelligence CoE that turns photos, scans, CAD and USD sources into governed, reproducible OpenUSD assets and Isaac Lab reinforcement learning environments for robotics simulation, with every geometry, physics and variant decision verified against SimReady requirements and tied to recorded evidence."
 authors:
   - family-names: "von Csefalvay"
     given-names: "Chris"
+    orcid: "https://orcid.org/0000-0003-3131-0864"
+  - family-names: "Foldi"
+    given-names: "Tamas"
+    orcid: "https://orcid.org/0000-0001-9283-6865"
 repository-code: "https://github.com/hcltech-robotics/asset-factory-blueprint"
 url: "https://github.com/hcltech-robotics/asset-factory-blueprint/tree/main/docs"
-version: 1.0.0
-date-released: 2026-07-10
+version: 1.1.0
+date-released: 2026-08-30
 license: MIT
 keywords:
   - OpenUSD
@@ -23,6 +27,10 @@ preferred-citation:
   authors:
     - family-names: "von Csefalvay"
       given-names: "Chris"
-  version: 1.0.0
+      orcid: "https://orcid.org/0000-0003-3131-0864"
+    - family-names: "Foldi"
+      given-names: "Tamas"
+      orcid: "https://orcid.org/0000-0001-9283-6865"
+  version: 1.1.0
   repository-code: "https://github.com/hcltech-robotics/asset-factory-blueprint"
   url: "https://github.com/hcltech-robotics/asset-factory-blueprint/tree/main/docs"

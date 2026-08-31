@@ -136,7 +136,7 @@ For guided start-up, expose `asset_programme_intake,asset_factory_start` and giv
 
 ## Review outputs
 
-Generated artefacts live under `projects/` and `artifacts/`, intentionally ignored by Git. Start with `progress.json` and `reports/contact-sheet.md` in the project workspace, then `run-plan.json`, `manifests/` and `reports/`. The docs site builds with `pip install -e ".[docs]"` and `make site`; the verification suite lives in the sibling asset-factory-verification repository.
+Generated artefacts live under `projects/` and `artifacts/`, intentionally ignored by Git. Start with `progress.json` and `reports/contact-sheet.md` in the project workspace, then `run-plan.json`, `manifests/` and `reports/`. The docs site builds with `pip install -e ".[docs]"` and `make site`; the test suite runs with `uv run --frozen pytest -q tests`.
 
 ## References
 

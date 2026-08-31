@@ -8,7 +8,7 @@ List affected schemas, tools, services, stages, layers, documentation and compat
 
 ## Evidence
 
-List exact checks and runtime evidence. Include the verification repository commit when that repository was used.
+List exact checks and runtime evidence, including the CI run for the commit under review.
 
 ## Checklist
 

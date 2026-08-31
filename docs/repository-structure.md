@@ -35,4 +35,4 @@ The repository separates documentation, schemas, runtime code, skills, configs, 
 
 ## Verification
 
-Tests, benchmarks, repository contract checks and continuous integration live in the sibling asset-factory-verification repository. Point it at this checkout with `AFB_REPO_ROOT` and run its pytest suite and `repo_checks/validate_repository.py`.
+Tests, the reproducibility benchmark and continuous integration live in this repository: `tests/`, `benchmarks/reproducibility/` and `.github/workflows/ci.yml`. Run `uv run --frozen pytest -q tests` from a checkout.
