@@ -190,8 +190,10 @@ def workspace_lease(
 
                 fcntl.flock(stream.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         except OSError as exc:
-            stream.seek(0)
-            raw_owner = stream.read().lstrip(b"\0").decode("utf-8", errors="replace")
+            # Byte zero is the Windows lock region. Keep the owner record after
+            # it so a competing process can still read the record on Windows.
+            stream.seek(1)
+            raw_owner = stream.read().decode("utf-8", errors="replace")
             try:
                 owner_record = json.loads(raw_owner) if raw_owner else {}
             except json.JSONDecodeError:
@@ -203,7 +205,7 @@ def workspace_lease(
             "pid": os.getpid(),
             "created_at": utc_now(),
         }
-        stream.seek(0)
+        stream.seek(1)
         stream.truncate()
         stream.write(json.dumps(token, ensure_ascii=True).encode("utf-8"))
         stream.flush()
