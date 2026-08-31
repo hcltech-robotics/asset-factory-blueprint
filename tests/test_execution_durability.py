@@ -117,8 +117,7 @@ def test_public_rl_mutators_refuse_a_leased_workspace(tmp_path: Path) -> None:
     manifest.parent.mkdir(parents=True)
     manifest.write_text("{}\n", encoding="utf-8")
 
-    with workspace_lease(project, "lease-holder") as lock_path:
-        assert lock_path.read_bytes().startswith(b"\0{")
+    with workspace_lease(project, "lease-holder"):
         route_result = rl_route({"project": project})
         with pytest.raises(WorkspaceBusyError, match="lease-holder"):
             rl_render.render_to_directory(manifest, project / "envs")

@@ -769,6 +769,7 @@ def _approve_rl_protocol(workspace: Path) -> dict:
     protocol_path.write_text(
         json.dumps(protocol, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
+        newline="\n",
     )
     protocol_sha256 = sha256_file(protocol_path)
     block["task_fitness_protocol"]["sha256"] = protocol_sha256
@@ -780,6 +781,7 @@ def _approve_rl_protocol(workspace: Path) -> dict:
     manifest_path.write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
+        newline="\n",
     )
     render_to_directory(manifest_path, workspace / "envs")
     return protocol
@@ -1183,6 +1185,7 @@ def test_positive_rl_capsule_copies_and_revalidates_both_receipt_chains(
     manifest_path.write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
+        newline="\n",
     )
     assert validate_payload("rl-environment-manifest", manifest) == []
 
