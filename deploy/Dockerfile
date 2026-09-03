@@ -16,7 +16,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     AFB_APPLIANCE_ROOT=/workspace \
     AFB_TRUSTED_TOOL_SERVER_NETWORK=1
 
-COPY pyproject.toml uv.lock README.md LICENSE THIRD_PARTY_NOTICES.md CITATION.cff codemeta.json ./
+COPY pyproject.toml uv.lock README.md LICENSE THIRD_PARTY_NOTICES.md .zenodo.json CITATION.cff codemeta.json ./
 COPY src ./src
 COPY configs ./configs
 COPY schemas ./schemas

@@ -1,5 +1,5 @@
 include CHANGELOG.md CITATION.cff CODE_OF_CONDUCT.md CONTRIBUTING.md GOVERNANCE.md LICENSE README.md RELEASE.md SECURITY.md SUPPORT.md THIRD_PARTY_NOTICES.md
-include Makefile codemeta.json mkdocs.yml pyproject.toml references.bib uv.lock
+include Makefile .zenodo.json codemeta.json mkdocs.yml pyproject.toml references.bib uv.lock
 recursive-include configs *.json
 recursive-include deploy *.example *.md *.sbatch *.yaml *.yml Dockerfile
 recursive-include docs *.css *.csl *.md *.png *.svg

@@ -21,6 +21,8 @@
   <meta name="theme-color" content="#f7f9fc" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#19191e" media="(prefers-color-scheme: dark)">
   <link rel="describedby" href="{{ 'llms.txt' | url }}" type="text/plain">
+  {% set citation_doi = config.extra.version_doi | d(config.extra.concept_doi, true) %}
+  <link rel="cite-as" href="https://doi.org/{{ citation_doi }}">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css?family=Manrope:300,300i,400,400i,700,700i%7CIBM+Plex+Mono:400,400i,700,700i&amp;display=optional" as="style">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Manrope:300,300i,400,400i,700,700i%7CIBM+Plex+Mono:400,400i,700,700i&amp;display=optional" media="print" onload="this.media='all'">
@@ -57,6 +59,12 @@
   <meta name="twitter:title" content="{{ og_title }}">
   <meta name="twitter:description" content="{{ page_description }}">
   <meta name="twitter:image" content="{{ og_image }}">
+  <meta name="citation_title" content="{{ config.site_name }}">
+  {% for a in config.extra.authors | d([]) %}<meta name="citation_author" content="{{ a.name }}">
+  {% endfor %}<meta name="citation_publication_date" content="{{ config.extra.release_date }}">
+  <meta name="citation_doi" content="{{ citation_doi }}">
+  <meta name="citation_publisher" content="Zenodo">
+  <meta name="citation_technical_report_institution" content="{{ config.extra.publisher_name }}">
   {% set publisher_name = config.extra.publisher_name | d(config.site_author, true) %}
   {% set publisher_url = config.extra.publisher_url %}
   {% set software_id = config.repo_url ~ '#software' %}
@@ -99,6 +107,29 @@
           "@id": {{ software_id | tojson }},
           "name": {{ config.site_name | tojson }},
           "description": {{ config.extra.software_description | tojson }},
+          "keywords": {{ config.extra.software_keywords | tojson }},
+          "version": {{ config.extra.software_version | string | tojson }},
+          "datePublished": {{ config.extra.release_date | string | tojson }},
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "Concept DOI",
+              "value": {{ config.extra.concept_doi | tojson }},
+              "url": {{ ('https://doi.org/' ~ config.extra.concept_doi) | tojson }}
+            }{% if config.extra.version_doi %},
+            {
+              "@type": "PropertyValue",
+              "propertyID": "DOI",
+              "value": {{ config.extra.version_doi | tojson }},
+              "url": {{ ('https://doi.org/' ~ config.extra.version_doi) | tojson }}
+            }{% endif %}
+          ],
+          "sameAs": [
+            {{ ('https://doi.org/' ~ config.extra.concept_doi) | tojson }}{% if config.extra.archive_url %},
+            {{ config.extra.archive_url | tojson }}{% endif %}
+          ],
+          "citation": {{ ('https://doi.org/' ~ citation_doi) | tojson }},{% if config.extra.archive_download_url %}
+          "downloadUrl": {{ config.extra.archive_download_url | tojson }},{% endif %}
           "codeRepository": {{ config.repo_url | tojson }},{% if config.extra.authors %}
           "author": [{% for a in config.extra.authors %}{ "@id": {{ a.orcid | tojson }} }{% if not loop.last %}, {% endif %}{% endfor %}],{% endif %}
           "license": "https://opensource.org/license/mit",

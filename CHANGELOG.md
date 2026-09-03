@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Integrated the Zenodo DOI series for Asset Factory Blueprint, propagated the v1.1.0 version DOI and stable concept DOI through citation and discovery metadata, and added release-time verification of automatic Zenodo archival, creators, affiliations and source files.
+
 ## 1.1.0
 
 - Added the evidence-bound PhysX pick-task lane for Isaac Lab 2.3.1. It renders the fixed-base, rigid-object contract, runs five runtime probes, measures affordance-weighted collision fidelity and rejects unsupported declarations before artefact creation. Runtime reports bind the task, USD, URDF, package inventory, simulator timing, producer files and regenerated source. Canonical evidence requires a signed importer receipt.

@@ -407,18 +407,80 @@ def _cff_scalar(text: str, key: str) -> str:
     return match.group("value").strip() if match else ""
 
 
+def _cff_preferred_scalar(text: str, key: str) -> str:
+    match = re.search(rf'(?m)^  {re.escape(key)}:\s*"?(?P<value>[^"\r\n]+?)"?\s*$', text)
+    return match.group("value").strip() if match else ""
+
+
+def _cff_authors(text: str) -> list[dict[str, str]]:
+    authors: list[dict[str, str]] = []
+    current: dict[str, str] | None = None
+    in_authors = False
+    for line in text.splitlines():
+        if line == "authors:":
+            in_authors = True
+            continue
+        if not in_authors:
+            continue
+        if line and not line.startswith("  "):
+            break
+        match = re.match(r'^  - (?P<key>[a-z-]+):\s*"?(?P<value>[^"\r\n]+?)"?\s*$', line)
+        if match:
+            current = {match.group("key"): match.group("value").strip()}
+            authors.append(current)
+            continue
+        match = re.match(r'^    (?P<key>[a-z-]+):\s*"?(?P<value>[^"\r\n]+?)"?\s*$', line)
+        if match and current is not None:
+            current[match.group("key")] = match.group("value").strip()
+    return authors
+
+
+def _cff_list(text: str, key: str) -> list[str]:
+    match = re.search(
+        rf'(?ms)^{re.escape(key)}:\s*\n(?P<items>(?:  - [^\r\n]+\r?\n?)+)',
+        text,
+    )
+    if match is None:
+        return []
+    return [
+        item.strip().strip('"')
+        for item in re.findall(r'(?m)^  - (?P<item>[^\r\n]+)$', match.group("items"))
+    ]
+
+
+def _doi_from_url(value: str) -> str:
+    return value.strip().removeprefix("https://doi.org/").removeprefix("http://doi.org/")
+
+
+def _doi_url_value(value: str) -> str:
+    stripped = value.strip()
+    return _doi_from_url(stripped) if stripped.startswith(("https://doi.org/", "http://doi.org/")) else ""
+
+
+def _mkdocs_extra_scalar(text: str, key: str) -> str:
+    match = re.search(rf'(?m)^  {re.escape(key)}:[ \t]*"?(?P<value>[^"\r\n]*?)"?[ \t]*$', text)
+    return match.group("value").strip() if match else ""
+
+
+def _orcid_id(value: str) -> str:
+    return value.strip().removeprefix("https://orcid.org/").removeprefix("http://orcid.org/")
+
+
 def _publication_metadata() -> dict[str, Any]:
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     project = pyproject.get("project") or {}
     project_urls = project.get("urls") or {}
     cff_text = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
     codemeta = json.loads((ROOT / "codemeta.json").read_text(encoding="utf-8"))
+    zenodo = json.loads((ROOT / ".zenodo.json").read_text(encoding="utf-8"))
+    mkdocs_text = (ROOT / "mkdocs.yml").read_text(encoding="utf-8")
 
     versions = {
         "package": str(project.get("version") or ""),
         "runtime": __version__,
         "citation": _cff_scalar(cff_text, "version"),
         "codemeta": str(codemeta.get("version") or ""),
+        "documentation": _mkdocs_extra_scalar(mkdocs_text, "software_version"),
     }
     if any(value != __version__ for value in versions.values()):
         raise ValueError(f"publication metadata versions are not aligned: {versions}")
@@ -439,10 +501,122 @@ def _publication_metadata() -> dict[str, Any]:
     if not documentation_urls["package"] or len(set(documentation_urls.values())) != 1:
         raise ValueError(f"publication documentation URLs are not aligned: {documentation_urls}")
 
+    cff_authors = _cff_authors(cff_text)
+    authors = {
+        "package": [str(author.get("name") or "") for author in project.get("authors") or []],
+        "citation": [
+            " ".join((author.get("given-names", ""), author.get("family-names", ""))).strip()
+            for author in cff_authors
+        ],
+        "codemeta": [
+            " ".join((str(author.get("givenName") or ""), str(author.get("familyName") or ""))).strip()
+            for author in codemeta.get("author") or []
+        ],
+        "zenodo": [
+            " ".join(reversed([part.strip() for part in str(author.get("name") or "").split(",", 1)]))
+            for author in zenodo.get("creators") or []
+        ],
+    }
+    if not authors["package"] or len({tuple(values) for values in authors.values()}) != 1:
+        raise ValueError(f"publication author identities/order are not aligned: {authors}")
+
+    affiliations = {
+        "citation": [author.get("affiliation", "") for author in cff_authors],
+        "codemeta": [
+            str((author.get("affiliation") or {}).get("name") or "")
+            for author in codemeta.get("author") or []
+        ],
+        "zenodo": [str(author.get("affiliation") or "") for author in zenodo.get("creators") or []],
+    }
+    if not affiliations["citation"] or len({tuple(values) for values in affiliations.values()}) != 1:
+        raise ValueError(f"publication author affiliations are not aligned: {affiliations}")
+
+    orcids = {
+        "citation": [_orcid_id(author.get("orcid", "")) for author in cff_authors],
+        "codemeta": [_orcid_id(str(author.get("@id") or "")) for author in codemeta.get("author") or []],
+        "zenodo": [_orcid_id(str(author.get("orcid") or "")) for author in zenodo.get("creators") or []],
+    }
+    if (
+        not orcids["citation"]
+        or any(not value for values in orcids.values() for value in values)
+        or len({tuple(values) for values in orcids.values()}) != 1
+    ):
+        raise ValueError(f"publication author ORCID iDs are not aligned: {orcids}")
+
+    keywords = {
+        "citation": _cff_list(cff_text, "keywords"),
+        "codemeta": [str(value) for value in codemeta.get("keywords") or []],
+        "zenodo": [str(value) for value in zenodo.get("keywords") or []],
+    }
+    if not keywords["citation"] or len({tuple(values) for values in keywords.values()}) != 1:
+        raise ValueError(f"publication keywords/order are not aligned: {keywords}")
+
+    concept_doi = _doi_from_url(str(project_urls.get("Archive") or ""))
+    version_dois = {
+        "package": _doi_from_url(str(project_urls.get("DOI") or "")),
+        "citation": _cff_preferred_scalar(cff_text, "doi"),
+        "citation_url": _doi_url_value(_cff_preferred_scalar(cff_text, "url")),
+        "codemeta_identifier": _doi_from_url(str(codemeta.get("identifier") or "")),
+        "codemeta_citation": _doi_from_url(str(codemeta.get("citation") or "")),
+        "documentation": _doi_from_url(_mkdocs_extra_scalar(mkdocs_text, "version_doi")),
+    }
+    present_version_dois = {value for value in version_dois.values() if value}
+    version_doi = next(iter(present_version_dois), None)
+    cff_identifiers = set(re.findall(r'(?m)^\s+value:\s*"?(10\.\d{4,9}/[^"\s]+)"?\s*$', cff_text))
+    codemeta_same_as = {_doi_from_url(str(value)) for value in codemeta.get("sameAs") or []}
+    documentation_concept_doi = _doi_from_url(_mkdocs_extra_scalar(mkdocs_text, "concept_doi"))
+    required_cff_identifiers = {concept_doi} | ({version_doi} if version_doi else set())
+    cff_zenodo_dois = {value for value in cff_identifiers if value.startswith("10.5281/zenodo.")}
+    if (
+        re.fullmatch(r"10\.5281/zenodo\.[0-9]+", concept_doi) is None
+        or (version_doi is not None and re.fullmatch(r"10\.5281/zenodo\.[0-9]+", version_doi) is None)
+        or version_doi == concept_doi
+        or (bool(present_version_dois) and len(present_version_dois) != 1)
+        or (bool(present_version_dois) and any(not value for value in version_dois.values()))
+        or required_cff_identifiers - cff_identifiers
+        or cff_zenodo_dois != required_cff_identifiers
+        or concept_doi not in codemeta_same_as
+        or documentation_concept_doi != concept_doi
+    ):
+        raise ValueError(
+            "publication DOI identities are not aligned: "
+            f"concept={concept_doi!r}, version={version_doi!r}, surfaces={version_dois!r}"
+        )
+
+    codemeta_record_urls = [
+        str(value)
+        for value in codemeta.get("sameAs") or []
+        if re.fullmatch(r"https://zenodo\.org/records/[0-9]+", str(value))
+    ]
+    record_urls = {
+        "codemeta": codemeta_record_urls[0] if len(codemeta_record_urls) == 1 else "",
+        "documentation": _mkdocs_extra_scalar(mkdocs_text, "archive_url"),
+    }
+    download_urls = {
+        "codemeta": str(codemeta.get("downloadUrl") or ""),
+        "documentation": _mkdocs_extra_scalar(mkdocs_text, "archive_download_url"),
+    }
+    if version_doi is None:
+        stale_urls = [value for value in (*codemeta_record_urls, *record_urls.values(), *download_urls.values()) if value]
+        if stale_urls:
+            raise ValueError(f"pre-mint publication metadata retains version-specific URLs: {stale_urls!r}")
+    else:
+        record_id = version_doi.rsplit(".", 1)[-1]
+        expected_record_url = f"https://zenodo.org/records/{record_id}"
+        if any(value != expected_record_url for value in record_urls.values()) or any(
+            f"/records/{record_id}/" not in value for value in download_urls.values()
+        ):
+            raise ValueError(
+                "publication record/download URLs are not aligned: "
+                f"version={version_doi!r}, records={record_urls!r}, downloads={download_urls!r}"
+            )
+
     metadata_paths = (
         "pyproject.toml",
+        ".zenodo.json",
         "CITATION.cff",
         "codemeta.json",
+        "mkdocs.yml",
         "references.bib",
         "CHANGELOG.md",
         "RELEASE.md",
@@ -468,6 +642,12 @@ def _publication_metadata() -> dict[str, Any]:
         "version_alignment": versions,
         "repository": repositories["package"],
         "documentation": documentation_urls["package"],
+        "authors": authors["package"],
+        "author_affiliations": affiliations["citation"],
+        "author_orcids": orcids["citation"],
+        "keywords": keywords["citation"],
+        "concept_doi": concept_doi,
+        "version_doi": version_doi,
         "metadata_files": metadata_files,
         "container_recipe": {
             "path": dockerfile.relative_to(ROOT).as_posix(),
@@ -523,15 +703,17 @@ def write_release_evidence(output_dir: str | Path) -> dict[str, Any]:
         raise ValueError("release evidence requires the checked-in uv.lock dependency resolution")
     sbom = build_cyclonedx_sbom()
     schemas = _schema_catalogue()
+    publication = _publication_metadata()
     _assert_publishable(sbom)
     _assert_publishable(schemas)
+    _assert_publishable(publication)
     sbom_path = atomic_write_json(root / "sbom.cdx.json", sbom)
     schema_path = atomic_write_json(root / "schema-catalogue.json", schemas)
     release = {
         "format_version": "1.0",
         "software": {"name": "asset-factory-blueprint", "version": __version__},
         "repository": _repository_state(),
-        "publication": _publication_metadata(),
+        "publication": publication,
         "dependency_lock": {
             "path": "uv.lock",
             "sha256": sha256_file(lock_path),
@@ -545,7 +727,7 @@ def write_release_evidence(output_dir: str | Path) -> dict[str, Any]:
         ],
         "claims": {
             "signed_tag_verified": False,
-            "doi_assigned": False,
+            "doi_assigned": publication["version_doi"] is not None,
             "official_nvidia_certification": False,
             "dependency_lock_verified": True,
         },

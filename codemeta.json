@@ -4,21 +4,44 @@
   "name": "Asset Factory Blueprint",
   "description": "Asset Factory Blueprint (AFB) is an MIT-licensed reference implementation from the HCLTech Robotics Intelligence CoE that turns photos, scans, CAD and USD sources into governed, reproducible OpenUSD assets and Isaac Lab reinforcement learning environments for robotics simulation, with every geometry, physics and variant decision verified against SimReady requirements and tied to recorded evidence.",
   "version": "1.1.0",
-  "dateModified": "2026-08-30",
+  "dateModified": "2026-09-03",
+  "datePublished": "2026-08-31",
+  "identifier": "https://doi.org/10.5281/zenodo.22201830",
+  "sameAs": [
+    "https://doi.org/10.5281/zenodo.22201829",
+    "https://zenodo.org/records/22201830"
+  ],
+  "citation": "https://doi.org/10.5281/zenodo.22201830",
+  "downloadUrl": "https://zenodo.org/api/records/22201830/files/hcltech-robotics/asset-factory-blueprint-v1.1.0.zip/content",
   "author": [
     {
       "@type": "Person",
       "@id": "https://orcid.org/0000-0003-3131-0864",
       "givenName": "Chris",
-      "familyName": "von Csefalvay"
+      "familyName": "von Csefalvay",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "HCLTech Robotics Intelligence CoE",
+        "url": "https://github.com/hcltech-robotics"
+      }
     },
     {
       "@type": "Person",
       "@id": "https://orcid.org/0000-0001-9283-6865",
       "givenName": "Tamas",
-      "familyName": "Foldi"
+      "familyName": "Foldi",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "HCLTech Robotics Intelligence CoE",
+        "url": "https://github.com/hcltech-robotics"
+      }
     }
   ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "HCLTech Robotics Intelligence CoE",
+    "url": "https://github.com/hcltech-robotics"
+  },
   "codeRepository": "https://github.com/hcltech-robotics/asset-factory-blueprint.git",
   "issueTracker": "https://github.com/hcltech-robotics/asset-factory-blueprint/issues",
   "license": "https://spdx.org/licenses/MIT.html",
@@ -27,13 +50,16 @@
   "applicationCategory": "Robotics simulation asset pipeline",
   "readme": "https://github.com/hcltech-robotics/asset-factory-blueprint/blob/main/README.md",
   "buildInstructions": "https://github.com/hcltech-robotics/asset-factory-blueprint/blob/main/RELEASE.md",
-  "softwareHelp": "https://github.com/hcltech-robotics/asset-factory-blueprint/tree/main/docs",
+  "softwareHelp": "https://hcltech-robotics.github.io/asset-factory-blueprint/",
   "continuousIntegration": "https://github.com/hcltech-robotics/asset-factory-blueprint/actions/workflows/ci.yml",
   "keywords": [
     "OpenUSD",
+    "SimReady",
     "robotics",
     "simulation",
-    "SimReady",
+    "asset pipeline",
+    "reinforcement learning",
+    "Isaac Lab",
     "provenance"
   ]
 }
