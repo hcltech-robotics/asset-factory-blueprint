@@ -37,7 +37,8 @@ jobs:
         run: |
           mkdir -p site/schemas/v1
           cp schemas/*.json site/schemas/v1/
-          cp .zenodo.json CITATION.cff codemeta.json references.bib site/
+          cp .zenodo.json site/zenodo.json
+          cp CITATION.cff codemeta.json references.bib site/
       - run: touch site/.nojekyll
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
         with:

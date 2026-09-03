@@ -14,7 +14,7 @@ Current release DOI (v1.1.0): [10.5281/zenodo.22201830](https://doi.org/10.5281/
 
 Zenodo record: [Asset Factory Blueprint v1.1.0](https://zenodo.org/records/22201830)
 
-Zenodo release metadata: [.zenodo.json](https://hcltech-robotics.github.io/asset-factory-blueprint/.zenodo.json)
+Zenodo release metadata: [zenodo.json](https://hcltech-robotics.github.io/asset-factory-blueprint/zenodo.json)
 
 Licence: [MIT](https://github.com/hcltech-robotics/asset-factory-blueprint/blob/main/LICENSE)
 
