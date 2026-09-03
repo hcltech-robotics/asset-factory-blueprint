@@ -4,6 +4,8 @@ description: "Governed, reproducible OpenUSD assets and Isaac Lab RL environment
 
 # Asset Factory Blueprint
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22201829.svg)](https://doi.org/10.5281/zenodo.22201829)
+
 ## What does Asset Factory Blueprint do?
 
 Asset Factory Blueprint (AFB) is an MIT-licensed reference implementation from the HCLTech Robotics Intelligence CoE that turns photos, scans, CAD and USD sources into governed, reproducible OpenUSD assets [@aousd_openusd_2026] and Isaac Lab reinforcement learning environments for robotics simulation, with every geometry, physics and variant decision verified against SimReady requirements [@nvidia_simready_faq_2026] and tied to recorded evidence. It routes each source through explicit stages, records evidence and checksums, and keeps generated variants traceable to the source, policy and review decisions that produced them.
@@ -68,18 +70,23 @@ The Asset Factory Blueprint was developed by HCLTech Robotics Intelligence CoE i
 
 ### Principal investigators
 
-* Chris von Csefalvay, HCLTech
-* Tamas Foldi, HCLTech, Head of Lab
+* [Chris von Csefalvay](https://orcid.org/0000-0003-3131-0864), HCLTech Robotics Intelligence CoE
+* [Tamas Foldi](https://orcid.org/0000-0001-9283-6865), HCLTech Robotics Intelligence CoE, Head of Lab
 
 ### Citation
 
+The [concept DOI](https://doi.org/10.5281/zenodo.22201829) follows the latest archived release. Cite the immutable version DOI when reporting a reproducible result. The current v1.1.0 archive and its verified creator order are registered by Zenodo [@von_csefalvay_asset_factory_2026].
+
 ```bibtex
-@software{voncsefalvay_asset_factory_blueprint_2026,
-  author  = {von Csefalvay, Chris},
-  title   = {{Asset Factory Blueprint}},
-  year    = {2026},
-  version = {1.1.0},
-  url     = {https://github.com/hcltech-robotics/asset-factory-blueprint}
+@software{von_csefalvay_2026_22201830,
+  author    = {von Csefalvay, Chris and Foldi, Tamas},
+  title     = {Asset Factory Blueprint},
+  month     = aug,
+  year      = {2026},
+  publisher = {Zenodo},
+  version   = {v1.1.0},
+  doi       = {10.5281/zenodo.22201830},
+  url       = {https://doi.org/10.5281/zenodo.22201830}
 }
 ```
 

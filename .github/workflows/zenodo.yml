@@ -1,0 +1,95 @@
+name: Zenodo release verification
+
+on:
+  release:
+    types: [published]
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Published semantic-version release tag; defaults to the latest GitHub Release
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: zenodo-release-${{ github.event.release.tag_name || inputs.tag || 'latest' }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify DOI and archival metadata
+    if: github.repository == 'hcltech-robotics/asset-factory-blueprint'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Resolve the published release tag
+        id: release
+        shell: bash
+        env:
+          EVENT_TAG: ${{ github.event.release.tag_name }}
+          INPUT_TAG: ${{ inputs.tag }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${EVENT_TAG:-${INPUT_TAG:-}}"
+          if [[ -z "$tag" ]]; then
+            tag="$(gh api "repos/${GITHUB_REPOSITORY}/releases/latest" --jq .tag_name)"
+          fi
+          if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Release tag is not a supported semantic version: $tag" >&2
+            exit 1
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.11"
+
+      - name: Verify Zenodo DOI series and release metadata
+        id: zenodo
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          release_source="${RUNNER_TEMP}/release-source"
+          mkdir -p "$release_source"
+          git archive "$RELEASE_TAG" | tar -x -C "$release_source"
+          attempts=1
+          interval=0
+          if [[ "$GITHUB_EVENT_NAME" == "release" ]]; then
+            attempts=30
+            interval=20
+          fi
+          python scripts/ci/verify_zenodo_release.py \
+            --tag "$RELEASE_TAG" \
+            --metadata "$release_source/.zenodo.json" \
+            --source-root "$release_source" \
+            --seed-record-id 22201830 \
+            --concept-doi 10.5281/zenodo.22201829 \
+            --attempts "$attempts" \
+            --interval "$interval"
+
+      - name: Add the immutable DOI to the GitHub release notes
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+          DOI_URL: ${{ steps.zenodo.outputs.doi_url }}
+          ZENODO_RECORD_URL: ${{ steps.zenodo.outputs.record_url }}
+        run: |
+          notes="$(gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json body --jq '.body // ""')"
+          if [[ "$notes" == *"$DOI_URL"* ]]; then
+            echo "Release notes already contain $DOI_URL"
+            exit 0
+          fi
+          notes_file="${RUNNER_TEMP}/release-notes-with-doi.md"
+          printf '%s\n\n## Archival DOI\n\n[%s](%s) ([Zenodo record](%s))\n' \
+            "$notes" "$DOI_URL" "$DOI_URL" "$ZENODO_RECORD_URL" > "$notes_file"
+          gh release edit "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --notes-file "$notes_file"

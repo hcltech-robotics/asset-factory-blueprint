@@ -10,7 +10,8 @@ readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [
-  { name = "Chris von Csefalvay" }
+  { name = "Chris von Csefalvay" },
+  { name = "Tamas Foldi" }
 ]
 requires-python = ">=3.11,<3.14"
 keywords = ["openusd", "robotics", "simulation", "simready", "asset-pipeline"]
@@ -34,10 +35,12 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/hcltech-robotics/asset-factory-blueprint"
-Documentation = "https://github.com/hcltech-robotics/asset-factory-blueprint/tree/main/docs"
+Documentation = "https://hcltech-robotics.github.io/asset-factory-blueprint/"
 Repository = "https://github.com/hcltech-robotics/asset-factory-blueprint.git"
 Issues = "https://github.com/hcltech-robotics/asset-factory-blueprint/issues"
 Changelog = "https://github.com/hcltech-robotics/asset-factory-blueprint/blob/main/CHANGELOG.md"
+Archive = "https://doi.org/10.5281/zenodo.22201829"
+DOI = "https://doi.org/10.5281/zenodo.22201830"
 
 [project.optional-dependencies]
 dev = [

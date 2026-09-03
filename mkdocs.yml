@@ -53,6 +53,21 @@ extra:
   publisher_url: https://github.com/hcltech-robotics
   parent_org_name: HCLTech
   parent_org_url: https://www.hcltech.com/
+  software_version: 1.1.0
+  release_date: 2026-08-31
+  concept_doi: 10.5281/zenodo.22201829
+  version_doi: 10.5281/zenodo.22201830
+  archive_url: https://zenodo.org/records/22201830
+  archive_download_url: https://zenodo.org/api/records/22201830/files/hcltech-robotics/asset-factory-blueprint-v1.1.0.zip/content
+  software_keywords:
+    - OpenUSD
+    - SimReady
+    - robotics
+    - simulation
+    - asset pipeline
+    - reinforcement learning
+    - Isaac Lab
+    - provenance
   authors:
     - name: Chris von Csefalvay
       orcid: https://orcid.org/0000-0003-3131-0864

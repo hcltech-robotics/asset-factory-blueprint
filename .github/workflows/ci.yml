@@ -72,10 +72,12 @@ jobs:
           test -n "$archive"
           tar -tzf "$archive" > .ci-sdist-files.txt
           for required in \
+            .zenodo.json \
             uv.lock \
             configs/tool-surface.json \
             schemas/simready-asset-manifest.schema.json \
             schemas/rl-probe-evidence.schema.json \
+            scripts/ci/verify_zenodo_release.py \
             scripts/ci/stdio_tool_server_smoke.py \
             scripts/rl/isaac_lab_probe.py \
             examples/run-requests/warehouse_pick_cell.json \

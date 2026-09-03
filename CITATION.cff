@@ -7,19 +7,31 @@ authors:
   - family-names: "von Csefalvay"
     given-names: "Chris"
     orcid: "https://orcid.org/0000-0003-3131-0864"
+    affiliation: "HCLTech Robotics Intelligence CoE"
   - family-names: "Foldi"
     given-names: "Tamas"
     orcid: "https://orcid.org/0000-0001-9283-6865"
+    affiliation: "HCLTech Robotics Intelligence CoE"
 repository-code: "https://github.com/hcltech-robotics/asset-factory-blueprint"
-url: "https://github.com/hcltech-robotics/asset-factory-blueprint/tree/main/docs"
+url: "https://hcltech-robotics.github.io/asset-factory-blueprint/"
 version: 1.1.0
-date-released: 2026-08-30
+date-released: 2026-08-31
 license: MIT
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.22201830"
+    description: "DOI for release v1.1.0"
+  - type: doi
+    value: "10.5281/zenodo.22201829"
+    description: "Concept DOI for all Asset Factory Blueprint versions"
 keywords:
   - OpenUSD
+  - SimReady
   - robotics
   - simulation
   - asset pipeline
+  - reinforcement learning
+  - Isaac Lab
   - provenance
 preferred-citation:
   type: software
@@ -28,9 +40,13 @@ preferred-citation:
     - family-names: "von Csefalvay"
       given-names: "Chris"
       orcid: "https://orcid.org/0000-0003-3131-0864"
+      affiliation: "HCLTech Robotics Intelligence CoE"
     - family-names: "Foldi"
       given-names: "Tamas"
       orcid: "https://orcid.org/0000-0001-9283-6865"
+      affiliation: "HCLTech Robotics Intelligence CoE"
   version: 1.1.0
+  date-released: 2026-08-31
+  doi: "10.5281/zenodo.22201830"
   repository-code: "https://github.com/hcltech-robotics/asset-factory-blueprint"
-  url: "https://github.com/hcltech-robotics/asset-factory-blueprint/tree/main/docs"
+  url: "https://doi.org/10.5281/zenodo.22201830"

@@ -1,5 +1,7 @@
 # Asset Factory Blueprint
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22201829.svg)](https://doi.org/10.5281/zenodo.22201829)
+
 Asset Factory Blueprint (AFB) is an MIT-licensed reference implementation from the HCLTech Robotics Intelligence CoE that turns photos, scans, CAD and USD sources into governed, reproducible OpenUSD assets and Isaac Lab reinforcement learning environments for robotics simulation, with every geometry, physics and variant decision verified against SimReady requirements and tied to recorded evidence.
 
 Robotic policies learn from what the simulator shows them. Clean-looking but physically wrong scenes teach brittle cues. Traceable geometry, scale, mass, friction, joints and material state make failures easier to find before they reach training. **The Asset Factory Blueprint creates the repeatable, governed USD pipelines that automatically build assets from your photos, meshes, USD files and other source evidence that will be _useful_, not just good-looking.**
@@ -207,15 +209,18 @@ Tests, the reproducibility benchmark and continuous integration live in this rep
 
 ## Citation and project policy
 
-Use `CITATION.cff` for software citation and record the signed release tag, schema digests and verification commit used by a run. The corresponding BibTeX entry is:
+Use `CITATION.cff` for software citation and record the signed release tag, schema digests and verification commit used by a run. The [concept DOI](https://doi.org/10.5281/zenodo.22201829) resolves to the latest archived version; reproducible work should cite the DOI for the exact version used. For v1.1.0, the canonical BibTeX entry is:
 
 ```bibtex
-@software{voncsefalvay_asset_factory_blueprint_2026,
-  author  = {von Csefalvay, Chris},
-  title   = {{Asset Factory Blueprint}},
-  year    = {2026},
-  version = {1.1.0},
-  url     = {https://github.com/hcltech-robotics/asset-factory-blueprint}
+@software{von_csefalvay_2026_22201830,
+  author    = {von Csefalvay, Chris and Foldi, Tamas},
+  title     = {Asset Factory Blueprint},
+  month     = aug,
+  year      = {2026},
+  publisher = {Zenodo},
+  version   = {v1.1.0},
+  doi       = {10.5281/zenodo.22201830},
+  url       = {https://doi.org/10.5281/zenodo.22201830}
 }
 ```
 
