@@ -93,6 +93,7 @@ plugins:
 
 hooks:
   - scripts/docs/bibliography_hook.py
+  - scripts/docs/repository_pages_hook.py
 
 markdown_extensions:
   - fenced_code
@@ -154,6 +155,13 @@ nav:
       - Toolchain: toolchain.md
       - RL environment: extensions/rl-environment.md
   - Governance:
+      - Project governance: GOVERNANCE.md
+      - Release process: RELEASE.md
+      - Support: SUPPORT.md
+      - Security policy: SECURITY.md
+      - Code of conduct: CODE_OF_CONDUCT.md
+      - Third-party notices: THIRD_PARTY_NOTICES.md
+      - MIT licence: license.md
       - Agent system: agent-system.md
       - Governance: platform/governance.md
       - Mandatory early mesh verification decision: design-decisions/mandatory-mesh-verification.md
@@ -172,5 +180,6 @@ nav:
       - Project workspaces: project-workspaces.md
       - Provider abstraction: provider-abstraction.md
       - Skill SDK: skill-sdk.md
+      - Asset programme strategist: asset-programme-strategist.md
       - Source map: source-map.md
       - References: references.md

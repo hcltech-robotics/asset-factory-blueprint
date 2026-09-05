@@ -2,7 +2,7 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22201829.svg)](https://doi.org/10.5281/zenodo.22201829)
 
-Asset Factory Blueprint (AFB) is an MIT-licensed reference implementation from the HCLTech Robotics Intelligence CoE that turns photos, scans, CAD and USD sources into governed, reproducible OpenUSD assets and Isaac Lab reinforcement learning environments for robotics simulation, with every geometry, physics and variant decision verified against SimReady requirements and tied to recorded evidence.
+[Asset Factory Blueprint](https://hcltech-robotics.github.io/asset-factory-blueprint/index.html) (AFB) is an MIT-licensed reference implementation from the HCLTech Robotics Intelligence CoE that turns photos, scans, CAD and USD sources into governed, reproducible OpenUSD assets and Isaac Lab reinforcement learning environments for robotics simulation, with every geometry, physics and variant decision verified against SimReady requirements and tied to recorded evidence.
 
 Robotic policies learn from what the simulator shows them. Clean-looking but physically wrong scenes teach brittle cues. Traceable geometry, scale, mass, friction, joints and material state make failures easier to find before they reach training. **The Asset Factory Blueprint creates the repeatable, governed USD pipelines that automatically build assets from your photos, meshes, USD files and other source evidence that will be _useful_, not just good-looking.**
 
@@ -24,9 +24,9 @@ uv sync --frozen --all-extras
 uv run afb capabilities
 ```
 
-Put source files under `artifacts/sources/`, which is ignored by Git, or configure `AFB_SERVICE_SOURCE_ROOTS` with an `os.pathsep`-separated list of additional authorised locations. See [security and confinement](docs/environment-reference.md#security-confinement-and-resource-limits).
+Put source files under `artifacts/sources/`, which is ignored by Git, or configure `AFB_SERVICE_SOURCE_ROOTS` with an `os.pathsep`-separated list of additional authorised locations. See [security and confinement](https://hcltech-robotics.github.io/asset-factory-blueprint/environment-reference.html#security-confinement-and-resource-limits).
 
-Start with the [asset programme strategist](skills/asset-programme-strategist/SKILL.md). Give an agent in the checkout this instruction:
+Start with the [asset programme strategist](https://hcltech-robotics.github.io/asset-factory-blueprint/asset-programme-strategist.html). Give an agent in the checkout this instruction:
 
 > Read and follow `skills/asset-programme-strategist/SKILL.md`. Start an asset-factory programme from my brief. Ask every start-blocking question, do not invent evidence or a Profile and use dry run unless I approve live work.
 
@@ -37,9 +37,9 @@ uv run afb agent intake --draft artifacts/run-requests/<asset-id>.json
 uv run afb agent start --request artifacts/run-requests/<asset-id>.json --project-root projects
 ```
 
-`agent intake` returns the exact missing questions without writing a project. Exit code 2 means the draft is blocked and must be updated from the user's answers; run `agent start` only when intake reports `ready: true`. Start repeats those checks, persists the confirmed object as `projects/<asset-id>/run-request.json` and enters the [whole-run agent loop](docs/platform/agentic-operation.md).
+`agent intake` returns the exact missing questions without writing a project. Exit code 2 means the draft is blocked and must be updated from the user's answers; run `agent start` only when intake reports `ready: true`. Start repeats those checks, persists the confirmed object as `projects/<asset-id>/run-request.json` and enters the [whole-run agent loop](https://hcltech-robotics.github.io/asset-factory-blueprint/platform/agentic-operation.html).
 
-For an external agent host, [`scripts/afb-agent-launchable`](scripts/afb-agent-launchable) exposes the equivalent `asset_programme_intake` and `asset_factory_start` tools over the governed stdio surface. Intake needs no approval. Starting the factory creates a project and may enter live provider-backed work, so it requires the existing parameter-bound, single-use [tool approval](docs/platform/deployment.md#http-tool-service).
+For an external agent host, [`scripts/afb-agent-launchable`](https://hcltech-robotics.github.io/asset-factory-blueprint/platform/deployment.html#external-agent-hosts) exposes the equivalent `asset_programme_intake` and `asset_factory_start` tools over the governed stdio surface. Intake needs no approval. Starting the factory creates a project and may enter live provider-backed work, so it requires the existing parameter-bound, single-use [tool approval](https://hcltech-robotics.github.io/asset-factory-blueprint/platform/deployment.html#http-tool-service).
 
 ### I have a photo
 
@@ -49,7 +49,7 @@ Give the agent the image path and the intended use:
 
 The strategist routes supported images through source ingestion, reconstruction, mandatory mesh verification, segmentation, material inference and the requested downstream stages. A SimReady or RL request must name an exact SimReady Profile ID and pinned version. If either is absent, the agent asks for it and stops before start-up rather than selecting one.
 
-The exact pair comes from the programme's approved SimReady requirements and validator configuration. If that authority has not selected one, follow the [SimReady verification guidance](docs/pipeline/07-simready-verification.md), keep the request blocked or narrow the deliverable to texture or physics work. The factory does not choose a release contract on the user's behalf.
+The exact pair comes from the programme's approved SimReady requirements and validator configuration. If that authority has not selected one, follow the [SimReady verification guidance](https://hcltech-robotics.github.io/asset-factory-blueprint/pipeline/07-simready-verification.html), keep the request blocked or narrow the deliverable to texture or physics work. The factory does not choose a release contract on the user's behalf.
 
 ### I have a mesh
 
@@ -95,13 +95,13 @@ uv run afb stage run texturing --project projects/<asset-id>
 
 ### I already have a run request
 
-Pass the JSON through `afb agent intake` for interactive blocker handling, or start the [agent loop](docs/platform/agentic-operation.md) directly:
+Pass the JSON through `afb agent intake` for interactive blocker handling, or start the [agent loop](https://hcltech-robotics.github.io/asset-factory-blueprint/platform/agentic-operation.html) directly:
 
 ```bash
 uv run afb agent run --request artifacts/run-requests/<asset-id>.json --project-root projects
 ```
 
-Direct `agent run` repeats schema and route validation but does not conduct the strategist's interview. It can materialise a blocked planning workspace when release-critical inputs are unresolved. Dry run is the default. Add `--live` to `agent start`, `agent run` or `stage run` only when provider-backed review and bounded fixes are intended. The project records the canonical request, run plan, missing evidence, stage manifests, reports, checksums, `progress.json` and the operator contact sheet. See the [full quickstart](docs/quickstart.md) for provider credentials, reconstruction backends and release gates.
+Direct `agent run` repeats schema and route validation but does not conduct the strategist's interview. It can materialise a blocked planning workspace when release-critical inputs are unresolved. Dry run is the default. Add `--live` to `agent start`, `agent run` or `stage run` only when provider-backed review and bounded fixes are intended. The project records the canonical request, run plan, missing evidence, stage manifests, reports, checksums, `progress.json` and the operator contact sheet. See the [full quickstart](https://hcltech-robotics.github.io/asset-factory-blueprint/quickstart.html) for provider credentials, reconstruction backends and release gates.
 
 ## The pipeline
 
@@ -122,13 +122,13 @@ Downstream extensions build RL environment contracts and controlled layout or mu
 
 `afb agent run` drives the routed stages. It runs deterministic gates, sends each stage to a vision-language reviewer, applies bounded fixes from the fix library and escalates unresolved findings to an operator. Candidate geometry always passes through the stricter `mesh-verification` gate before downstream stages can consume it.
 
-Each iteration rewrites `progress.json` and the Markdown and PNG contact sheets under `reports/`. These record the stage, gate, verdict, fix state, thumbnails and defect tags. `afb capabilities` shows the active implementation for each capability, its fallbacks and any licence or token gate. It can also plan installs. See [Agentic operation](docs/platform/agentic-operation.md).
+Each iteration rewrites `progress.json` and the Markdown and PNG contact sheets under `reports/`. These record the stage, gate, verdict, fix state, thumbnails and defect tags. `afb capabilities` shows the active implementation for each capability, its fallbacks and any licence or token gate. It can also plan installs. See [Agentic operation](https://hcltech-robotics.github.io/asset-factory-blueprint/platform/agentic-operation.html).
 
 ## Libraries
 
 Library indexes ground materials, textures, assets and physical values in known sources. Point the factory at existing material and texture folders, USD asset folders, the Omniverse content estate or a USD Search endpoint, then index them with `afb library index`.
 
-The repository includes exemplar PBR and MDL materials based on the Omniverse reference catalogues, a physical property dictionary for review-gated proposals, links to asset packs and a knowledge corpus covering USD, asset creation, validation, PhysX binding, PBR and MDL. Free sources such as ambientCG and Poly Haven are queryable and downloadable. `afb library shop --query "rusty metal"` opens the terminal selector for matching items or whole packs. See [Libraries](docs/platform/libraries.md).
+The repository includes exemplar PBR and MDL materials based on the Omniverse reference catalogues, a physical property dictionary for review-gated proposals, links to asset packs and a knowledge corpus covering USD, asset creation, validation, PhysX binding, PBR and MDL. Free sources such as ambientCG and Poly Haven are queryable and downloadable. `afb library shop --query "rusty metal"` opens the terminal selector for matching items or whole packs. See [Libraries](https://hcltech-robotics.github.io/asset-factory-blueprint/platform/libraries.html).
 
 ## Core idea
 
@@ -193,15 +193,15 @@ Provider routing comes from `configs/provider-policy.json`. Each public tool cal
 
 ## Documentation map
 
-- [Index](docs/index.md) gives task-based routes through the documentation.
-- [Blueprint](docs/blueprint.md) explains the purpose, promotion model and policy-quality link.
-- [Reference architecture](docs/reference-architecture.md) explains runtime layers and artefact flow.
-- The stage docs under [docs/pipeline](docs/pipeline) cover intake and sources, reconstruction, mandatory mesh verification, segmentation, material and physical inference, texturing, physics and articulation, nonvisual materials and SimReady verification in canonical order.
-- The platform docs under [docs/platform](docs/platform) cover the orchestrator, governance, infrastructure, deployment, external model runners and layer ownership.
-- [RL environment design](docs/extensions/rl-environment.md) explains how validated assets become policy-training environments.
-- [Support matrix](docs/support-matrix.md) distinguishes declared, CI-checked, provisional and release-verified targets.
-- [Citation and reproducibility](docs/citation-and-reproducibility.md) defines software and schema citation requirements.
-- [Reference-run capsule](docs/reference-run-capsule.md) defines the evidence package required for a citeable release claim.
+- [Index](https://hcltech-robotics.github.io/asset-factory-blueprint/index.html) gives task-based routes through the documentation.
+- [Blueprint](https://hcltech-robotics.github.io/asset-factory-blueprint/blueprint.html) explains the purpose, promotion model and policy-quality link.
+- [Reference architecture](https://hcltech-robotics.github.io/asset-factory-blueprint/reference-architecture.html) explains runtime layers and artefact flow.
+- The stage docs under [Pipeline stages](https://hcltech-robotics.github.io/asset-factory-blueprint/index.html#pipeline-stages) cover intake and sources, reconstruction, mandatory mesh verification, segmentation, material and physical inference, texturing, physics and articulation, nonvisual materials and SimReady verification in canonical order.
+- The platform docs under [Platform operations](https://hcltech-robotics.github.io/asset-factory-blueprint/index.html#implementation-guidance) cover the orchestrator, governance, infrastructure, deployment, external model runners and layer ownership.
+- [RL environment design](https://hcltech-robotics.github.io/asset-factory-blueprint/extensions/rl-environment.html) explains how validated assets become policy-training environments.
+- [Support matrix](https://hcltech-robotics.github.io/asset-factory-blueprint/support-matrix.html) distinguishes declared, CI-checked, provisional and release-verified targets.
+- [Citation and reproducibility](https://hcltech-robotics.github.io/asset-factory-blueprint/citation-and-reproducibility.html) defines software and schema citation requirements.
+- [Reference-run capsule](https://hcltech-robotics.github.io/asset-factory-blueprint/reference-run-capsule.html) defines the evidence package required for a citeable release claim.
 
 ## Verification
 
@@ -224,10 +224,10 @@ Use `CITATION.cff` for software citation and record the signed release tag, sche
 }
 ```
 
-Project decisions and releases follow [GOVERNANCE.md](GOVERNANCE.md) and [RELEASE.md](RELEASE.md). Support, security and participation policies are in [SUPPORT.md](SUPPORT.md), [SECURITY.md](SECURITY.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+Project decisions and releases follow [Project governance](https://hcltech-robotics.github.io/asset-factory-blueprint/GOVERNANCE.html) and [Release process](https://hcltech-robotics.github.io/asset-factory-blueprint/RELEASE.html). Support, security and participation policies are in [Support](https://hcltech-robotics.github.io/asset-factory-blueprint/SUPPORT.html), [Security policy](https://hcltech-robotics.github.io/asset-factory-blueprint/SECURITY.html) and [Code of conduct](https://hcltech-robotics.github.io/asset-factory-blueprint/CODE_OF_CONDUCT.html).
 
 ## License
 
-The repository code is [licensed under the MIT License](LICENSE).
+The repository code is [licensed under the MIT License](https://hcltech-robotics.github.io/asset-factory-blueprint/license.html).
 
-The Asset Factory Blueprint was developed in early 2026 by HCLTech Robotics Intelligence CoE. Its material workflows draw on NVIDIA's `content-agents`, while Omniverse, Isaac Sim and SimReady inform its runtime and promotion model; see [acknowledged foundations](THIRD_PARTY_NOTICES.md#acknowledged-foundations) for attribution.
+The Asset Factory Blueprint was developed in early 2026 by HCLTech Robotics Intelligence CoE. Its material workflows draw on NVIDIA's `content-agents`, while Omniverse, Isaac Sim and SimReady inform its runtime and promotion model; see [acknowledged foundations](https://hcltech-robotics.github.io/asset-factory-blueprint/THIRD_PARTY_NOTICES.html#acknowledged-foundations) for attribution.

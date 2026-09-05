@@ -25,6 +25,12 @@ Deployment lets operators review evidence, rerun gates and inspect project state
 
 Secrets are supplied through environment variables or deployment secret stores. Reports can record env var names, provider IDs, model IDs and redacted endpoint metadata. Reports must not record raw keys, bearer tokens, approval secrets or signed URLs. Job parameters and approval reasons are durable operational records and must contain only handles.
 
+## External agent hosts
+
+`scripts/afb-agent-launchable` exposes the `asset_programme_intake` and `asset_factory_start` tools over the governed stdio surface for an external agent host. Start with the [asset programme strategist](../asset-programme-strategist.md) to turn a brief into a run request.
+
+Intake validates the draft without creating a project. Starting the factory creates a project and may enter live provider-backed work, so it requires the existing parameter-bound, single-use tool approval described below.
+
 ## HTTP tool service
 
 The service binds to loopback by default. It limits request and result size, HTTP threads, workers, retained jobs and retries. `--job-store` persists every job transition and consumed approval capability. On restart, recorded terminal jobs remain queryable and interrupted jobs become failed. The service never silently resumes an interrupted mutation.
