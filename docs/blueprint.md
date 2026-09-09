@@ -6,6 +6,8 @@ description: "See how Asset Factory turns source evidence into reproducible, Sim
 
 The Asset Factory is a governed process for creating reproducible, sim-ready OpenUSD assets [@aousd_openusd_2026; @nvidia_simready_faq_2026]. Source handling, provider-assisted generation, deterministic validation and operator review share one [project workspace](project-workspaces.md).
 
+The [Theory](theory/index.md) section defines the task-relative, evidential and physical basis for this process. This page retains the operational pipeline and promotion model.
+
 ## What is the Asset Factory process?
 
 The process converts source evidence into a reviewable asset package through intake, reconstruction or conditioning, mandatory mesh verification, segmentation, material and texture work, physics authoring and final SimReady verification. A dependency-closed run plan controls the route, while manifests and checksums make every promotion decision inspectable and reproducible.

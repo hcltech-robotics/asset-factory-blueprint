@@ -24,6 +24,7 @@ Generated model output remains a proposal until the required deterministic check
 
 - [Documentation index](https://hcltech-robotics.github.io/asset-factory-blueprint/index.html): Task-oriented map of the documentation.
 - [Blueprint](https://hcltech-robotics.github.io/asset-factory-blueprint/blueprint.html): Purpose, eight-stage process, promotion model and controlled variants.
+- [Theory](https://hcltech-robotics.github.io/asset-factory-blueprint/theory/index.html): Task-relative fidelity, evidence, physical interaction, composition, agentic authoring and learning-environment design.
 - [Quickstart](https://hcltech-robotics.github.io/asset-factory-blueprint/quickstart.html): Installation, provider configuration, dry runs and live operation.
 - [Reference architecture](https://hcltech-robotics.github.io/asset-factory-blueprint/reference-architecture.html): Runtime layers, artefact flow, provider boundary and release evidence.
 - [Walkthrough](https://hcltech-robotics.github.io/asset-factory-blueprint/walkthrough.html): One-photo example from intake to a governed workspace.

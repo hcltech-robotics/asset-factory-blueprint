@@ -1,0 +1,19 @@
+%% Figure 4.2. Editable semantic source; the published SVG uses the AFB theory visual system.
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"AFB Manrope, sans-serif","primaryColor":"#292931","primaryTextColor":"#f0f2f8","primaryBorderColor":"#3c91ff","lineColor":"#8c69f0","secondaryColor":"#392f29","tertiaryColor":"#222229"},"flowchart":{"curve":"basis"}}}%%
+flowchart LR
+    X["geometry scale or units change"] --> C["collision geometry and clearances"]
+    X --> MP["mass, centre of mass and inertia assumptions"]
+    X --> J["joint and drive frames"]
+    X --> G["grasp and affordance frames"]
+    X --> T["real-space texture scale"]
+    C --> F["task-fitness evidence"]
+    MP --> F
+    J --> F
+    G --> F
+
+    classDef change fill:#292931,stroke:#3c91ff,color:#f0f2f8,stroke-width:2.5px;
+    classDef affected fill:#2f3039,stroke:#8c69f0,color:#f0f2f8,stroke-width:2px;
+    classDef invalidated fill:#392f29,stroke:#e28b56,color:#f0f2f8,stroke-width:2.5px;
+    class X change;
+    class C,MP,J,G,T affected;
+    class F invalidated;

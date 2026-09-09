@@ -95,6 +95,10 @@ hooks:
   - scripts/docs/bibliography_hook.py
   - scripts/docs/repository_pages_hook.py
 
+extra_javascript:
+  - assets/javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3.2.2/es5/tex-mml-chtml.js
+
 markdown_extensions:
   - fenced_code
   - sane_lists
@@ -117,6 +121,8 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.keys
+  - pymdownx.arithmatex:
+      generic: true
   - pymdownx.snippets
   - pymdownx.superfences
   - pymdownx.tabbed:
@@ -133,6 +139,14 @@ nav:
       - Blueprint: blueprint.md
       - Reference architecture: reference-architecture.md
       - Runtime architecture: runtime-architecture.md
+  - Theory:
+      - Theory: theory/index.md
+      - Task-dependent fidelity: theory/task-dependent-fidelity.md
+      - Reconstruction and evidence: theory/reconstruction-and-evidence.md
+      - Geometry, materials and physical interaction: theory/physical-interaction.md
+      - Composition and reproducibility in OpenUSD: theory/composition-and-reproducibility.md
+      - Agentic asset construction: theory/agentic-construction.md
+      - From assets to learning environments: theory/learning-environments.md
   - Pipeline:
       - Intake and sources: pipeline/00-intake-and-sources.md
       - Reconstruction: pipeline/01-reconstruction.md

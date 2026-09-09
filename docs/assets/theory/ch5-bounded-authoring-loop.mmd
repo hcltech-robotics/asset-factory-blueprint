@@ -1,0 +1,28 @@
+%% Figure 5.1. Editable semantic source; the published SVG uses the AFB theory visual system.
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"AFB Manrope, sans-serif","primaryColor":"#292931","primaryTextColor":"#f0f2f8","primaryBorderColor":"#3c91ff","lineColor":"#4bc3af","secondaryColor":"#302c3d","tertiaryColor":"transparent","background":"transparent"},"flowchart":{"curve":"linear","nodeSpacing":52,"rankSpacing":64}}}%%
+flowchart TD
+    E["available evidence + requested scope"] --> C["construct candidate"]
+    C --> K["run applicable checks"]
+    K --> Q{"supported within scope?"}
+    Q -->|yes| A["stage accepted for declared scope"]
+    Q -->|repairable defect| B{"authorised repair budget remains?"}
+    B -->|yes| R["apply bounded repair"]
+    R --> K
+    B -->|no| X["stop: budget exhausted"]
+    Q -->|missing object evidence| M["request observation or measurement"]
+    M -->|new object evidence| J(("new attempt"))
+    Q -->|unsupported requested scope| N{"narrower deliverable is useful?"}
+    N -->|approved scope change| J
+    J --> E
+    N -->|no| F["stop: failed construction"]
+
+    classDef state fill:#2f3039,stroke:#526476,color:#f0f2f8,stroke-width:2px;
+    classDef decision fill:#302c3d,stroke:#8c69f0,color:#f0f2f8,stroke-width:2.2px;
+    classDef accepted fill:#263533,stroke:#4bc3af,color:#f0f2f8,stroke-width:2.5px;
+    classDef merge fill:#4bc3af,stroke:#263533,color:#15171c,stroke-width:2px;
+    classDef stop fill:#392f29,stroke:#e28b56,color:#f0f2f8,stroke-width:2.2px;
+    class E,C,K,R,M state;
+    class Q,B,N decision;
+    class A accepted;
+    class J merge;
+    class X,F stop;

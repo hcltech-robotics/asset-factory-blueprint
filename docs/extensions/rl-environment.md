@@ -1,32 +1,30 @@
 ---
-description: "Build an Isaac Lab task contract from a validated asset package while carrying recorded asset uncertainty into training and evaluation."
+description: "Build an Isaac Lab task contract from a validated asset package while keeping asset evidence, training design and evaluation records distinct."
 ---
 
 # RL environment
 
 This downstream extension takes a validated asset package and produces an Isaac Lab RL task with complete evidence lineage. It runs only after stage 7 simready-verification and the target runtime's `isaac-load` check.
 
+The [learning-environments theory chapter](../theory/learning-environments.md) defines the distinction among individual-object uncertainty, deployment variation and the deliberately selected training distribution. This page owns the implemented manifest fields, process and promotion gates.
+
 ![rl environment loop](../assets/rl-environment-loop.svg)
 
 ## Variant distributions
 
-A policy learns from its observations and the effects of its actions. Geometry, texture variation, materials, contact behaviour and articulation shape that signal. An asset can look correct in a catalogue render while remaining unsuitable for grasping or pushing, or leaving joint-limit behaviour unspecified. The upstream stages make these properties explicit, measured and reviewable.
+Geometry, appearance, materials, contact behaviour and articulation affect observations and transitions. The upstream records constrain which variants are admissible for the requested task and runtime. They do not determine how often an admissible variant appears during training.
 
-Existing systems generate simulation tasks, assets and rewards from language and image models [@wang_robogen_2024; @katara_gen2sim_2024]. Others build procedural houses [@deitke_procthor_2022] or reconstruct articulated objects from interaction and single images [@jiang_ditto_2022; @chen_urdformer_2024], supported by part-level datasets and affordance models [@xiang_sapien_2020; @mo_where2act_2021]. The cited systems do not provide a record of each asset's known properties, uncertainty and approvals. Asset Factory Blueprint carries that record into environment design.
-
-The base asset supplies a prior over valid scenes rather than a single training target, following the same premise as ConTaRo. In the digital-cousins study, policies trained on affordance-preserving scene variants achieved 90% zero-shot success on the same manipulation task, compared with 25% for policies trained on the exact digital twin [@dai_cousins_2024]. This lane defines the variant model, admissible changes, evidence-backed bounds and the training evidence required for promotion.
+The environment manifest therefore records the variant model, physical and task constraints, selected training distribution and the provenance of every bound. A training-distribution decision remains distinct from the evidence record that informed it.
 
 ## Training contract
 
-Training over asset variants is modelled as a contextual Markov decision process: one task with a family of transition functions indexed by mass, friction, drive stiffness, texture, placement and other context values [@hallak_contextual_2015]. When the policy cannot observe that context directly, the problem becomes an epistemic POMDP. Most generalisation failures can then be understood as partial observability of the context [@ghosh_epistemic_2021; @kirk_generalisation_2023].
-
-The asset factory records the prior over that context:
+The training contract binds one task to a family of admissible environment contexts. The asset factory records the evidence available for those contexts:
 
 - Every physical property proposal carries a value, unit, range, distribution, method and confidence.
 - Every authored mass carries a sealed uncertainty record.
 - Every grasp point carries a frame, an approach vector, a gripper width and a confidence.
 
-The lane uses these fields as context priors. It records their source manifest identifiers and checksums in the environment manifest, then derives the training distribution from the recorded uncertainty.
+The lane records the source manifest identifiers and checksums in the environment manifest. It then records the separate policy decision that converts evidence-backed bounds, admissibility constraints and programme requirements into a training distribution.
 
 ## Upstream records
 
@@ -61,7 +59,7 @@ The environment manifest records:
 
 ## Environment identity
 
-Isaac Lab is the canonical RL environment framework for this lane. It succeeds Isaac Gym and ORBIT [@makoviychuk_isaacgym_2021; @mittal_orbit_2023] and supports Newton alongside PhysX, Warp and MuJoCo [@mittal_isaaclab_2025; @nvidia_isaaclab_newton_2026]. The same asset can produce different contact behaviour and failure modes under different solvers [@hu_simweaver_2026]. The manifest therefore treats the physics backend as part of environment identity: a PhysX pass does not validate a Newton environment.
+Isaac Lab is the canonical RL environment framework for this lane. It succeeds Isaac Gym and ORBIT [@makoviychuk_isaacgym_2021; @mittal_orbit_2023] and supports Newton alongside PhysX, Warp and MuJoCo [@mittal_isaaclab_2025; @nvidia_isaaclab_newton_2026]. The same asset can produce different contact behaviour and failure modes under different solvers [@hu_simweaver_2026]. The manifest therefore treats the physics backend as part of environment identity, with a separate pass state for each backend.
 
 The timestep is part of the same identity. A manager-based Isaac Lab environment is defined by `sim.dt`, `decimation` and `episode_length_s` [@nvidia_isaaclab_manager_env_2026]. Isaac runtime evidence records the `physics_dt` used to check the asset's contact behaviour. The training timestep must match it unless fresh runtime evidence is attached. Seeds, environment count and Isaac Lab version complete the identity record.
 
@@ -71,12 +69,12 @@ Observation terms are split into two groups. The `policy` group contains proprio
 
 Every privileged input in this blueprint must come from a validated manifest field with evidence and a checksum. Each `critic` term cites the manifest path from which it is read.
 
-The manifest also declares an `adaptation_mode`:
+The manifest also declares an `adaptation_mode`; the theoretical distinction between robust and adaptive policies is defined in [From assets to learning environments](../theory/learning-environments.md#the-complete-environment):
 
 - `robust`: the policy averages over the context prior and carries no explicit estimate of it.
 - `adaptive`: the policy infers the context online from its own observations, in the manner of rapid motor adaptation [@kumar_rma_2021].
 
-Adaptive mode requires an identifiability audit. For each randomised parameter, the manifest records which `policy` observations can distinguish its values within one episode. Lifting can identify mass, pushing can identify friction, and joint motion can identify drive damping. Proprioception cannot identify texture variation. A randomised parameter that the policy cannot identify from its observations is handled robustly regardless of the declared mode, and the audit records that decision.
+Adaptive mode requires an identifiability audit. For each randomised parameter, the manifest records which `policy` actions and observations can distinguish its values within one episode and which confounders remain. A randomised parameter that the policy cannot identify from its declared interface is handled robustly regardless of the requested mode, and the audit records that decision.
 
 ## Sensor contract
 
@@ -94,13 +92,7 @@ Terminations include time-out, success, recorded joint-limit violation, illegal 
 
 ## Rewards
 
-Every reward remains a proposal until it passes the probes, whether it came from an engineer or a language model. In the Eureka pattern, the model writes reward code, trains policies, receives training statistics and revises the reward [@ma_eureka_2024; @yu_l2r_2023; @xie_text2reward_2024]. DrEureka adds a safety instruction and reports that this makes the rewards deployable [@ma_dreureka_2024]. Each iteration in this blueprint writes a proposal record, an evidence record and a report. Promotion requires both probe evidence and review.
-
-!!! sidebar "Rigid Kriegsspiel before free Kriegsspiel"
-
-    The Prussian war game began in 1824 as a rules-heavy exercise, played with dice and printed tables that fixed the outcome of every engagement [@reisswitz_kriegsspiel_1824]. Half a century later it split in two: rigid Kriegsspiel, governed by the tables, and free Kriegsspiel, governed by an umpire's judgement, which Verdy du Vernois argued was the only way to keep the game close to war [@verdy_kriegsspiel_1876]. The Prussian General Staff kept both, in that order. The tables caught the errors an umpire would be too generous to notice.
-
-    Reward review follows the same order: deterministic probes precede reviewer judgement. The probes catch errors that an informal review may excuse.
+Every reward remains a proposal until it passes the deterministic probes and review, whether it came from an engineer or a language model. Each iteration writes a proposal record, an evidence record and a report.
 
 Before review, every reward proposal passes the following deterministic probes, and the manifest records the result of each:
 
@@ -114,11 +106,7 @@ A proposal that fails a probe returns to the proposer with the probe output. A p
 
 ## Randomisation with provenance
 
-Domain randomisation began with visual variation [@tobin_domain_2017] and later covered dynamics [@peng_dynamics_2018]. Adaptive methods let the range grow with the policy [@openai_rubiks_2019], while canonicalisation maps randomised observations back to a reference appearance [@james_rcan_2019]. Surveys cover the resulting field [@zhao_survey_2020; @muratore_review_2022; @aljalbout_realitygap_2025]. Ranges that are too broad can drive the optimiser into a conservative local optimum; ranges that are too narrow fail to generalise [@muratore_review_2022; @chen_understanding_2022].
-
-Real-robot data provides another source of bounds. SimOpt and BayesSim infer a posterior over simulator parameters from real rollouts [@chebotar_simopt_2019; @ramos_bayessim_2019], and DROPO performs offline inference from logged trajectories [@tiboni_dropo_2023]. Active domain randomisation and entropy maximisation expand the distribution within policy tolerance [@mehta_active_2020; @tiboni_doraemon_2024]. DrEureka first perturbs the simulator around a trained policy to measure those tolerances, then uses a language model to set the ranges within them [@ma_dreureka_2024].
-
-This blueprint also derives bounds from the asset's evidence. Every randomisation axis records its provenance.
+The [learning-environments theory chapter](../theory/learning-environments.md#correlated-and-constrained-randomisation) defines the relationship among evidence, admissibility, correlated sampling and deliberate training design. Operationally, every randomisation axis records its provenance.
 
 | Provenance | Meaning | Where it comes from |
 |---|---|---|
@@ -127,23 +115,15 @@ This blueprint also derives bounds from the asset's evidence. Every randomisatio
 | `posterior` | interval inferred from real rollouts | BayesSim or DROPO style inference, when real data exists |
 | `policy_default` | declared fallback | the randomisation policy in the run request |
 
-The manifest records how these sources combine into each training range. If the evidence and feasibility intervals do not overlap, the axis becomes `review_required`. The mismatch may indicate that the policy cannot tolerate the measured asset range or that the asset evidence needs review; the lane does not choose between them.
+The manifest records how these sources inform each training range. If the evidence and feasibility intervals do not overlap, the axis becomes `review_required`; the lane records the mismatch without choosing whether the policy tolerance or asset evidence must change.
 
-!!! sidebar "Requisite variety, and the good regulator"
-
-    Ashby's law of requisite variety states that a regulator can only hold a system within bounds if the variety of its responses matches the variety of the disturbances it faces [@ashby_cybernetics_1956]. Domain randomisation is that law made operational: the disturbances are the contexts the policy will meet, and the recorded uncertainty in the manifests is a measured lower bound on their variety. A randomisation range narrower than the evidence interval is a regulator that has been told less than is known about its adversary.
-
-    Conant and Ashby went further and proved that every good regulator of a system must be a model of that system [@conant_regulator_1970]. That is the cybernetic case for `adaptive` mode over `robust` mode: a policy that carries an estimate of the context is a better regulator than one that averages over it, provided the context is identifiable from what the policy can observe. The identifiability audit exists to check that proviso.
-
-Variants must preserve recorded affordances. An affordance depends on the object and the agent together [@gibson_ecological_1979]. A texture change that makes a handle unrecognisable or a deformation that moves a grasp point beyond the gripper's reach changes the task and is rejected. Only variants that pass this check enter the training distribution as digital cousins [@dai_cousins_2024].
+Variants must preserve recorded affordances for the declared embodiment and task. A texture change that makes a handle unrecognisable or a deformation that moves a grasp point beyond the gripper's reach changes the task and is rejected.
 
 ## Curriculum tiers
 
-Domain randomisation is the simplest form of unsupervised environment design [@dennis_paired_2020]. Prioritised level replay selects high-regret levels from random generation [@jiang_plr_2021; @jiang_replay_2021]. ACCEL edits high-regret levels so complexity can compound [@parkerholder_accel_2022], while POET co-evolves environments and agents [@wang_poet_2019]. Grounded curriculum learning keeps the curriculum tied to the real deployment task distribution [@wang_gcl_2024].
+The theory chapter defines curriculum as a sequence of deliberately selected training distributions and keeps it separate from deployment variation. The blueprint's mutation plan declares the target layer, prim, operation, inputs, expected outputs, gates, rollback note and dry-run support. Layout plans add parametric placement patterns with unit policy and bounds. The lane supports three curriculum tiers:
 
-ACCEL describes each edit as a mutation. The blueprint's mutation plan already declares the target layer, prim, operation, inputs, expected outputs, gates, rollback note and dry-run support. Layout plans add parametric placement patterns with unit policy and bounds. The lane supports three curriculum tiers:
-
-1. **Static.** A declared schedule over randomisation bounds and reset difficulty, in the Isaac Lab curriculum manager idiom, with the terrain-difficulty schedule as the canonical example [@rudin_walk_2022; @portelas_curriculum_2020].
+1. **Static.** A declared schedule over randomisation bounds and reset difficulty.
 2. **Replay.** Prioritised replay over pre-validated variants, where the replay buffer is a set of variant identifiers with checksums and the priority is an estimated regret.
 3. **Editing.** ACCEL-style proposals emitted as mutation plans in `validate_only` mode and promoted only through the existing gates, with rollback notes. The curriculum generator is one more provider whose output is proposal material.
 
@@ -151,9 +131,7 @@ Editing curricula retain lineage, bounds, gates and rollback for every proposed 
 
 ## Affordance-weighted collision fidelity
 
-Collision geometry limits manipulation transfer more directly than visual geometry. One recent study argues that replacing accurate collision meshes with crude convex hulls has a large, underexamined effect on robustness. It measures the error using a surface-sampling distance between the visual and collision shells [@xu_realikea_2026]. Region-specific decomposition tolerances, fine near contact surfaces and coarse elsewhere, cut simulation time by 69% on a pick-and-place task without losing fidelity at contact [@vu_empart_2025]. Bounded-stiffness contact reduction makes tight-clearance insertion learnable [@vuong_contact_2023].
-
-The blueprint records grasp points with frames and approach vectors, together with the moving parts for articulation affordances. The lane measures visual-to-collision shell distance around each grasp point and articulated contact surface, then checks it against the task-fitness tolerance. A value outside tolerance emits a stage 5 request for finer decomposition in the failing region and blocks the lane until that request is resolved. The request uses the collision-aware decomposition already supported by the physics stage [@wei_coacd_2022; @mamou_hacd_2009]. Mandatory mesh verification makes this reliable because approximate convex decomposition behaves poorly on non-manifold input.
+The [physical-interaction theory chapter](../theory/physical-interaction.md#contact-geometry-and-collision-approximation) explains why visual and collision geometry require separate task-bound evaluation. The blueprint records grasp points with frames and approach vectors, together with the moving parts for articulation affordances. The lane measures visual-to-collision shell distance around each recorded affordance region and checks it against the task-fitness tolerance. A value outside tolerance emits a stage 5 request for finer decomposition in the failing region and blocks the lane until that request is resolved.
 
 ## Safety constraints
 
@@ -169,17 +147,11 @@ Isaac Lab Arena is the evaluation harness of record for the Isaac runtime, and i
 
 ## Updating asset evidence
 
-!!! sidebar "The wind tunnel at Dayton"
-
-    In 1901 the Wright glider produced a fraction of the lift its designers had calculated. The calculation rested on the Lilienthal tables and on Smeaton's coefficient of air pressure, a number that had been in circulation since 1759 and that nobody had thought to re-measure. The Wrights built a wind tunnel, measured, and found the coefficient wrong by about a third. The 1902 glider flew [@jakab_visions_1990].
-
-    The episode shows why simulator inputs should be treated as hypotheses. Flight tests provide evidence about those inputs, and the next calculation inherits any error that is not written back into the tables.
-
 Evaluation runs and real-world rollouts provide new evidence about the asset. BayesSim or DROPO-style methods can infer a posterior over the context from those rollouts [@ramos_bayessim_2019; @tiboni_dropo_2023; @aljalbout_realitygap_2025]. The lane writes that posterior as a new physical-property evidence record with lineage to the source rollouts, then proposes a revised asset manifest through the ordinary review gates. This return path lets recorded uncertainty shrink as evidence accumulates.
 
 ## Environment card
 
-The manifest renders an environment card containing intended tasks and embodiments, out-of-scope uses, provenance-backed randomisation coverage, known sim-to-real gaps, evaluation results and a reward report [@gilbert_rewardreports_2023]. It serves the same role as a model card or dataset datasheet [@mitchell_modelcards_2019; @gebru_datasheets_2021]. A client's safety function can review it without opening a USD file.
+The manifest renders an environment card containing intended tasks and embodiments, out-of-scope uses, provenance-backed randomisation coverage, known sim-to-real gaps, evaluation results and a reward report [@gilbert_rewardreports_2023]. The environment card is the RL-environment counterpart to a model card or dataset datasheet [@mitchell_modelcards_2019; @gebru_datasheets_2021]. A client's safety function can review it without opening a USD file.
 
 ## Inputs
 

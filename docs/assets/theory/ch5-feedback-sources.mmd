@@ -1,0 +1,26 @@
+%% Figure 5.2. Editable semantic source; the published SVG uses the AFB theory visual system.
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"AFB Manrope, sans-serif","primaryColor":"#292931","primaryTextColor":"#f0f2f8","primaryBorderColor":"#3c91ff","lineColor":"#4bc3af","secondaryColor":"#302c3d","tertiaryColor":"#222229"},"flowchart":{"curve":"basis"}}}%%
+flowchart LR
+    O["source observations"] --> R["source-conditioned review"]
+    C["candidate bytes"] --> D["deterministic diagnostics"]
+    C --> V["diagnostic renders"]
+    V --> R
+    C --> P["simulator probe"]
+    RC["runtime context"] --> P
+    O --> G["governance decision"]
+    D --> G
+    R --> G
+    P --> G
+    M["physical measurement"] --> G
+
+    classDef source fill:#263533,stroke:#4bc3af,color:#f0f2f8,stroke-width:2px;
+    classDef candidate fill:#292931,stroke:#3c91ff,color:#f0f2f8,stroke-width:2.5px;
+    classDef check fill:#2f3039,stroke:#526476,color:#f0f2f8,stroke-width:2px;
+    classDef review fill:#302c3d,stroke:#8c69f0,color:#f0f2f8,stroke-width:2px;
+    classDef measurement fill:#392f29,stroke:#e28b56,color:#f0f2f8,stroke-width:2px;
+    class O,RC source;
+    class C candidate;
+    class D,V,P check;
+    class R review;
+    class M measurement;
+    class G candidate;

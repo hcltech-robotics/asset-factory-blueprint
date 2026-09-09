@@ -11,7 +11,7 @@ The repository separates documentation, schemas, runtime code, skills, configs, 
 | Path | Role |
 | --- | --- |
 | `README.md` | Entry point and command map. |
-| `docs/` | Concept docs at the root, stage docs under `pipeline/`, cross-cutting docs under `platform/`, downstream docs under `extensions/` and generated diagrams under `assets/`. |
+| `docs/` | Concept docs at the root, theoretical chapters under `theory/`, stage docs under `pipeline/`, cross-cutting docs under `platform/`, downstream docs under `extensions/` and generated diagrams under `assets/`. |
 | `schemas/` | 31 versioned JSON Schema contracts for durable files. |
 | `configs/` | Provider, workflow, validation, skill and backend policy. |
 | `src/asset_factory_blueprint/` | Runtime package. |

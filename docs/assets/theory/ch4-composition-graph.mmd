@@ -1,0 +1,25 @@
+%% Figure 4.1. Editable semantic source; the published SVG uses the AFB theory visual system.
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"AFB Manrope, sans-serif","primaryColor":"#292931","primaryTextColor":"#f0f2f8","primaryBorderColor":"#3c91ff","lineColor":"#4bc3af","secondaryColor":"#302c3d","tertiaryColor":"#222229"},"flowchart":{"curve":"basis"}}}%%
+flowchart LR
+    G["geo.usda<br/>/asset-id"] -->|references| N["source/normalised.usda<br/>/World"]
+    R["asset-id.usda<br/>/asset-id"] -->|references| G
+    R -->|references| M["mtl.usda"]
+    R -->|references| P["phy.usda"]
+    R -->|references| A["art.usda"]
+    R -->|references| S["sem.usda"]
+    R -->|references| D["deform.usda<br/>optional"]
+    R -->|references| V["variants.usda"]
+    R -->|references| C["contents.usda"]
+    SC["scene.usda<br/>/World"] -->|references| R
+    E["environment.usda<br/>/Environment"] -->|references| SC
+
+    classDef source fill:#263533,stroke:#4bc3af,color:#f0f2f8,stroke-width:2px;
+    classDef layer fill:#2f3039,stroke:#526476,color:#f0f2f8,stroke-width:2px;
+    classDef optional fill:#392f29,stroke:#e28b56,color:#f0f2f8,stroke-width:2px,stroke-dasharray:6 5;
+    classDef root fill:#292931,stroke:#3c91ff,color:#f0f2f8,stroke-width:2.5px;
+    classDef project fill:#302c3d,stroke:#8c69f0,color:#f0f2f8,stroke-width:2px;
+    class N source;
+    class G,M,P,A,S,V,C layer;
+    class D optional;
+    class R root;
+    class SC,E project;

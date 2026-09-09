@@ -24,6 +24,7 @@ The Asset Factory Blueprint is a coordinator that works with your tools, patches
 - [Walkthrough: one photo to a governed workspace](walkthrough.md)
 - [Observed runthrough](runthrough.md)
 - [Blueprint](blueprint.md)
+- [Theory](theory/index.md)
 - [Reference architecture](reference-architecture.md)
 - [Source map](source-map.md)
 

@@ -195,6 +195,7 @@ Provider routing comes from `configs/provider-policy.json`. Each public tool cal
 
 - [Index](https://hcltech-robotics.github.io/asset-factory-blueprint/index.html) gives task-based routes through the documentation.
 - [Blueprint](https://hcltech-robotics.github.io/asset-factory-blueprint/blueprint.html) explains the purpose, promotion model and policy-quality link.
+- [Theory](https://hcltech-robotics.github.io/asset-factory-blueprint/theory/index.html) sets out the task-relative, evidential and physical basis of the blueprint.
 - [Reference architecture](https://hcltech-robotics.github.io/asset-factory-blueprint/reference-architecture.html) explains runtime layers and artefact flow.
 - The stage docs under [Pipeline stages](https://hcltech-robotics.github.io/asset-factory-blueprint/index.html#pipeline-stages) cover intake and sources, reconstruction, mandatory mesh verification, segmentation, material and physical inference, texturing, physics and articulation, nonvisual materials and SimReady verification in canonical order.
 - The platform docs under [Platform operations](https://hcltech-robotics.github.io/asset-factory-blueprint/index.html#implementation-guidance) cover the orchestrator, governance, infrastructure, deployment, external model runners and layer ownership.

@@ -1,0 +1,20 @@
+%% Figure 4.3. Editable semantic source; the published SVG uses the AFB theory visual system.
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"AFB Manrope, sans-serif","primaryColor":"#292931","primaryTextColor":"#f0f2f8","primaryBorderColor":"#3c91ff","lineColor":"#4bc3af","secondaryColor":"#302c3d","tertiaryColor":"#222229"},"flowchart":{"curve":"basis"}}}%%
+flowchart LR
+    SE["source evidence entity"] -->|used by| AU["authoring activity"]
+    PR["provider proposal entity"] -->|used by| AU
+    AG["software agent + version"] -->|associated with| AU
+    AU -->|generated| AP["asset package entity"]
+    AP -->|used by| EX["runtime activity"]
+    RC["runtime context entity"] -->|used by| EX
+    EX -->|generated| O["result entity"]
+    OP["operator"] -->|associated with| GD["governance decision activity"]
+    AP -->|used by| GD
+    O -->|used by| GD
+
+    classDef entity fill:#263533,stroke:#4bc3af,color:#f0f2f8,stroke-width:2px;
+    classDef activity fill:#292931,stroke:#3c91ff,color:#f0f2f8,stroke-width:2.5px;
+    classDef agent fill:#302c3d,stroke:#8c69f0,color:#f0f2f8,stroke-width:2px;
+    class SE,PR,AP,RC,O entity;
+    class AU,EX,GD activity;
+    class AG,OP agent;
