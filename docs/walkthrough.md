@@ -171,6 +171,6 @@ reconstruction: external reconstruction validation required before release
     afb isaac-load apply --project projects/metal_jerrycan --report projects/metal_jerrycan/reports/isaac-load-check.json
     ```
 
-4. Generate and apply task-fitness evidence, run `afb project validate`, then preview and write the release decision with `afb governance decide`. Release stays blocked until the current run, asset fingerprint, exact Profile, rights, runtime and declared use all match; the [governance page](platform/governance.md) shows the worked example.
+4. Generate and apply task-fitness evidence, run `afb project validate`, then preview and write the release decision with `afb governance decide`. Release stays blocked until the current run, asset fingerprint, exact Profile, rights, runtime and declared use all match; the [governance page](https://github.com/hcltech-robotics/asset-factory-blueprint/blob/main/docs/platform/governance.md) shows the worked example.
 
 Rerun `afb progress --project projects/metal_jerrycan` after each step; the contact sheet and `progress.json` always reflect the latest state.

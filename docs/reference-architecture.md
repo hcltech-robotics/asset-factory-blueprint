@@ -4,7 +4,7 @@ description: "Understand the architecture separating source evidence, model prop
 
 # Reference architecture
 
-The architecture assigns separate layers to [source evidence](pipeline/00-intake-and-sources.md), [proposal generation](provider-abstraction.md), [project mutation](runtime-architecture.md), [validation](pipeline/07-simready-verification.md) and [release](platform/governance.md). Recorded hand-offs keep promoted assets replayable.
+The architecture assigns separate layers to [source evidence](pipeline/00-intake-and-sources.md), [proposal generation](provider-abstraction.md), [project mutation](runtime-architecture.md), [validation](pipeline/07-simready-verification.md) and [release](https://github.com/hcltech-robotics/asset-factory-blueprint/blob/main/docs/platform/governance.md). Recorded hand-offs keep promoted assets replayable.
 
 <p align="center">
   <img src="assets/architecture.svg" alt="architecture" width="920">

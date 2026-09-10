@@ -36,7 +36,7 @@ afb manifest validate <schema-name> projects/<slug>/manifests/<manifest-name>.js
 
 ## Stage manifests
 
-Each project writes stage manifests as `manifests/<schema-name>.json`. The geometry boundary uses `reconstruction-manifest` for candidate geometry and `mesh-verification-record` for checksum-bound promotion to canonical geometry. The remaining [pipeline stage](blueprint.md#factory-process) manifests cover segmentation, material inference, texturing, physics and articulation, nonvisual materials and [SimReady verification](pipeline/07-simready-verification.md). Cross-cutting records cover the run request, immutable stage attempts, evaluation, [governance](platform/governance.md), provenance, external models, runtime evidence, layout, mutation, skills, review, library and task-fitness contracts.
+Each project writes stage manifests as `manifests/<schema-name>.json`. The geometry boundary uses `reconstruction-manifest` for candidate geometry and `mesh-verification-record` for checksum-bound promotion to canonical geometry. The remaining [pipeline stage](blueprint.md#factory-process) manifests cover segmentation, material inference, texturing, physics and articulation, nonvisual materials and [SimReady verification](pipeline/07-simready-verification.md). Cross-cutting records cover the run request, immutable stage attempts, evaluation, [governance](https://github.com/hcltech-robotics/asset-factory-blueprint/blob/main/docs/platform/governance.md), provenance, external models, runtime evidence, layout, mutation, skills, review, library and task-fitness contracts.
 
 ## Contract rules
 

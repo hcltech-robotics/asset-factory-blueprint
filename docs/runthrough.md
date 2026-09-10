@@ -50,7 +50,7 @@ The review records still contain minor findings: `baked_lighting` in the base co
   <img src="assets/runthrough-gpu-contact-sheet.png" alt="contact sheet after the GPU-backed run" width="920">
 </p>
 
-The Isaac Sim report recorded 62 prims, a ray-traced render, 911 frames and no load errors against the packaged USD. The runtime check also records drop-and-settle, impulse, reset and applicable joint behaviour. `afb isaac-load apply` binds that report to the exact USD composition and Profile. This report cannot release the package by itself. The [official Profile result](pipeline/07-simready-verification.md#official-profile-validation), task-fitness report, record graph, rights state and content-bound operator decision must all pass for the declared scope. The [governance page](platform/governance.md) shows that decision path.
+The Isaac Sim report recorded 62 prims, a ray-traced render, 911 frames and no load errors against the packaged USD. The runtime check also records drop-and-settle, impulse, reset and applicable joint behaviour. `afb isaac-load apply` binds that report to the exact USD composition and Profile. This report cannot release the package by itself. The [official Profile result](pipeline/07-simready-verification.md#official-profile-validation), task-fitness report, record graph, rights state and content-bound operator decision must all pass for the declared scope. The [governance page](https://github.com/hcltech-robotics/asset-factory-blueprint/blob/main/docs/platform/governance.md) shows that decision path.
 
 ## Observed operational issues
 

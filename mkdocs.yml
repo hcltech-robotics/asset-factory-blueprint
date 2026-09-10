@@ -8,6 +8,7 @@ docs_dir: docs
 site_dir: site
 exclude_docs: |
   overrides/
+  platform/governance.md
 strict: true
 use_directory_urls: false
 
@@ -161,30 +162,19 @@ nav:
   - Operations:
       - Orchestrator: platform/orchestrator.md
       - Agentic operation: platform/agentic-operation.md
+      - Agent system: agent-system.md
       - Direct partial invocation: platform/direct-partial-invocation.md
       - Libraries: platform/libraries.md
+      - Layer ownership and variants: platform/layer-ownership-and-variants.md
+      - Layout and mutation plans: platform/layout-and-mutation-plans.md
       - Infrastructure: platform/infrastructure.md
       - Deployment: platform/deployment.md
       - External model runners: platform/external-model-runners.md
       - Toolchain: toolchain.md
       - RL environment: extensions/rl-environment.md
-  - Governance:
-      - Project governance: GOVERNANCE.md
-      - Release process: RELEASE.md
-      - Support: SUPPORT.md
-      - Security policy: SECURITY.md
-      - Code of conduct: CODE_OF_CONDUCT.md
-      - Third-party notices: THIRD_PARTY_NOTICES.md
-      - MIT licence: license.md
-      - Agent system: agent-system.md
-      - Governance: platform/governance.md
-      - Mandatory early mesh verification decision: design-decisions/mandatory-mesh-verification.md
-      - RL runtime evidence boundary: design-decisions/rl-runtime-evidence-boundary.md
-      - Manifest contracts: manifest-contracts.md
-      - Layer ownership and variants: platform/layer-ownership-and-variants.md
-      - Layout and mutation plans: platform/layout-and-mutation-plans.md
-      - Citation and reproducibility: citation-and-reproducibility.md
-      - Reference-run capsule: reference-run-capsule.md
+  - ARROW:
+      - ARROW: arrow.md
+      - How to benchmark with ARROW: arrow/how-to-benchmark.md
   - Reference:
       - Requirements: requirements.md
       - Support matrix: support-matrix.md
@@ -196,4 +186,9 @@ nav:
       - Skill SDK: skill-sdk.md
       - Asset programme strategist: asset-programme-strategist.md
       - Source map: source-map.md
+      - Mandatory early mesh verification decision: design-decisions/mandatory-mesh-verification.md
+      - RL runtime evidence boundary: design-decisions/rl-runtime-evidence-boundary.md
+      - Manifest contracts: manifest-contracts.md
+      - Citation and reproducibility: citation-and-reproducibility.md
+      - Reference-run capsule: reference-run-capsule.md
       - References: references.md

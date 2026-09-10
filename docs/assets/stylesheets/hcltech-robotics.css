@@ -307,6 +307,24 @@ body {
   font-weight: 750;
 }
 
+.arrow-dataset-badge img {
+  width: auto;
+  height: 36px;
+  vertical-align: middle;
+}
+
+.arrow-dataset-badge__dark,
+.arrow-sample__dark,
+[data-md-color-scheme="hcltech-dark"] .arrow-dataset-badge__light,
+[data-md-color-scheme="hcltech-dark"] .arrow-sample__light {
+  display: none;
+}
+
+[data-md-color-scheme="hcltech-dark"] .arrow-dataset-badge__dark,
+[data-md-color-scheme="hcltech-dark"] .arrow-sample__dark {
+  display: inline-block;
+}
+
 .md-typeset a {
   text-decoration-color: rgba(15, 95, 220, 0.28);
   text-decoration-thickness: 0.08em;

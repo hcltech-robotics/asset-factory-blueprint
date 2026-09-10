@@ -12,7 +12,7 @@ Asset Factory selects providers by declared role and capability, then treats eve
 
 ## Provider authority
 
-Models may generate proposals, classify evidence, draft texture prompts or summarise stage records. Provider selection remains replaceable and repository [governance](platform/governance.md) retains validation authority. Credentials are configured through the [environment reference](environment-reference.md), while isolated backend processes follow the [external model runner](platform/external-model-runners.md) contract.
+Models may generate proposals, classify evidence, draft texture prompts or summarise stage records. Provider selection remains replaceable and repository [governance](https://github.com/hcltech-robotics/asset-factory-blueprint/blob/main/docs/platform/governance.md) retains validation authority. Credentials are configured through the [environment reference](environment-reference.md), while isolated backend processes follow the [external model runner](platform/external-model-runners.md) contract.
 
 ## Lanes
 

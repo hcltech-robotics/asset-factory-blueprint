@@ -25,6 +25,7 @@ The Asset Factory Blueprint is a coordinator that works with your tools, patches
 - [Observed runthrough](runthrough.md)
 - [Blueprint](blueprint.md)
 - [Theory](theory/index.md)
+- [ARROW: companion benchmark and dataset](arrow.md)
 - [Reference architecture](reference-architecture.md)
 - [Source map](source-map.md)
 
@@ -46,7 +47,6 @@ The Asset Factory Blueprint is a coordinator that works with your tools, patches
 - [Orchestrator](platform/orchestrator.md)
 - [Agentic operation](platform/agentic-operation.md)
 - [Libraries](platform/libraries.md)
-- [Governance](platform/governance.md)
 - [Infrastructure](platform/infrastructure.md)
 - [Deployment](platform/deployment.md)
 - [External model runners](platform/external-model-runners.md)

@@ -196,9 +196,10 @@ Provider routing comes from `configs/provider-policy.json`. Each public tool cal
 - [Index](https://hcltech-robotics.github.io/asset-factory-blueprint/index.html) gives task-based routes through the documentation.
 - [Blueprint](https://hcltech-robotics.github.io/asset-factory-blueprint/blueprint.html) explains the purpose, promotion model and policy-quality link.
 - [Theory](https://hcltech-robotics.github.io/asset-factory-blueprint/theory/index.html) sets out the task-relative, evidential and physical basis of the blueprint.
+- [ARROW](https://hcltech-robotics.github.io/asset-factory-blueprint/arrow.html) introduces the independent companion benchmark and dataset for comparing agent drivers, models and settings.
 - [Reference architecture](https://hcltech-robotics.github.io/asset-factory-blueprint/reference-architecture.html) explains runtime layers and artefact flow.
 - The stage docs under [Pipeline stages](https://hcltech-robotics.github.io/asset-factory-blueprint/index.html#pipeline-stages) cover intake and sources, reconstruction, mandatory mesh verification, segmentation, material and physical inference, texturing, physics and articulation, nonvisual materials and SimReady verification in canonical order.
-- The platform docs under [Platform operations](https://hcltech-robotics.github.io/asset-factory-blueprint/index.html#implementation-guidance) cover the orchestrator, governance, infrastructure, deployment, external model runners and layer ownership.
+- The platform docs under [Platform operations](https://hcltech-robotics.github.io/asset-factory-blueprint/index.html#implementation-guidance) cover the orchestrator, infrastructure, deployment, external model runners and layer ownership.
 - [RL environment design](https://hcltech-robotics.github.io/asset-factory-blueprint/extensions/rl-environment.html) explains how validated assets become policy-training environments.
 - [Support matrix](https://hcltech-robotics.github.io/asset-factory-blueprint/support-matrix.html) distinguishes declared, CI-checked, provisional and release-verified targets.
 - [Citation and reproducibility](https://hcltech-robotics.github.io/asset-factory-blueprint/citation-and-reproducibility.html) defines software and schema citation requirements.
@@ -225,10 +226,10 @@ Use `CITATION.cff` for software citation and record the signed release tag, sche
 }
 ```
 
-Project decisions and releases follow [Project governance](https://hcltech-robotics.github.io/asset-factory-blueprint/GOVERNANCE.html) and [Release process](https://hcltech-robotics.github.io/asset-factory-blueprint/RELEASE.html). Support, security and participation policies are in [Support](https://hcltech-robotics.github.io/asset-factory-blueprint/SUPPORT.html), [Security policy](https://hcltech-robotics.github.io/asset-factory-blueprint/SECURITY.html) and [Code of conduct](https://hcltech-robotics.github.io/asset-factory-blueprint/CODE_OF_CONDUCT.html).
+Project decisions and releases follow [Project governance](https://github.com/hcltech-robotics/asset-factory-blueprint/blob/main/GOVERNANCE.md) and [Release process](https://github.com/hcltech-robotics/asset-factory-blueprint/blob/main/RELEASE.md). Support, security and participation policies are in [Support](https://github.com/hcltech-robotics/asset-factory-blueprint/blob/main/SUPPORT.md), [Security policy](https://github.com/hcltech-robotics/asset-factory-blueprint/blob/main/SECURITY.md) and [Code of conduct](https://github.com/hcltech-robotics/asset-factory-blueprint/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 
-The repository code is [licensed under the MIT License](https://hcltech-robotics.github.io/asset-factory-blueprint/license.html).
+The repository code is [licensed under the MIT License](https://github.com/hcltech-robotics/asset-factory-blueprint/blob/main/LICENSE).
 
-The Asset Factory Blueprint was developed in early 2026 by HCLTech Robotics Intelligence CoE. Its material workflows draw on NVIDIA's `content-agents`, while Omniverse, Isaac Sim and SimReady inform its runtime and promotion model; see [acknowledged foundations](https://hcltech-robotics.github.io/asset-factory-blueprint/THIRD_PARTY_NOTICES.html#acknowledged-foundations) for attribution.
+The Asset Factory Blueprint was developed in early 2026 by HCLTech Robotics Intelligence CoE. Its material workflows draw on NVIDIA's `content-agents`, while Omniverse, Isaac Sim and SimReady inform its runtime and promotion model; see [acknowledged foundations](https://github.com/hcltech-robotics/asset-factory-blueprint/blob/main/THIRD_PARTY_NOTICES.md#acknowledged-foundations) for attribution.

@@ -47,9 +47,15 @@ Generated model output remains a proposal until the required deterministic check
 - [Agentic operation](https://hcltech-robotics.github.io/asset-factory-blueprint/platform/agentic-operation.html): Deterministic gates, bounded model review and escalation.
 - [Provider abstraction](https://hcltech-robotics.github.io/asset-factory-blueprint/provider-abstraction.html): Replaceable model providers with repository-controlled validation.
 - [Manifest contracts](https://hcltech-robotics.github.io/asset-factory-blueprint/manifest-contracts.html): Durable records for resumability, review and reproduction.
-- [Governance](https://hcltech-robotics.github.io/asset-factory-blueprint/platform/governance.html): Rights, privacy, retention, provenance and release decisions.
 - [Citation and reproducibility](https://hcltech-robotics.github.io/asset-factory-blueprint/citation-and-reproducibility.html): Software, schema, provider and run citation requirements.
 - [Reference-run capsule](https://hcltech-robotics.github.io/asset-factory-blueprint/reference-run-capsule.html): Minimal redistributable evidence for a release claim.
+
+## ARROW
+
+- [ARROW](https://hcltech-robotics.github.io/asset-factory-blueprint/arrow.html): Independent companion benchmark and dataset for quantitative comparisons of agent drivers, models and settings in pipelines such as AFB.
+- [How to benchmark with ARROW](https://hcltech-robotics.github.io/asset-factory-blueprint/arrow/how-to-benchmark.html): Select cases, fix inputs, run a reconstruction pipeline, submit meshes and compare evaluation results.
+- [ARROW dataset](https://huggingface.co/datasets/chrisvoncsefalvay/ARROW): Object photographs, descriptions, reference scans and physical measurements.
+- [ARROW repository](https://github.com/hcltech-robotics/ARROW): Validator, data dictionary and benchmark recipes.
 
 ## Primary specifications
 
